@@ -1,201 +1,1698 @@
 <!DOCTYPE html>
-<html lang="te">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>సింహం మరియు ఎలుక 🦁🐀</title>
-
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-body{
-  margin:0;
-  font-family:'Segoe UI',sans-serif;
-  background:linear-gradient(#87CEEB,#228B22);
-  overflow:hidden;
+:root {
+  --gold: #f4c430;
+  --forest-mid: #2d5a27;
+  --forest-light: #4a8c3f;
 }
-#sceneTitle{
-  position:absolute;
-  top:10px;
-  width:100%;
-  text-align:center;
-  font-size:22px;
-  font-weight:bold;
-  color:white;
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%;
+  height: 100%;
 }
-#storyBox{
-  position:absolute;
-  bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
-  width:85%;
-  background:rgba(255,255,255,0.9);
-  padding:15px;
-  border-radius:15px;
-  font-size:18px;
+
+body {
+  background: #0d1f0d;
+  font-family: 'Nunito', sans-serif;
+  /* Grid layout: fixed rows, stage gets all leftover space */
+  display: grid;
+  grid-template-rows:
+    auto   /* .header */
+    1fr    /* .stage-wrap (fills all remaining) */
+    auto   /* .narration-box */
+    auto   /* .progress-wrap */
+    auto   /* .status-bar */
+    auto;  /* .controls */
+  align-items: stretch;
+  justify-items: center;
+  height: 100dvh;
+  min-height: 480px;
+  overflow: hidden;
 }
-#controls{
-  position:absolute;
-  top:10px;
-  right:10px;
+
+/* ── HEADER ── */
+.header {
+  text-align: center;
+  padding: 4px 20px 2px;
+  width: 100%;
 }
-button{
-  padding:8px 14px;
-  border:none;
-  border-radius:8px;
-  font-size:16px;
-  cursor:pointer;
+.title {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(1rem, 2.2vw, 1.6rem);
+  background: linear-gradient(135deg, #f4c430, #ff8c42, #4a8c3f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 2px;
 }
-#statusBar{
-  position:absolute;
-  bottom:0;
-  width:100%;
-  text-align:center;
-  background:#222;
-  color:#fff;
-  padding:5px;
+.subtitle {
+  font-family: 'Lora', serif;
+  font-style: italic;
+  color: #a3c99a;
+  font-size: 0.65rem;
 }
-.lion,.rat{
-  position:absolute;
-  bottom:120px;
+
+/* ── SCENE STAGE ── */
+.stage-wrap {
+  position: relative;
+  width: min(960px, 98vw);
+  min-height: 0;    /* crucial: lets grid row shrink */
+  display: flex;
+  flex-direction: column;
 }
-.lion{
-  left:20%;
-  font-size:90px;
+
+.scene-stage {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(74,140,63,0.4), 0 0 80px rgba(0,0,0,0.6);
+  border: 2px solid #3a6b35;
 }
-.rat{
-  right:20%;
-  font-size:60px;
+
+.scene {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  pointer-events: none;
 }
-.bubble{
-  position:absolute;
-  background:white;
-  padding:10px;
-  border-radius:15px;
-  font-size:14px;
-  display:none;
+.scene.active { opacity: 1; pointer-events: auto; }
+
+/* ── NARRATION BOX ── */
+.narration-box {
+  width: min(960px, 98vw);
+  background: rgba(8,22,8,0.97);
+  border-top: 1px solid rgba(74,140,63,0.5);
+  border-bottom: 1px solid rgba(20,60,20,0.8);
+  padding: 5px 16px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
 }
+.narration-text {
+  font-family: 'Lora', serif;
+  color: #fffde7;
+  font-size: clamp(0.58rem, 1.2vw, 0.78rem);
+  line-height: 1.3;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  width: 100%;
+}
+.narration-text.show { opacity: 1; transform: translateY(0); }
+.narration-text .speaker-tag {
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.82em;
+  letter-spacing: 1px;
+  margin-right: 6px;
+  padding: 1px 7px;
+  border-radius: 20px;
+  display: inline-block;
+}
+.tag-narrator { background: rgba(244,196,48,0.25); color: #f4c430; border: 1px solid #f4c43066; }
+.tag-lion     { background: rgba(200,134,10,0.3);  color: #ffb347; border: 1px solid #c8860a66; }
+.tag-rat      { background: rgba(138,122,106,0.3); color: #c8b89a; border: 1px solid #8a7a6a66; }
+
+/* ── SPEECH BUBBLES ── */
+.speech-bubble {
+  position: absolute;
+  background: rgba(255,255,255,0.95);
+  border-radius: 16px;
+  padding: 8px 14px;
+  font-family: 'Lora', serif;
+  font-size: clamp(0.6rem, 1.3vw, 0.82rem);
+  color: #1a1a1a;
+  max-width: 38%;
+  line-height: 1.4;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.4);
+  opacity: 0;
+  transform: scale(0.7) translateY(10px);
+  transition: opacity 0.4s cubic-bezier(.34,1.56,.64,1), transform 0.4s cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+  z-index: 30;
+}
+.speech-bubble.show { opacity: 1; transform: scale(1) translateY(0); }
+.speech-bubble::after { content:''; position:absolute; border:8px solid transparent; }
+.bubble-lion { left: 44%; top: 8%; border: 2px solid #c8860a; }
+.bubble-lion::after { bottom:-16px; left:18px; border-top-color: rgba(255,255,255,0.95); }
+.bubble-rat  { left: 4%; top: 8%; border: 2px solid #8a7a6a; max-width: 34%; }
+.bubble-rat::after { bottom:-16px; right:18px; border-top-color: rgba(255,255,255,0.95); }
+
+/* ── SCENE TITLE CARD ── */
+.scene-title-card {
+  position: absolute;
+  top: 6%; left: 50%; transform: translateX(-50%);
+  background: rgba(0,0,0,0.6);
+  border: 1px solid rgba(244,196,48,0.5);
+  border-radius: 24px;
+  padding: 4px 18px;
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(0.65rem, 1.4vw, 0.9rem);
+  color: #f4c430;
+  letter-spacing: 2px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  z-index: 20;
+}
+.scene-title-card.show { opacity: 1; }
+
+/* ── PROGRESS ── */
+.progress-wrap {
+  width: min(960px, 98vw);
+  padding: 3px 0 1px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.progress-track {
+  flex: 1;
+  height: 5px;
+  background: #1a3a1a;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4a8c3f, #f4c430);
+  border-radius: 10px;
+  width: 0%;
+  transition: width 0.5s ease;
+}
+.progress-label {
+  font-size: 0.7rem;
+  color: #6b9e65;
+  white-space: nowrap;
+  min-width: 48px;
+  text-align: right;
+}
+
+/* ── STATUS ── */
+.status-bar {
+  color: #7ab870;
+  font-size: 0.7rem;
+  height: 16px;
+  text-align: center;
+  font-style: italic;
+  line-height: 16px;
+}
+
+/* ── CONTROLS ── */
+.controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding: 4px 0 8px;
+  align-items: center;
+  width: 100%;
+}
+.btn {
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.85rem;
+  padding: 6px 20px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 5px 16px rgba(0,0,0,0.35); }
+.btn:active { transform: translateY(0); }
+.btn-play  { background: linear-gradient(135deg, #2d7a27, #4a8c3f); color: #fffde7; }
+.btn-reset { background: linear-gradient(135deg, #3a2a10, #6b4c1e); color: #f4c430; }
+.audio-label {
+  display: flex; align-items: center; gap: 6px;
+  color: #a3c99a; font-size: 0.78rem; cursor: pointer;
+  user-select: none;
+}
+.audio-label input { accent-color: #4a8c3f; width: 14px; height: 14px; cursor: pointer; }
+
+/* ── MORAL CARD ── */
+.moral-card {
+  position: absolute;
+  bottom: 76px; left: 50%; transform: translateX(-50%) translateY(20px);
+  width: min(700px, 90%);
+  background: linear-gradient(135deg, rgba(20,50,20,0.97), rgba(40,80,35,0.97));
+  border: 2px solid #f4c430;
+  border-radius: 14px;
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  opacity: 0;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  z-index: 40;
+  pointer-events: none;
+}
+.moral-card.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+.moral-icon { font-size: 1.8rem; flex-shrink: 0; }
+.moral-text { font-family: 'Lora', serif; color: #fffde7; }
+.moral-text strong { font-family: 'Fredoka One', cursive; color: #f4c430; font-size: 0.95rem; display: block; margin-bottom: 2px; }
+.moral-text span { font-size: clamp(0.65rem, 1.3vw, 0.82rem); line-height: 1.4; }
+
+/* ════════════════════════════════════════
+   SVG CHARACTER ANIMATIONS
+   ════════════════════════════════════════ */
+@keyframes lionBreath { 0%,100%{transform:scaleY(1)} 50%{transform:scaleY(1.03)} }
+@keyframes lionWalk   { 0%,100%{transform:translateX(0)} 50%{transform:translateX(12px)} }
+@keyframes lionShake  { 0%,100%{transform:rotate(0)} 20%{transform:rotate(-4deg)} 40%{transform:rotate(4deg)} 60%{transform:rotate(-3deg)} 80%{transform:rotate(3deg)} }
+@keyframes lionRoar   { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
+@keyframes lionTrap   { 0%,100%{transform:translateY(0)} 50%{transform:translateY(4px)} }
+
+@keyframes ratRun     { 0%,100%{transform:translateX(0) scaleX(1)} 50%{transform:translateX(-8px) scaleX(1.05)} }
+@keyndef ratTremble  { 0%,100%{transform:rotate(0)} 25%{transform:rotate(-5deg)} 75%{transform:rotate(5deg)} }
+@keyframes ratNibble  { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+@keyframes ratBrave   { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+@keyframes float      { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+@keyframes treeSway   { 0%,100%{transform:rotate(0)} 50%{transform:rotate(1.5deg)} }
+@keyframes grassSway  { 0%,100%{transform:skewX(0)} 50%{transform:skewX(3deg)} }
+@keyframes sparkle    { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.6)} }
+@keyframes netShake   { 0%,100%{transform:rotate(0) translateY(0)} 25%{transform:rotate(-2deg) translateY(-3px)} 75%{transform:rotate(2deg) translateY(2px)} }
+@keyframes sunPulse   { 0%,100%{opacity:0.9;r:48} 50%{opacity:1;r:52} }
+@keyframes cloudDrift { 0%{transform:translateX(0)} 100%{transform:translateX(30px)} }
+@keyframes birdFly    { 0%{transform:translateX(0) translateY(0)} 50%{transform:translateX(40px) translateY(-10px)} 100%{transform:translateX(80px) translateY(5px)} }
+@keyframes leafFall   { 0%{transform:translateX(0) rotate(0) translateY(0);opacity:1} 100%{transform:translateX(20px) rotate(180deg) translateY(30px);opacity:0} }
+@keyframes ropeBreak  { 0%{stroke-dashoffset:0} 100%{stroke-dashoffset:50} }
+@keyframes victoryJump{ 0%,100%{transform:translateY(0)} 40%{transform:translateY(-18px)} }
+
+/* Lion states */
+.lion-breath { animation: lionBreath 3s ease-in-out infinite; transform-origin: center; }
+.lion-walk   { animation: lionWalk   0.6s ease-in-out infinite; }
+.lion-shake  { animation: lionShake  0.35s ease-in-out infinite; }
+.lion-roar   { animation: lionRoar   0.5s ease-in-out infinite; }
+.lion-trap   { animation: lionTrap   1s ease-in-out infinite; }
+.lion-happy  { animation: victoryJump 0.8s ease-in-out infinite; }
+
+/* Rat states */
+.rat-run     { animation: ratRun    0.4s ease-in-out infinite; }
+.rat-tremble { animation: ratTremble 0.2s ease-in-out infinite; }
+.rat-nibble  { animation: ratNibble  0.3s ease-in-out infinite; }
+.rat-brave   { animation: ratBrave   0.6s ease-in-out infinite; }
+.rat-happy   { animation: victoryJump 0.7s ease-in-out 0.1s infinite; }
+
+.tree-sway   { animation: treeSway 4s ease-in-out infinite; transform-origin: bottom center; }
+.cloud-drift { animation: cloudDrift 20s linear infinite alternate; }
+.bird        { animation: birdFly 8s ease-in-out infinite; }
+.sparkle-star{ animation: sparkle 1.5s ease-in-out infinite; }
+.leaf        { animation: leafFall 3s ease-in-out infinite; }
+
 </style>
 </head>
-
 <body>
 
-<div id="sceneTitle">🌿 లోతైన పచ్చని అడవి</div>
-
-<div class="lion" id="lion">🦁</div>
-<div class="rat" id="rat">🐀</div>
-
-<div class="bubble" id="lionBubble"></div>
-<div class="bubble" id="ratBubble"></div>
-
-<div id="storyBox"></div>
-
-<div id="controls">
-  <button onclick="startStory()">▶ ప్లే</button>
+<div class="header">
+  <div class="title">🦁 The Lion & The Rat 🐀</div>
+  <div class="subtitle">A timeless fable about kindness, humility, and unexpected friendship</div>
 </div>
 
-<div id="statusBar">▶ ప్లే నొక్కండి కథ ప్రారంభమవుతుంది…</div>
+<!-- ═══════════════════════════════════════════ -->
+<!--  STAGE                                       -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="stage-wrap">
+  <div class="scene-stage" id="stage">
 
+    <!-- ════ SCENE 1: Introduction ════ -->
+    <svg class="scene active" id="scene-1" viewBox="0 40 960 500" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="s1sky" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#87ceeb"/>
+          <stop offset="100%" stop-color="#b8e4f7"/>
+        </linearGradient>
+        <linearGradient id="s1ground" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#4a8c3f"/>
+          <stop offset="100%" stop-color="#2d5a27"/>
+        </linearGradient>
+        <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fffde7" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#f4c430" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="blur2"><feGaussianBlur stdDeviation="2"/></filter>
+        <filter id="shadow1"><feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#00000055"/></filter>
+      </defs>
+
+      <!-- Sky -->
+      <rect width="960" height="380" fill="url(#s1sky)"/>
+      <!-- Sun -->
+      <circle cx="820" cy="70" r="52" fill="#fffde7" opacity="0.15" class="sparkle-star"/>
+      <circle cx="820" cy="70" r="40" fill="#ffd700" opacity="0.8"/>
+      <circle cx="820" cy="70" r="28" fill="#ffe066"/>
+      <!-- Sun rays -->
+      <g stroke="#ffd700" stroke-width="2.5" opacity="0.5">
+        <line x1="820" y1="18" x2="820" y2="5"/>
+        <line x1="820" y1="122" x2="820" y2="135"/>
+        <line x1="768" y1="70" x2="755" y2="70"/>
+        <line x1="872" y1="70" x2="885" y2="70"/>
+        <line x1="783" y1="33" x2="774" y2="24"/>
+        <line x1="857" y1="107" x2="866" y2="116"/>
+        <line x1="857" y1="33" x2="866" y2="24"/>
+        <line x1="783" y1="107" x2="774" y2="116"/>
+      </g>
+
+      <!-- Clouds -->
+      <g class="cloud-drift">
+        <ellipse cx="160" cy="80" rx="70" ry="28" fill="white" opacity="0.8"/>
+        <ellipse cx="200" cy="68" rx="50" ry="24" fill="white" opacity="0.9"/>
+        <ellipse cx="120" cy="75" rx="40" ry="20" fill="white" opacity="0.7"/>
+      </g>
+      <g class="cloud-drift" style="animation-delay:-8s">
+        <ellipse cx="500" cy="55" rx="55" ry="22" fill="white" opacity="0.7"/>
+        <ellipse cx="540" cy="45" rx="40" ry="20" fill="white" opacity="0.8"/>
+      </g>
+      <!-- Birds -->
+      <g class="bird" opacity="0.6">
+        <path d="M300,100 Q305,94 310,100" stroke="#333" stroke-width="2" fill="none"/>
+        <path d="M315,96 Q320,90 325,96" stroke="#333" stroke-width="2" fill="none"/>
+      </g>
+
+      <!-- Far hills -->
+      <ellipse cx="150" cy="330" rx="220" ry="90" fill="#3a7a35" opacity="0.7"/>
+      <ellipse cx="800" cy="320" rx="250" ry="100" fill="#2d6628" opacity="0.6"/>
+      <ellipse cx="480" cy="350" rx="300" ry="80" fill="#4a8c3f" opacity="0.5"/>
+
+      <!-- Ground -->
+      <rect x="0" y="370" width="960" height="170" fill="url(#s1ground)"/>
+      <!-- Grass texture -->
+      <g fill="#5aaa4f" opacity="0.6">
+        <ellipse cx="80"  cy="372" rx="30" ry="10"/>
+        <ellipse cx="200" cy="370" rx="40" ry="12"/>
+        <ellipse cx="400" cy="373" rx="35" ry="10"/>
+        <ellipse cx="600" cy="371" rx="45" ry="11"/>
+        <ellipse cx="800" cy="372" rx="38" ry="10"/>
+        <ellipse cx="920" cy="370" rx="28" ry="9"/>
+      </g>
+      <!-- Flowers -->
+      <g>
+        <circle cx="150" cy="370" r="5" fill="#ff9eb5"/><circle cx="150" cy="370" r="2" fill="#ffe066"/>
+        <circle cx="350" cy="368" r="5" fill="#ff9eb5"/><circle cx="350" cy="368" r="2" fill="#ffe066"/>
+        <circle cx="720" cy="371" r="5" fill="#c8e6c9"/><circle cx="720" cy="371" r="2" fill="#ffe066"/>
+      </g>
+
+      <!-- Trees background -->
+      <g class="tree-sway" style="transform-origin:340px 300px">
+        <rect x="328" y="250" width="24" height="130" rx="8" fill="#5a3d1a"/>
+        <ellipse cx="340" cy="230" rx="55" ry="70" fill="#2d6628"/>
+        <ellipse cx="320" cy="250" rx="40" ry="55" fill="#3a7a35"/>
+        <ellipse cx="360" cy="245" rx="42" ry="58" fill="#4a8c3f"/>
+      </g>
+      <g class="tree-sway" style="transform-origin:630px 280px;animation-delay:-2s">
+        <rect x="618" y="230" width="24" height="150" rx="8" fill="#5a3d1a"/>
+        <ellipse cx="630" cy="210" rx="65" ry="80" fill="#1e5220"/>
+        <ellipse cx="608" cy="235" rx="48" ry="62" fill="#2d6628"/>
+        <ellipse cx="652" cy="228" rx="50" ry="65" fill="#3a7a35"/>
+      </g>
+      <g class="tree-sway" style="transform-origin:100px 320px;animation-delay:-4s">
+        <rect x="88" y="280" width="20" height="110" rx="6" fill="#5a3d1a"/>
+        <ellipse cx="98" cy="262" rx="48" ry="60" fill="#2d6628"/>
+        <ellipse cx="80" cy="280" rx="36" ry="48" fill="#3a7a35"/>
+      </g>
+      <g class="tree-sway" style="transform-origin:870px 300px;animation-delay:-6s">
+        <rect x="858" y="260" width="22" height="120" rx="7" fill="#5a3d1a"/>
+        <ellipse cx="869" cy="242" rx="52" ry="65" fill="#1e5220"/>
+        <ellipse cx="849" cy="265" rx="40" ry="52" fill="#2d6628"/>
+      </g>
+
+      <!-- Bushes foreground -->
+      <ellipse cx="50"  cy="390" rx="55" ry="28" fill="#2d6628"/>
+      <ellipse cx="900" cy="390" rx="55" ry="28" fill="#2d6628"/>
+      <ellipse cx="480" cy="395" rx="70" ry="25" fill="#3a7a35"/>
+
+      <!-- === LION (center-right, resting) === -->
+      <g id="s1lion" class="lion-breath" filter="url(#shadow1)" style="transform-origin:620px 420px">
+        <!-- Body -->
+        <ellipse cx="630" cy="430" rx="120" ry="65" fill="#c8860a"/>
+        <ellipse cx="630" cy="418" rx="112" ry="58" fill="#d4980f"/>
+        <!-- Tail -->
+        <path d="M750,440 Q790,420 800,400 Q810,380 800,370" stroke="#c8860a" stroke-width="14" fill="none" stroke-linecap="round"/>
+        <ellipse cx="800" cy="365" rx="16" ry="10" fill="#8b5e08"/>
+        <!-- Legs -->
+        <rect x="565" y="470" width="28" height="55" rx="12" fill="#b8760a"/>
+        <rect x="605" y="472" width="28" height="55" rx="12" fill="#b8760a"/>
+        <rect x="648" y="470" width="28" height="55" rx="12" fill="#b8760a"/>
+        <rect x="688" y="472" width="28" height="55" rx="12" fill="#b8760a"/>
+        <!-- Paws -->
+        <ellipse cx="579" cy="524" rx="18" ry="9" fill="#a06608"/>
+        <ellipse cx="619" cy="526" rx="18" ry="9" fill="#a06608"/>
+        <ellipse cx="662" cy="524" rx="18" ry="9" fill="#a06608"/>
+        <ellipse cx="702" cy="526" rx="18" ry="9" fill="#a06608"/>
+        <!-- Neck -->
+        <ellipse cx="530" cy="410" rx="38" ry="50" fill="#c8860a"/>
+        <!-- Mane -->
+        <ellipse cx="510" cy="375" rx="80" ry="78" fill="#7a3c08"/>
+        <ellipse cx="510" cy="378" rx="68" ry="65" fill="#8b4a0a"/>
+        <!-- Head -->
+        <ellipse cx="510" cy="368" rx="62" ry="58" fill="#d4980f"/>
+        <!-- Ears -->
+        <ellipse cx="462" cy="320" rx="18" ry="22" fill="#c8860a"/>
+        <ellipse cx="462" cy="322" rx="10" ry="14" fill="#7a3c08"/>
+        <ellipse cx="558" cy="320" rx="18" ry="22" fill="#c8860a"/>
+        <ellipse cx="558" cy="322" rx="10" ry="14" fill="#7a3c08"/>
+        <!-- Eyes -->
+        <ellipse cx="490" cy="360" rx="14" ry="12" fill="#2d1a00"/>
+        <ellipse cx="530" cy="360" rx="14" ry="12" fill="#2d1a00"/>
+        <circle cx="494" cy="357" r="4" fill="white"/>
+        <circle cx="534" cy="357" r="4" fill="white"/>
+        <ellipse cx="490" cy="360" rx="7" ry="8" fill="#f0a020"/>
+        <ellipse cx="530" cy="360" rx="7" ry="8" fill="#f0a020"/>
+        <circle cx="490" cy="360" r="4" fill="#1a0a00"/>
+        <circle cx="530" cy="360" r="4" fill="#1a0a00"/>
+        <!-- Nose -->
+        <ellipse cx="510" cy="385" rx="14" ry="9" fill="#8b4a0a"/>
+        <ellipse cx="510" cy="384" rx="10" ry="7" fill="#d4696a"/>
+        <!-- Mouth -->
+        <path d="M496,394 Q510,404 524,394" stroke="#8b4a0a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <!-- Whiskers -->
+        <line x1="460" y1="386" x2="492" y2="388" stroke="#fffde7" stroke-width="1.5" opacity="0.8"/>
+        <line x1="460" y1="392" x2="492" y2="392" stroke="#fffde7" stroke-width="1.5" opacity="0.8"/>
+        <line x1="528" y1="388" x2="560" y2="386" stroke="#fffde7" stroke-width="1.5" opacity="0.8"/>
+        <line x1="528" y1="392" x2="560" y2="392" stroke="#fffde7" stroke-width="1.5" opacity="0.8"/>
+        <!-- Crown hint -->
+        <path d="M470,310 L490,295 L510,308 L530,295 L550,310" stroke="#f4c430" stroke-width="3" fill="none"/>
+      </g>
+
+      <!-- === RAT (far left, tiny, running) === -->
+      <g id="s1rat" class="rat-run" filter="url(#shadow1)" style="transform-origin:190px 450px">
+        <!-- Body -->
+        <ellipse cx="195" cy="453" rx="28" ry="16" fill="#8a7a6a"/>
+        <ellipse cx="195" cy="450" rx="25" ry="14" fill="#9a8a7a"/>
+        <!-- Tail -->
+        <path d="M223,458 Q245,448 250,440 Q255,432 248,428" stroke="#7a6a5a" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <!-- Head -->
+        <ellipse cx="170" cy="445" rx="22" ry="18" fill="#9a8a7a"/>
+        <!-- Ears -->
+        <ellipse cx="158" cy="430" rx="9" ry="11" fill="#9a8a7a"/>
+        <ellipse cx="158" cy="430" rx="5" ry="7" fill="#d4a0a0"/>
+        <ellipse cx="180" cy="428" rx="9" ry="11" fill="#9a8a7a"/>
+        <ellipse cx="180" cy="428" rx="5" ry="7" fill="#d4a0a0"/>
+        <!-- Eyes -->
+        <circle cx="158" cy="440" r="5" fill="#1a1a1a"/>
+        <circle cx="156" cy="438" r="2" fill="white"/>
+        <!-- Nose -->
+        <ellipse cx="150" cy="447" rx="4" ry="3" fill="#d4696a"/>
+        <!-- Whiskers -->
+        <line x1="130" y1="445" x2="150" y2="446" stroke="#c8b89a" stroke-width="1"/>
+        <line x1="130" y1="449" x2="150" y2="449" stroke="#c8b89a" stroke-width="1"/>
+        <line x1="150" y1="446" x2="168" y2="443" stroke="#c8b89a" stroke-width="1"/>
+        <!-- Legs (tiny) -->
+        <rect x="182" y="465" width="8" height="12" rx="4" fill="#7a6a5a"/>
+        <rect x="196" y="465" width="8" height="12" rx="4" fill="#7a6a5a"/>
+        <rect x="160" y="463" width="8" height="11" rx="4" fill="#7a6a5a"/>
+        <rect x="172" y="463" width="8" height="11" rx="4" fill="#7a6a5a"/>
+      </g>
+
+      <!-- Narration box -->
+      <foreignObject x="0" y="440" width="960" height="100"/>
+    </svg>
+
+    <!-- ════ SCENE 2: Lion catches Rat ════ -->
+    <svg class="scene" id="scene-2" viewBox="0 40 960 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="s2sky" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#6ab4e0"/>
+          <stop offset="100%" stop-color="#a0d4f0"/>
+        </linearGradient>
+        <filter id="sh2"><feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#00000055"/></filter>
+      </defs>
+      <rect width="960" height="380" fill="url(#s2sky)"/>
+      <rect x="0" y="370" width="960" height="170" fill="#3a7a35"/>
+      <!-- Dense bushes background -->
+      <ellipse cx="100" cy="360" rx="80" ry="40" fill="#2d6628"/>
+      <ellipse cx="860" cy="355" rx="90" ry="45" fill="#2d6628"/>
+      <ellipse cx="480" cy="350" rx="160" ry="50" fill="#1e5220"/>
+      <!-- Trees -->
+      <g class="tree-sway" style="transform-origin:200px 300px">
+        <rect x="188" y="240" width="24" height="150" rx="8" fill="#5a3d1a"/>
+        <ellipse cx="200" cy="220" rx="60" ry="75" fill="#2d6628"/>
+        <ellipse cx="178" cy="242" rx="44" ry="58" fill="#3a7a35"/>
+      </g>
+      <g class="tree-sway" style="transform-origin:780px 280px;animation-delay:-3s">
+        <rect x="768" y="220" width="24" height="170" rx="8" fill="#5a3d1a"/>
+        <ellipse cx="780" cy="200" rx="65" ry="80" fill="#1e5220"/>
+        <ellipse cx="758" cy="228" rx="50" ry="62" fill="#2d6628"/>
+      </g>
+
+      <!-- RAT (left, trapped under paw) -->
+      <g id="s2rat" class="rat-tremble" filter="url(#sh2)" style="transform-origin:390px 450px">
+        <ellipse cx="395" cy="455" rx="22" ry="12" fill="#8a7a6a"/>
+        <ellipse cx="375" cy="448" rx="18" ry="14" fill="#9a8a7a"/>
+        <ellipse cx="364" cy="435" rx="8" ry="10" fill="#9a8a7a"/>
+        <ellipse cx="364" cy="435" rx="4" ry="6" fill="#d4a0a0"/>
+        <ellipse cx="382" cy="432" rx="8" ry="10" fill="#9a8a7a"/>
+        <ellipse cx="382" cy="432" rx="4" ry="6" fill="#d4a0a0"/>
+        <circle cx="364" cy="442" r="4" fill="#1a1a1a"/>
+        <circle cx="362" cy="440" r="1.5" fill="white"/>
+        <ellipse cx="357" cy="447" rx="3" ry="2" fill="#d4696a"/>
+        <line x1="340" y1="445" x2="356" y2="446" stroke="#c8b89a" stroke-width="1"/>
+        <line x1="340" y1="449" x2="356" y2="449" stroke="#c8b89a" stroke-width="1"/>
+        <path d="M417,458 Q435,450 442,442" stroke="#7a6a5a" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <!-- Fear sweat drops -->
+        <ellipse cx="350" cy="428" rx="3" ry="5" fill="#87ceeb" opacity="0.8"/>
+        <ellipse cx="395" cy="422" rx="2.5" ry="4" fill="#87ceeb" opacity="0.8"/>
+      </g>
+
+      <!-- LION (center, standing over rat, paw down) -->
+      <g id="s2lion" class="lion-roar" filter="url(#sh2)" style="transform-origin:550px 390px">
+        <!-- Body -->
+        <ellipse cx="560" cy="400" rx="130" ry="70" fill="#c8860a"/>
+        <ellipse cx="560" cy="388" rx="120" ry="62" fill="#d4980f"/>
+        <!-- Tail up -->
+        <path d="M690,405 Q730,370 740,340 Q748,315 738,305" stroke="#c8860a" stroke-width="14" fill="none" stroke-linecap="round"/>
+        <ellipse cx="736" cy="300" rx="16" ry="10" fill="#8b5e08"/>
+        <!-- Rear legs -->
+        <rect x="660" y="450" width="28" height="65" rx="12" fill="#b8760a"/>
+        <rect x="700" y="452" width="28" height="65" rx="12" fill="#b8760a"/>
+        <ellipse cx="674" cy="514" rx="18" ry="9" fill="#a06608"/>
+        <ellipse cx="714" cy="516" rx="18" ry="9" fill="#a06608"/>
+        <!-- Front legs - one raised/paw on rat -->
+        <rect x="440" y="435" width="28" height="45" rx="12" fill="#b8760a"/>
+        <!-- Paw on rat (pressing down) -->
+        <ellipse cx="454" cy="460" rx="30" ry="14" fill="#a06608"/>
+        <rect x="478" y="448" width="28" height="50" rx="12" fill="#b8760a"/>
+        <ellipse cx="492" cy="497" rx="18" ry="9" fill="#a06608"/>
+        <!-- Neck -->
+        <ellipse cx="452" cy="375" rx="42" ry="55" fill="#c8860a"/>
+        <!-- Mane (bigger, angry) -->
+        <ellipse cx="428" cy="338" rx="88" ry="85" fill="#6b3208"/>
+        <ellipse cx="428" cy="342" rx="74" ry="72" fill="#7a3c08"/>
+        <!-- Head (slightly tilted down, looking at rat) -->
+        <ellipse cx="425" cy="330" rx="66" ry="60" fill="#d4980f"/>
+        <!-- Ears -->
+        <ellipse cx="374" cy="280" rx="18" ry="22" fill="#c8860a"/>
+        <ellipse cx="374" cy="282" rx="10" ry="14" fill="#7a3c08"/>
+        <ellipse cx="474" cy="278" rx="18" ry="22" fill="#c8860a"/>
+        <ellipse cx="474" cy="280" rx="10" ry="14" fill="#7a3c08"/>
+        <!-- Eyes (angry, looking down) -->
+        <ellipse cx="404" cy="325" rx="14" ry="11" fill="#2d1a00"/>
+        <ellipse cx="446" cy="323" rx="14" ry="11" fill="#2d1a00"/>
+        <circle cx="408" cy="323" r="4" fill="white"/>
+        <circle cx="450" cy="321" r="4" fill="white"/>
+        <!-- Angry eyebrows -->
+        <path d="M390,312 Q404,305 418,312" stroke="#5a2a00" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M432,310 Q446,303 460,310" stroke="#5a2a00" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <!-- Open mouth (roaring) -->
+        <ellipse cx="425" cy="358" rx="22" ry="18" fill="#8b1a1a"/>
+        <ellipse cx="425" cy="358" rx="18" ry="14" fill="#c03030"/>
+        <!-- Teeth -->
+        <path d="M408,348 L412,358 L416,348" fill="white"/>
+        <path d="M434,348 L438,358 L442,348" fill="white"/>
+        <!-- Whiskers -->
+        <line x1="375" y1="348" x2="404" y2="352" stroke="#fffde7" stroke-width="1.5" opacity="0.8"/>
+        <line x1="375" y1="356" x2="404" y2="356" stroke="#fffde7" stroke-width="1.5" opacity="0.8"/>
+        <line x1="446" y1="352" x2="478" y2="348" stroke="#fffde7" stroke-width="1.5" opacity="0.8"/>
+        <line x1="446" y1="356" x2="478" y2="356" stroke="#fffde7" stroke-width="1.5" opacity="0.8"/>
+        <!-- Roar lines -->
+        <g stroke="#f4c430" stroke-width="2" opacity="0.7">
+          <line x1="360" y1="320" x2="330" y2="308"/>
+          <line x1="355" y1="330" x2="322" y2="322"/>
+          <line x1="355" y1="342" x2="320" y2="338"/>
+        </g>
+      </g>
+    </svg>
+
+    <!-- ════ SCENE 3: Rat pleads for freedom ════ -->
+    <svg class="scene" id="scene-3" viewBox="0 40 960 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="s3sky" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#7ab8d8"/>
+          <stop offset="100%" stop-color="#b0d8ee"/>
+        </linearGradient>
+        <filter id="sh3"><feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#00000055"/></filter>
+      </defs>
+      <rect width="960" height="380" fill="url(#s3sky)"/>
+      <rect x="0" y="370" width="960" height="170" fill="#3a7a35"/>
+
+      <!-- Background trees -->
+      <g class="tree-sway" style="transform-origin:120px 300px">
+        <rect x="108" y="250" width="24" height="140" rx="8" fill="#5a3d1a"/>
+        <ellipse cx="120" cy="232" rx="58" ry="72" fill="#2d6628"/>
+      </g>
+      <g class="tree-sway" style="transform-origin:840px 290px;animation-delay:-1s">
+        <rect x="828" y="240" width="24" height="150" rx="8" fill="#5a3d1a"/>
+        <ellipse cx="840" cy="222" rx="62" ry="78" fill="#1e5220"/>
+      </g>
+      <!-- Bushes -->
+      <ellipse cx="480" cy="380" rx="200" ry="40" fill="#2d6628" opacity="0.7"/>
+      <ellipse cx="80" cy="390" rx="90" ry="35" fill="#2d6628" opacity="0.8"/>
+      <ellipse cx="880" cy="385" rx="90" ry="35" fill="#2d6628" opacity="0.8"/>
+
+      <!-- RAT (center, standing brave, tiny) -->
+      <g id="s3rat" class="rat-brave" filter="url(#sh3)" style="transform-origin:380px 445px">
+        <!-- Body upright -->
+        <ellipse cx="380" cy="452" rx="18" ry="22" fill="#9a8a7a"/>
+        <!-- Tail -->
+        <path d="M398,462 Q420,455 428,448 Q436,440 430,434" stroke="#7a6a5a" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <!-- Head -->
+        <ellipse cx="376" cy="428" rx="20" ry="17" fill="#9a8a7a"/>
+        <!-- Ears -->
+        <ellipse cx="365" cy="415" rx="8" ry="10" fill="#9a8a7a"/>
+        <ellipse cx="365" cy="415" rx="4" ry="6" fill="#d4a0a0"/>
+        <ellipse cx="385" cy="413" rx="8" ry="10" fill="#9a8a7a"/>
+        <ellipse cx="385" cy="413" rx="4" ry="6" fill="#d4a0a0"/>
+        <!-- Bright hopeful eyes -->
+        <circle cx="368" cy="425" r="5" fill="#1a1a1a"/>
+        <circle cx="366" cy="423" r="2" fill="white"/>
+        <circle cx="374" cy="424" r="2" fill="#4a8c3f"/>
+        <!-- Nose -->
+        <ellipse cx="360" cy="431" rx="3.5" ry="2.5" fill="#d4696a"/>
+        <!-- Whiskers -->
+        <line x1="342" y1="429" x2="358" y2="430" stroke="#c8b89a" stroke-width="1"/>
+        <line x1="342" y1="433" x2="358" y2="433" stroke="#c8b89a" stroke-width="1"/>
+        <!-- Tiny arms raised/pleading -->
+        <path d="M365,450 Q350,438 345,428" stroke="#9a8a7a" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M395,450 Q408,438 410,428" stroke="#9a8a7a" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <!-- Legs -->
+        <rect x="370" y="470" width="8" height="14" rx="4" fill="#7a6a5a"/>
+        <rect x="384" y="470" width="8" height="14" rx="4" fill="#7a6a5a"/>
+      </g>
+
+      <!-- LION sitting, amused expression -->
+      <g id="s3lion" class="lion-breath" filter="url(#sh3)" style="transform-origin:600px 400px">
+        <ellipse cx="610" cy="420" rx="125" ry="68" fill="#c8860a"/>
+        <ellipse cx="610" cy="408" rx="115" ry="60" fill="#d4980f"/>
+        <path d="M735,425 Q770,400 780,378 Q788,358 778,348" stroke="#c8860a" stroke-width="14" fill="none" stroke-linecap="round"/>
+        <ellipse cx="776" cy="342" rx="16" ry="10" fill="#8b5e08"/>
+        <!-- Sitting legs -->
+        <rect x="555" y="462" width="28" height="58" rx="12" fill="#b8760a"/>
+        <rect x="595" y="464" width="28" height="58" rx="12" fill="#b8760a"/>
+        <rect x="638" y="462" width="28" height="58" rx="12" fill="#b8760a"/>
+        <rect x="678" y="464" width="28" height="58" rx="12" fill="#b8760a"/>
+        <ellipse cx="569" cy="519" rx="18" ry="9" fill="#a06608"/>
+        <ellipse cx="609" cy="521" rx="18" ry="9" fill="#a06608"/>
+        <ellipse cx="652" cy="519" rx="18" ry="9" fill="#a06608"/>
+        <ellipse cx="692" cy="521" rx="18" ry="9" fill="#a06608"/>
+        <!-- Neck -->
+        <ellipse cx="502" cy="385" rx="40" ry="52" fill="#c8860a"/>
+        <!-- Mane -->
+        <ellipse cx="480" cy="348" rx="84" ry="80" fill="#7a3c08"/>
+        <ellipse cx="480" cy="352" rx="70" ry="67" fill="#8b4a0a"/>
+        <!-- Head -->
+        <ellipse cx="478" cy="342" rx="64" ry="58" fill="#d4980f"/>
+        <!-- Ears -->
+        <ellipse cx="428" cy="292" rx="18" ry="22" fill="#c8860a"/>
+        <ellipse cx="428" cy="294" rx="10" ry="14" fill="#7a3c08"/>
+        <ellipse cx="526" cy="290" rx="18" ry="22" fill="#c8860a"/>
+        <ellipse cx="526" cy="292" rx="10" ry="14" fill="#7a3c08"/>
+        <!-- Amused eyes -->
+        <ellipse cx="458" cy="336" rx="14" ry="13" fill="#2d1a00"/>
+        <ellipse cx="498" cy="334" rx="14" ry="13" fill="#2d1a00"/>
+        <circle cx="462" cy="333" r="4" fill="white"/>
+        <circle cx="502" cy="331" r="4" fill="white"/>
+        <ellipse cx="458" cy="336" rx="7" ry="8" fill="#f0a020"/>
+        <ellipse cx="498" cy="334" rx="7" ry="8" fill="#f0a020"/>
+        <circle cx="458" cy="336" r="3.5" fill="#1a0a00"/>
+        <circle cx="498" cy="334" r="3.5" fill="#1a0a00"/>
+        <!-- Amused smile -->
+        <path d="M460,368 Q478,380 496,368" stroke="#8b4a0a" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <!-- Nose -->
+        <ellipse cx="478" cy="358" rx="14" ry="9" fill="#8b4a0a"/>
+        <ellipse cx="478" cy="357" rx="10" ry="7" fill="#d4696a"/>
+        <!-- Whiskers -->
+        <line x1="428" y1="356" x2="464" y2="360" stroke="#fffde7" stroke-width="1.5" opacity="0.8"/>
+        <line x1="428" y1="363" x2="464" y2="364" stroke="#fffde7" stroke-width="1.5" opacity="0.8"/>
+        <line x1="492" y1="360" x2="528" y2="356" stroke="#fffde7" stroke-width="1.5" opacity="0.8"/>
+        <line x1="492" y1="364" x2="528" y2="363" stroke="#fffde7" stroke-width="1.5" opacity="0.8"/>
+        <!-- Laugh lines -->
+        <path d="M440,345 Q434,338 438,332" stroke="#c8860a" stroke-width="2" fill="none" opacity="0.6"/>
+        <path d="M516,343 Q522,336 518,330" stroke="#c8860a" stroke-width="2" fill="none" opacity="0.6"/>
+      </g>
+      <!-- Sparkle of hope above rat -->
+      <g class="sparkle-star" style="animation-delay:-0.5s">
+        <text x="330" y="400" font-size="18" fill="#f4c430">✨</text>
+      </g>
+    </svg>
+
+    <!-- ════ SCENE 4: Lion Trapped in Rope Net ════ -->
+    <svg class="scene" id="scene-4" viewBox="0 40 960 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="s4sky" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#2c3e50"/>
+          <stop offset="60%" stop-color="#3d5a4a"/>
+          <stop offset="100%" stop-color="#1a3a1a"/>
+        </linearGradient>
+        <filter id="sh4"><feDropShadow dx="2" dy="4" stdDeviation="4" flood-color="#00000088"/></filter>
+        <filter id="redglow">
+          <feGaussianBlur stdDeviation="5" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- Ominous dark sky -->
+      <rect width="960" height="540" fill="url(#s4sky)"/>
+
+      <!-- Storm clouds -->
+      <g style="animation:cloudDrift 14s linear infinite alternate">
+        <ellipse cx="180" cy="75" rx="130" ry="48" fill="#1a1a2e" opacity="0.9"/>
+        <ellipse cx="240" cy="55" rx="100" ry="40" fill="#16213e" opacity="0.85"/>
+        <ellipse cx="120" cy="88" rx="80" ry="35" fill="#0f1923" opacity="0.8"/>
+      </g>
+      <g style="animation:cloudDrift 18s linear infinite alternate-reverse">
+        <ellipse cx="760" cy="65" rx="120" ry="45" fill="#1a1a2e" opacity="0.85"/>
+        <ellipse cx="820" cy="48" rx="95" ry="38" fill="#16213e" opacity="0.9"/>
+      </g>
+      <ellipse cx="480" cy="50" rx="160" ry="42" fill="#0f1923" opacity="0.75"/>
+
+      <!-- Moon (eerie light) -->
+      <circle cx="820" cy="90" r="35" fill="#fffde7" opacity="0.18"/>
+      <circle cx="820" cy="90" r="24" fill="#fffde7" opacity="0.25"/>
+
+      <!-- Ground -->
+      <rect x="0" y="355" width="960" height="200" fill="#1a3518"/>
+      <!-- Soil patches -->
+      <ellipse cx="480" cy="360" rx="240" ry="16" fill="#122a10" opacity="0.7"/>
+      <ellipse cx="200" cy="357" rx="140" ry="12" fill="#122a10" opacity="0.5"/>
+      <ellipse cx="760" cy="358" rx="150" ry="12" fill="#122a10" opacity="0.5"/>
+
+      <!-- Dense dark jungle trees (background) -->
+      <g class="tree-sway" style="transform-origin:78px 270px">
+        <rect x="66" y="185" width="24" height="185" rx="8" fill="#2a1608"/>
+        <ellipse cx="78" cy="165" rx="70" ry="88" fill="#0c2a0e"/>
+        <ellipse cx="54" cy="195" rx="54" ry="70" fill="#122810"/>
+        <ellipse cx="104" cy="190" rx="50" ry="66" fill="#163014"/>
+      </g>
+      <g class="tree-sway" style="transform-origin:882px 265px;animation-delay:-2.5s">
+        <rect x="870" y="178" width="24" height="192" rx="8" fill="#2a1608"/>
+        <ellipse cx="882" cy="158" rx="72" ry="90" fill="#0c2a0e"/>
+        <ellipse cx="856" cy="188" rx="56" ry="72" fill="#122810"/>
+        <ellipse cx="908" cy="183" rx="52" ry="68" fill="#163014"/>
+      </g>
+      <!-- Mid trees -->
+      <g class="tree-sway" style="transform-origin:195px 295px;animation-delay:-1s">
+        <rect x="184" y="238" width="18" height="138" rx="6" fill="#2a1608"/>
+        <ellipse cx="193" cy="222" rx="50" ry="63" fill="#102410"/>
+      </g>
+      <g class="tree-sway" style="transform-origin:768px 290px;animation-delay:-3.5s">
+        <rect x="757" y="232" width="18" height="144" rx="6" fill="#2a1608"/>
+        <ellipse cx="766" cy="215" rx="52" ry="65" fill="#0c2a0e"/>
+      </g>
+      <!-- Hanging vines -->
+      <path d="M72,210 Q60,260 66,320" stroke="#2a5018" stroke-width="3" fill="none" opacity="0.6"/>
+      <path d="M94,192 Q106,252 100,315" stroke="#2a5018" stroke-width="2.5" fill="none" opacity="0.5"/>
+      <path d="M870,200 Q882,255 876,318" stroke="#2a5018" stroke-width="3" fill="none" opacity="0.6"/>
+      <!-- Ferns -->
+      <g fill="#1e4a18" opacity="0.85">
+        <ellipse cx="148" cy="360" rx="72" ry="24"/>
+        <ellipse cx="816" cy="358" rx="76" ry="26"/>
+        <ellipse cx="310" cy="362" rx="55" ry="18"/>
+        <ellipse cx="650" cy="360" rx="60" ry="20"/>
+      </g>
+
+      <!-- ══════════════════════════════════
+           HUNTER'S ROPE NET TRAP
+           Heavy knotted rope net dropped
+           from a tree, lion fully tangled
+           ══════════════════════════════════ -->
+
+      <!-- Tree branch the net hangs from -->
+      <path d="M250,100 Q380,80 480,95 Q560,105 580,88" stroke="#4a2e10" stroke-width="16" fill="none" stroke-linecap="round"/>
+      <path d="M250,100 Q380,80 480,95 Q560,105 580,88" stroke="#5a3d1a" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.6"/>
+      <!-- Branch connect to tree -->
+      <line x1="220" y1="95" x2="68" y2="140" stroke="#4a2e10" stroke-width="12" stroke-linecap="round"/>
+      <!-- Rope from branch to net -->
+      <line x1="330" y1="90" x2="330" y2="175" stroke="#8b6914" stroke-width="5" opacity="0.9"/>
+      <line x1="480" y1="95" x2="480" y2="168" stroke="#8b6914" stroke-width="5" opacity="0.9"/>
+      <line x1="590" y1="92" x2="590" y2="178" stroke="#8b6914" stroke-width="5" opacity="0.9"/>
+      <!-- Gather knot at top of net -->
+      <ellipse cx="330" cy="178" rx="10" ry="8" fill="#7a5010"/>
+      <ellipse cx="480" cy="170" rx="12" ry="9" fill="#7a5010"/>
+      <ellipse cx="590" cy="180" rx="10" ry="8" fill="#7a5010"/>
+
+      <!-- THE ROPE NET - draped over lion, heavy knotted rope -->
+      <!-- Net drawn as overlapping curved rope lines + knots -->
+      <!-- Diagonal lines going left-down (net draped over body shape) -->
+      <g stroke="#c8a050" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.95">
+        <!-- Left-leaning ropes (\ direction) -->
+        <path d="M290,178 Q320,240 340,310 Q355,360 360,400"/>
+        <path d="M330,174 Q365,240 390,310 Q410,365 415,405"/>
+        <path d="M375,170 Q415,238 445,308 Q465,362 468,402"/>
+        <path d="M420,168 Q462,236 492,305 Q512,360 514,400"/>
+        <path d="M465,168 Q505,234 530,302 Q548,358 548,400"/>
+        <path d="M510,170 Q545,234 562,300 Q574,356 572,400"/>
+        <path d="M555,172 Q582,234 590,298 Q594,354 590,400"/>
+        <path d="M600,175 Q618,232 618,295 Q616,350 610,398"/>
+        <path d="M642,180 Q650,235 644,298 Q636,352 624,400"/>
+        <path d="M678,186 Q678,238 665,300 Q650,354 636,402"/>
+        <!-- Right-leaning ropes (/ direction) -->
+        <path d="M290,300 Q340,270 400,250 Q460,234 510,225 Q570,218 620,222 Q665,228 690,240"/>
+        <path d="M295,340 Q348,308 410,288 Q475,270 530,264 Q588,258 638,264 Q676,270 695,282"/>
+        <path d="M302,375 Q358,344 422,324 Q488,306 545,300 Q605,296 652,302 Q685,308 700,320"/>
+        <path d="M308,400 Q365,375 432,356 Q500,340 558,336 Q616,333 660,340 Q690,346 704,356"/>
+        <!-- Outer boundary ropes (top arc, sides) -->
+        <path d="M288,175 Q295,120 335,100 Q390,82 480,88 Q575,94 632,110 Q668,126 672,165"/>
+        <path d="M286,178 Q282,240 285,310 Q288,360 295,400"/>
+        <path d="M672,168 Q680,228 684,295 Q686,348 682,400"/>
+      </g>
+
+      <!-- ROPE KNOTS at intersections (circles at grid points) -->
+      <g fill="#9a7030" stroke="#6a4818" stroke-width="1.5">
+        <!-- Row 1 knots -->
+        <circle cx="335" cy="240" r="7"/><circle cx="392" cy="236" r="7"/><circle cx="448" cy="232" r="7"/>
+        <circle cx="505" cy="228" r="7"/><circle cx="562" cy="224" r="7"/><circle cx="616" cy="226" r="7"/>
+        <circle cx="664" cy="232" r="7"/>
+        <!-- Row 2 knots -->
+        <circle cx="328" cy="282" r="7"/><circle cx="386" cy="275" r="7"/><circle cx="444" cy="270" r="7"/>
+        <circle cx="502" cy="267" r="7"/><circle cx="558" cy="264" r="7"/><circle cx="612" cy="268" r="7"/>
+        <circle cx="660" cy="275" r="7"/>
+        <!-- Row 3 knots -->
+        <circle cx="322" cy="322" r="7"/><circle cx="380" cy="315" r="7"/><circle cx="438" cy="308" r="7"/>
+        <circle cx="496" cy="305" r="7"/><circle cx="554" cy="303" r="7"/><circle cx="606" cy="308" r="7"/>
+        <circle cx="653" cy="316" r="7"/>
+        <!-- Row 4 knots -->
+        <circle cx="318" cy="360" r="7"/><circle cx="376" cy="352" r="7"/><circle cx="434" cy="346" r="7"/>
+        <circle cx="492" cy="343" r="7"/><circle cx="549" cy="342" r="7"/><circle cx="601" cy="347" r="7"/>
+        <circle cx="647" cy="356" r="7"/>
+        <!-- Row 5 knots (near ground) -->
+        <circle cx="315" cy="396" r="7"/><circle cx="373" cy="390" r="7"/><circle cx="430" cy="385" r="7"/>
+        <circle cx="487" cy="382" r="7"/><circle cx="544" cy="382" r="7"/><circle cx="596" cy="387" r="7"/>
+        <circle cx="642" cy="395" r="7"/>
+      </g>
+
+      <!-- Stakes in ground anchoring the net -->
+      <rect x="290" y="395" width="12" height="55" rx="4" fill="#5a3d1a" stroke="#3a2408" stroke-width="1"/>
+      <rect x="678" y="398" width="12" height="52" rx="4" fill="#5a3d1a" stroke="#3a2408" stroke-width="1"/>
+      <!-- Ropes from net bottom to stakes -->
+      <line x1="296" y1="400" x2="296" y2="448" stroke="#8b6914" stroke-width="4" opacity="0.9"/>
+      <line x1="684" y1="403" x2="684" y2="448" stroke="#8b6914" stroke-width="4" opacity="0.9"/>
+      <!-- Stakes wedged in ground -->
+      <polygon points="290,445 302,445 296,460" fill="#3a2408"/>
+      <polygon points="678,448 690,448 684,462" fill="#3a2408"/>
+
+      <!-- ══ TRAPPED LION inside net ══ -->
+      <!-- Lion drawn BEHIND the net ropes but visible through gaps -->
+      <g id="s4lion" class="lion-shake" filter="url(#sh4)" style="transform-origin:490px 340px">
+        <!-- Shadow -->
+        <ellipse cx="490" cy="400" rx="140" ry="20" fill="#000" opacity="0.35"/>
+        <!-- Body -->
+        <ellipse cx="490" cy="360" rx="135" ry="70" fill="#c8860a"/>
+        <ellipse cx="490" cy="348" rx="122" ry="62" fill="#d4980f"/>
+        <!-- Legs compressed against ground -->
+        <rect x="418" y="402" width="26" height="38" rx="11" fill="#b8760a"/>
+        <rect x="455" y="404" width="26" height="36" rx="11" fill="#b8760a"/>
+        <rect x="498" y="402" width="26" height="38" rx="11" fill="#b8760a"/>
+        <rect x="535" y="404" width="26" height="36" rx="11" fill="#b8760a"/>
+        <!-- Paws at ground -->
+        <ellipse cx="431" cy="439" rx="18" ry="9" fill="#a06608"/>
+        <ellipse cx="468" cy="440" rx="18" ry="9" fill="#a06608"/>
+        <ellipse cx="511" cy="439" rx="18" ry="9" fill="#a06608"/>
+        <ellipse cx="548" cy="440" rx="18" ry="9" fill="#a06608"/>
+        <!-- Tail thrashing sideways against net -->
+        <path d="M622,368 Q665,340 678,315 Q690,292 680,280" stroke="#c8860a" stroke-width="13" fill="none" stroke-linecap="round"/>
+        <ellipse cx="678" cy="275" rx="15" ry="9" fill="#8b5e08"/>
+        <!-- Neck -->
+        <ellipse cx="375" cy="332" rx="40" ry="52" fill="#c8860a"/>
+        <!-- Mane (big, tangled in net) -->
+        <ellipse cx="346" cy="292" rx="88" ry="85" fill="#5a2808"/>
+        <ellipse cx="346" cy="296" rx="74" ry="72" fill="#7a3c08"/>
+        <!-- Head raised up trying to escape -->
+        <ellipse cx="342" cy="284" rx="65" ry="60" fill="#d4980f"/>
+        <!-- Ears flat (distress) -->
+        <ellipse cx="292" cy="238" rx="18" ry="22" fill="#c8860a" transform="rotate(10,292,238)"/>
+        <ellipse cx="290" cy="240" rx="10" ry="14" fill="#7a3c08" transform="rotate(10,290,240)"/>
+        <ellipse cx="390" cy="234" rx="18" ry="22" fill="#c8860a" transform="rotate(-8,390,234)"/>
+        <ellipse cx="390" cy="236" rx="10" ry="14" fill="#7a3c08" transform="rotate(-8,390,236)"/>
+        <!-- Wide terrified eyes -->
+        <ellipse cx="318" cy="278" rx="16" ry="17" fill="white" stroke="#c8860a" stroke-width="1.5"/>
+        <ellipse cx="362" cy="274" rx="16" ry="17" fill="white" stroke="#c8860a" stroke-width="1.5"/>
+        <circle cx="321" cy="280" r="9" fill="#1a0800"/>
+        <circle cx="365" cy="276" r="9" fill="#1a0800"/>
+        <circle cx="324" cy="277" r="3.5" fill="white"/>
+        <circle cx="368" cy="273" r="3.5" fill="white"/>
+        <!-- Furrowed brows (fear/anger) -->
+        <path d="M301,263 Q318,254 334,263" stroke="#5a2800" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M348,259 Q364,250 380,259" stroke="#5a2800" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <!-- Roaring mouth wide open -->
+        <ellipse cx="340" cy="308" rx="24" ry="20" fill="#6b0000"/>
+        <ellipse cx="340" cy="305" rx="20" ry="16" fill="#c01818"/>
+        <!-- Teeth -->
+        <path d="M323,296 L328,310 L334,296" fill="#fffde7"/>
+        <path d="M346,296 L352,310 L358,296" fill="#fffde7"/>
+        <!-- Tongue -->
+        <ellipse cx="340" cy="315" rx="12" ry="7" fill="#e04040"/>
+        <!-- Whiskers -->
+        <line x1="285" y1="298" x2="318" y2="302" stroke="#fffde7" stroke-width="1.5" opacity="0.9"/>
+        <line x1="285" y1="306" x2="318" y2="308" stroke="#fffde7" stroke-width="1.5" opacity="0.9"/>
+        <line x1="362" y1="302" x2="396" y2="298" stroke="#fffde7" stroke-width="1.5" opacity="0.9"/>
+        <line x1="362" y1="308" x2="396" y2="306" stroke="#fffde7" stroke-width="1.5" opacity="0.9"/>
+        <!-- Sweat drops distress -->
+        <ellipse cx="272" cy="255" rx="4" ry="7" fill="#87ceeb" opacity="0.9" transform="rotate(-12,272,255)"/>
+        <ellipse cx="410" cy="248" rx="4" ry="7" fill="#87ceeb" opacity="0.9" transform="rotate(12,410,248)"/>
+        <ellipse cx="280" cy="240" rx="3" ry="5" fill="#87ceeb" opacity="0.7"/>
+      </g>
+
+      <!-- Net ropes drawn ON TOP of lion (overlay layer) so lion looks trapped INSIDE -->
+      <g stroke="#c8a050" stroke-width="3.5" fill="none" stroke-linecap="round" opacity="0.88">
+        <path d="M290,300 Q340,270 400,250 Q460,234 510,225 Q570,218 620,222 Q665,228 690,240"/>
+        <path d="M295,340 Q348,308 410,288 Q475,270 530,264 Q588,258 638,264 Q676,270 695,282"/>
+        <path d="M302,375 Q358,344 422,324 Q488,306 545,300 Q605,296 652,302 Q685,308 700,320"/>
+        <path d="M375,170 Q415,238 445,308 Q465,362 468,402"/>
+        <path d="M420,168 Q462,236 492,305 Q512,360 514,400"/>
+        <path d="M510,170 Q545,234 562,300 Q574,356 572,400"/>
+        <path d="M555,172 Q582,234 590,298 Q594,354 590,400"/>
+      </g>
+      <!-- Overlay knots on top of lion -->
+      <g fill="#9a7030" stroke="#6a4818" stroke-width="1.5">
+        <circle cx="444" cy="270" r="6.5"/><circle cx="502" cy="267" r="6.5"/><circle cx="558" cy="264" r="6.5"/>
+        <circle cx="438" cy="308" r="6.5"/><circle cx="496" cy="305" r="6.5"/><circle cx="554" cy="303" r="6.5"/>
+        <circle cx="434" cy="346" r="6.5"/><circle cx="492" cy="343" r="6.5"/><circle cx="549" cy="342" r="6.5"/>
+      </g>
+
+      <!-- Danger / distress marks -->
+      <g class="sparkle-star" style="animation-delay:0s">
+        <text x="222" y="215" font-size="32" fill="#ff2200" font-weight="bold" opacity="0.95">!</text>
+      </g>
+      <g class="sparkle-star" style="animation-delay:-0.8s">
+        <text x="700" y="225" font-size="28" fill="#ff3300" opacity="0.85">!</text>
+      </g>
+    </svg>
+
+    <!-- ════ SCENE 5: Rat Cuts the Net ════ -->
+    <svg class="scene" id="scene-5" viewBox="0 40 960 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="s5sky" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#2e4a3a"/>
+          <stop offset="60%" stop-color="#3d6050"/>
+          <stop offset="100%" stop-color="#1a3a20"/>
+        </linearGradient>
+        <filter id="sh5"><feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#00000066"/></filter>
+        <filter id="nibbleGlow">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- Sky (slightly lighter - dawn breaking) -->
+      <rect width="960" height="540" fill="url(#s5sky)"/>
+      <!-- Hint of dawn light on horizon -->
+      <ellipse cx="480" cy="355" rx="300" ry="40" fill="#f4c430" opacity="0.08"/>
+
+      <!-- Clouds -->
+      <g style="animation:cloudDrift 16s linear infinite alternate">
+        <ellipse cx="200" cy="80" rx="110" ry="40" fill="#1a2a22" opacity="0.8"/>
+        <ellipse cx="260" cy="62" rx="85" ry="33" fill="#1e3028" opacity="0.75"/>
+      </g>
+      <g style="animation:cloudDrift 20s linear infinite alternate-reverse">
+        <ellipse cx="740" cy="70" rx="105" ry="38" fill="#1a2a22" opacity="0.75"/>
+        <ellipse cx="800" cy="52" rx="80" ry="32" fill="#1e3028" opacity="0.8"/>
+      </g>
+
+      <!-- Ground -->
+      <rect x="0" y="355" width="960" height="200" fill="#1e4020"/>
+      <ellipse cx="480" cy="360" rx="260" ry="18" fill="#163015" opacity="0.7"/>
+
+      <!-- Trees background -->
+      <g class="tree-sway" style="transform-origin:78px 270px">
+        <rect x="66" y="185" width="24" height="185" rx="8" fill="#2a1608"/>
+        <ellipse cx="78" cy="165" rx="70" ry="88" fill="#0c2a0e"/>
+        <ellipse cx="54" cy="195" rx="54" ry="70" fill="#1a3a18"/>
+      </g>
+      <g class="tree-sway" style="transform-origin:882px 265px;animation-delay:-2s">
+        <rect x="870" y="178" width="24" height="192" rx="8" fill="#2a1608"/>
+        <ellipse cx="882" cy="158" rx="72" ry="90" fill="#0c2a0e"/>
+        <ellipse cx="908" cy="183" rx="52" ry="68" fill="#1a3a18"/>
+      </g>
+      <!-- Ferns -->
+      <g fill="#1e4a18" opacity="0.85">
+        <ellipse cx="148" cy="360" rx="72" ry="24"/>
+        <ellipse cx="816" cy="358" rx="76" ry="26"/>
+        <ellipse cx="300" cy="362" rx="55" ry="18"/>
+        <ellipse cx="650" cy="360" rx="60" ry="20"/>
+      </g>
+
+      <!-- Tree branch (same as scene 4) -->
+      <path d="M250,100 Q380,80 480,95 Q560,105 580,88" stroke="#4a2e10" stroke-width="16" fill="none" stroke-linecap="round"/>
+      <path d="M250,100 Q380,80 480,95 Q560,105 580,88" stroke="#5a3d1a" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.6"/>
+      <line x1="220" y1="95" x2="68" y2="140" stroke="#4a2e10" stroke-width="12" stroke-linecap="round"/>
+      <!-- Ropes from branch (some CUT - broken dangling ends) -->
+      <line x1="330" y1="90" x2="330" y2="170" stroke="#8b6914" stroke-width="5" opacity="0.9"/>
+      <!-- CUT rope end dangling loose left side -->
+      <path d="M330,170 Q322,188 318,202" stroke="#8b6914" stroke-width="4" fill="none" stroke-dasharray="5,4" opacity="0.7"/>
+      <line x1="480" y1="95" x2="480" y2="168" stroke="#8b6914" stroke-width="5" opacity="0.9"/>
+      <line x1="590" y1="92" x2="590" y2="178" stroke="#8b6914" stroke-width="5" opacity="0.9"/>
+
+      <!-- Stakes still in ground -->
+      <rect x="290" y="390" width="12" height="55" rx="4" fill="#5a3d1a"/>
+      <rect x="678" y="393" width="12" height="52" rx="4" fill="#5a3d1a"/>
+      <!-- Left stake rope mostly CUT, frayed -->
+      <path d="M296,394 Q288,406 282,420 Q276,434 280,448" stroke="#8b6914" stroke-width="3" fill="none" stroke-dasharray="5,4" opacity="0.6"/>
+      <line x1="684" y1="398" x2="684" y2="445" stroke="#8b6914" stroke-width="4" opacity="0.8"/>
+      <polygon points="678,440 690,440 684,455" fill="#3a2408"/>
+
+      <!-- ══ LION (partially freed - left side of net opening) ══ -->
+      <g id="s5lion" class="lion-breath" filter="url(#sh5)" style="transform-origin:490px 335px">
+        <ellipse cx="490" cy="355" rx="132" ry="68" fill="#c8860a"/>
+        <ellipse cx="490" cy="344" rx="120" ry="60" fill="#d4980f"/>
+        <!-- Legs -->
+        <rect x="418" y="396" width="26" height="38" rx="11" fill="#b8760a"/>
+        <rect x="455" y="398" width="26" height="36" rx="11" fill="#b8760a"/>
+        <rect x="498" y="396" width="26" height="38" rx="11" fill="#b8760a"/>
+        <rect x="535" y="398" width="26" height="36" rx="11" fill="#b8760a"/>
+        <ellipse cx="431" cy="433" rx="18" ry="9" fill="#a06608"/>
+        <ellipse cx="468" cy="435" rx="18" ry="9" fill="#a06608"/>
+        <ellipse cx="511" cy="433" rx="18" ry="9" fill="#a06608"/>
+        <ellipse cx="548" cy="435" rx="18" ry="9" fill="#a06608"/>
+        <!-- Tail still tangled in net (right) -->
+        <path d="M620,362 Q658,338 668,312 Q676,290 665,278" stroke="#c8860a" stroke-width="12" fill="none" stroke-linecap="round"/>
+        <ellipse cx="664" cy="274" rx="14" ry="8" fill="#8b5e08"/>
+        <!-- Neck -->
+        <ellipse cx="375" cy="326" rx="40" ry="50" fill="#c8860a"/>
+        <!-- Mane -->
+        <ellipse cx="346" cy="288" rx="86" ry="82" fill="#7a3c08"/>
+        <ellipse cx="346" cy="292" rx="72" ry="70" fill="#8b4a0a"/>
+        <!-- Head - watching rat with hope/gratitude -->
+        <ellipse cx="342" cy="280" rx="63" ry="58" fill="#d4980f"/>
+        <!-- Ears -->
+        <ellipse cx="292" cy="234" rx="18" ry="22" fill="#c8860a"/>
+        <ellipse cx="292" cy="236" rx="10" ry="14" fill="#7a3c08"/>
+        <ellipse cx="390" cy="230" rx="18" ry="22" fill="#c8860a"/>
+        <ellipse cx="390" cy="232" rx="10" ry="14" fill="#7a3c08"/>
+        <!-- Hopeful eyes (looking at rat) -->
+        <ellipse cx="316" cy="274" rx="13" ry="14" fill="#2d1a00"/>
+        <ellipse cx="358" cy="270" rx="13" ry="14" fill="#2d1a00"/>
+        <circle cx="320" cy="272" r="4" fill="white"/>
+        <circle cx="362" cy="268" r="4" fill="white"/>
+        <ellipse cx="316" cy="274" rx="7" ry="8" fill="#f0a020"/>
+        <ellipse cx="358" cy="270" rx="7" ry="8" fill="#f0a020"/>
+        <circle cx="316" cy="274" r="3.5" fill="#1a0800"/>
+        <circle cx="358" cy="270" r="3.5" fill="#1a0800"/>
+        <!-- Gentle expression -->
+        <path d="M322,300 Q342,312 362,300" stroke="#8b4a0a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="342" cy="290" rx="13" ry="8" fill="#8b4a0a"/>
+        <ellipse cx="342" cy="289" rx="9" ry="6" fill="#d4696a"/>
+        <!-- Whiskers -->
+        <line x1="284" y1="288" x2="318" y2="292" stroke="#fffde7" stroke-width="1.5" opacity="0.8"/>
+        <line x1="284" y1="295" x2="318" y2="296" stroke="#fffde7" stroke-width="1.5" opacity="0.8"/>
+        <line x1="366" y1="292" x2="402" y2="288" stroke="#fffde7" stroke-width="1.5" opacity="0.8"/>
+        <line x1="366" y1="296" x2="402" y2="295" stroke="#fffde7" stroke-width="1.5" opacity="0.8"/>
+        <!-- Net marks still on body (partial) -->
+        <g stroke="#c8a050" stroke-width="2" opacity="0.4" fill="none">
+          <path d="M540,330 Q580,320 620,328"/>
+          <path d="M545,355 Q585,345 622,354"/>
+          <line x1="560" y1="318" x2="558" y2="368"/>
+          <line x1="595" y1="316" x2="592" y2="366"/>
+        </g>
+      </g>
+
+      <!-- PARTIALLY CUT NET (left opening where rat is working) -->
+      <!-- Intact right portion of net -->
+      <g stroke="#c8a050" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.92">
+        <!-- Right intact section ropes - diagonal -->
+        <path d="M520,170 Q548,232 558,295 Q564,348 560,395"/>
+        <path d="M558,173 Q582,232 584,294 Q585,348 578,395"/>
+        <path d="M596,177 Q612,232 608,292 Q600,346 590,393"/>
+        <path d="M634,184 Q642,236 630,295 Q616,348 598,392"/>
+        <path d="M668,192 Q668,242 648,298 Q628,352 606,394"/>
+        <!-- Right intact horizontals -->
+        <path d="M518,230 Q570,222 625,224 Q662,228 682,238"/>
+        <path d="M524,272 Q576,264 632,267 Q670,272 688,282"/>
+        <path d="M528,312 Q582,304 638,308 Q676,314 692,326"/>
+        <path d="M530,350 Q586,344 640,348 Q676,355 690,366"/>
+        <path d="M530,390 Q588,384 640,388 Q675,395 688,405"/>
+        <!-- Right boundary -->
+        <path d="M674,188 Q682,245 686,308 Q688,355 682,398"/>
+      </g>
+      <!-- Intact knots (right side) -->
+      <g fill="#9a7030" stroke="#6a4818" stroke-width="1.5">
+        <circle cx="556" cy="228" r="7"/><circle cx="610" cy="226" r="7"/><circle cx="658" cy="232" r="7"/>
+        <circle cx="548" cy="268" r="7"/><circle cx="604" cy="270" r="7"/><circle cx="652" cy="276" r="7"/>
+        <circle cx="540" cy="308" r="7"/><circle cx="596" cy="310" r="7"/><circle cx="644" cy="318" r="7"/>
+        <circle cx="534" cy="346" r="7"/><circle cx="588" cy="350" r="7"/><circle cx="635" cy="358" r="7"/>
+        <circle cx="530" cy="384" r="7"/><circle cx="583" cy="388" r="7"/><circle cx="628" cy="397" r="7"/>
+      </g>
+
+      <!-- CUT/FRAYED LEFT SECTION (dangling cut ropes) -->
+      <g stroke="#a07828" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7">
+        <!-- Frayed cut ends dangling down-left -->
+        <path d="M330,172 Q315,210 308,260 Q304,295 308,330" stroke-dasharray="6,5"/>
+        <path d="M375,170 Q358,208 352,256 Q350,290 356,324" stroke-dasharray="6,5"/>
+        <path d="M418,169 Q402,206 398,252 Q398,285 406,316" stroke-dasharray="5,4"/>
+        <path d="M460,168 Q448,204 448,248 Q452,280 462,308" stroke-dasharray="5,4"/>
+        <path d="M500,169 Q492,204 496,246 Q504,278 514,304" stroke-dasharray="5,4"/>
+        <!-- Cut horizontal ropes ends -->
+        <path d="M294,238 Q315,234 340,238 Q360,240 374,245" stroke-dasharray="6,5"/>
+        <path d="M296,278 Q318,272 344,276 Q366,278 380,284" stroke-dasharray="5,4"/>
+        <path d="M298,318 Q322,312 348,316 Q372,318 386,325" stroke-dasharray="5,4"/>
+        <path d="M300,356 Q325,350 352,354 Q378,356 393,362" stroke-dasharray="5,4"/>
+      </g>
+      <!-- Severed rope ends (short frayed stubs where rat cut) -->
+      <g stroke="#8a6018" stroke-width="2.5" opacity="0.8">
+        <!-- Cut point zone - around x=505-525, y=260-300 where rat is working -->
+        <line x1="508" y1="262" x2="496" y2="255"/><line x1="510" y1="263" x2="502" y2="252"/>
+        <line x1="512" y1="264" x2="518" y2="252"/><line x1="514" y1="266" x2="522" y2="256"/>
+        <line x1="506" y1="285" x2="494" y2="278"/><line x1="508" y1="286" x2="500" y2="275"/>
+        <line x1="510" y1="288" x2="516" y2="276"/><line x1="512" y1="290" x2="520" y2="280"/>
+      </g>
+
+      <!-- ══ RAT actively gnawing the net rope ══ -->
+      <!-- Rat positioned at the KEY cut point, clearly biting a rope -->
+      <g id="s5rat" class="rat-nibble" filter="url(#sh5)" style="transform-origin:508px 278px">
+        <!-- Body -->
+        <ellipse cx="510" cy="285" rx="26" ry="17" fill="#9a8a7a"/>
+        <ellipse cx="510" cy="282" rx="23" ry="15" fill="#aaa090"/>
+        <!-- Tail curling back -->
+        <path d="M536,288 Q556,278 564,268 Q570,258 562,252" stroke="#7a6a5a" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <!-- Head (pushed forward into net, biting) -->
+        <ellipse cx="486" cy="276" rx="24" ry="20" fill="#aaa090"/>
+        <!-- Ears -->
+        <ellipse cx="476" cy="261" rx="10" ry="12" fill="#9a8a7a"/>
+        <ellipse cx="476" cy="261" rx="6" ry="8" fill="#d4a0a0"/>
+        <ellipse cx="494" cy="258" rx="10" ry="12" fill="#9a8a7a"/>
+        <ellipse cx="494" cy="258" rx="6" ry="8" fill="#d4a0a0"/>
+        <!-- Determined focused eyes -->
+        <circle cx="476" cy="273" r="6" fill="#1a1a1a"/>
+        <circle cx="474" cy="271" r="2.5" fill="white"/>
+        <circle cx="480" cy="272" r="2" fill="#22c55e" opacity="0.8"/>
+        <!-- Nose pressed against rope -->
+        <ellipse cx="464" cy="280" rx="5" ry="4" fill="#d4696a"/>
+        <!-- MOUTH OPEN BITING ROPE -->
+        <path d="M460,277 L468,285" stroke="#8a6a5a" stroke-width="2.5" fill="none"/>
+        <path d="M460,283 L468,277" stroke="#8a6a5a" stroke-width="2.5" fill="none"/>
+        <!-- THE ROPE being bitten - clearly passing through rat's mouth -->
+        <path d="M440,280 Q460,279 468,281 Q476,283 488,282 Q500,281 520,275" stroke="#c8a050" stroke-width="5" fill="none" opacity="0.85"/>
+        <!-- BREAK point in rope right at mouth -->
+        <circle cx="468" cy="280" r="4" fill="#ff8c00" filter="url(#nibbleGlow)"/>
+        <!-- Tiny teeth visible -->
+        <rect x="462" y="276" width="5" height="4" rx="1" fill="#fffde7" opacity="0.9"/>
+        <rect x="462" y="282" width="5" height="4" rx="1" fill="#fffde7" opacity="0.9"/>
+        <!-- Whiskers (pressed forward) -->
+        <line x1="445" y1="278" x2="463" y2="279" stroke="#c8b89a" stroke-width="1.5"/>
+        <line x1="445" y1="283" x2="463" y2="283" stroke="#c8b89a" stroke-width="1.5"/>
+        <line x1="463" y1="279" x2="480" y2="276" stroke="#c8b89a" stroke-width="1"/>
+        <!-- Front paws gripping net -->
+        <circle cx="455" cy="292" r="7" fill="#9a8a7a"/>
+        <circle cx="470" cy="295" r="7" fill="#9a8a7a"/>
+        <!-- Tiny claws gripping rope -->
+        <line x1="452" y1="286" x2="448" y2="280" stroke="#7a6a5a" stroke-width="1.5"/>
+        <line x1="455" y1="285" x2="452" y2="278" stroke="#7a6a5a" stroke-width="1.5"/>
+        <line x1="458" y1="285" x2="456" y2="278" stroke="#7a6a5a" stroke-width="1.5"/>
+        <!-- Back legs on net -->
+        <rect x="515" y="292" width="10" height="16" rx="5" fill="#8a7a6a"/>
+        <rect x="528" y="292" width="10" height="16" rx="5" fill="#8a7a6a"/>
+      </g>
+
+      <!-- SPARKS / ROPE FIBERS flying where rat bites -->
+      <g filter="url(#nibbleGlow)">
+        <g class="sparkle-star" style="animation-delay:0s">
+          <circle cx="460" cy="272" r="3" fill="#f4c430"/>
+          <circle cx="453" cy="268" r="2" fill="#ff8c00"/>
+          <circle cx="468" cy="266" r="2.5" fill="#f4c430"/>
+        </g>
+        <g class="sparkle-star" style="animation-delay:-0.4s">
+          <circle cx="445" cy="275" r="2" fill="#ffcc44"/>
+          <circle cx="472" cy="270" r="2" fill="#ff9900"/>
+          <circle cx="458" cy="262" r="2" fill="#f4c430"/>
+        </g>
+      </g>
+      <!-- Rope fiber fragments flying -->
+      <g stroke="#c8a050" stroke-width="1.5" opacity="0.7">
+        <line x1="456" y1="270" x2="448" y2="264"/>
+        <line x1="462" y1="268" x2="458" y2="260"/>
+        <line x1="468" y1="266" x2="466" y2="258"/>
+        <line x1="474" y1="268" x2="478" y2="260"/>
+        <line x1="458" y1="272" x2="446" y2="270"/>
+      </g>
+
+      <!-- Encouraging sparkles (dawn of hope) -->
+      <g class="sparkle-star" style="animation-delay:-1s">
+        <text x="740" y="160" font-size="20" fill="#f4c430" opacity="0.7">✨</text>
+      </g>
+      <g class="sparkle-star" style="animation-delay:-0.5s">
+        <text x="200" y="180" font-size="16" fill="#f4c430" opacity="0.6">✦</text>
+      </g>
+    </svg>
+
+
+    <!-- ════ SCENE 6: Freedom & Gratitude ════ -->
+    <svg class="scene" id="scene-6" viewBox="0 40 960 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="s6sky" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#ff8c42"/>
+          <stop offset="40%" stop-color="#ffb347"/>
+          <stop offset="100%" stop-color="#ffe0a3"/>
+        </linearGradient>
+        <filter id="sh6"><feDropShadow dx="2" dy="4" stdDeviation="4" flood-color="#00000044"/></filter>
+        <radialGradient id="goldenGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#f4c430" stop-opacity="0.3"/>
+          <stop offset="100%" stop-color="#f4c430" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <!-- Sunset sky -->
+      <rect width="960" height="380" fill="url(#s6sky)"/>
+      <!-- Sun setting -->
+      <circle cx="480" cy="380" r="100" fill="#f4c430" opacity="0.3"/>
+      <circle cx="480" cy="380" r="70" fill="#ff8c42" opacity="0.4"/>
+      <circle cx="480" cy="360" r="50" fill="#ffd700" opacity="0.6"/>
+
+      <!-- Clouds (sunset pink) -->
+      <ellipse cx="200" cy="100" rx="90" ry="32" fill="#ffb3a0" opacity="0.7"/>
+      <ellipse cx="750" cy="80" rx="80" ry="28" fill="#ffb3a0" opacity="0.6"/>
+      <ellipse cx="500" cy="60" rx="70" ry="25" fill="#ffc8a0" opacity="0.5"/>
+
+      <!-- Ground -->
+      <rect x="0" y="370" width="960" height="170" fill="#4a8c3f"/>
+      <!-- Golden grass -->
+      <g fill="#6ab05a" opacity="0.7">
+        <ellipse cx="100" cy="372" rx="40" ry="13"/>
+        <ellipse cx="300" cy="370" rx="50" ry="14"/>
+        <ellipse cx="660" cy="371" rx="55" ry="15"/>
+        <ellipse cx="880" cy="372" rx="42" ry="12"/>
+      </g>
+      <!-- Flowers blooming everywhere -->
+      <g>
+        <circle cx="120" cy="370" r="6" fill="#ff9eb5"/><circle cx="120" cy="370" r="2.5" fill="#ffe066"/>
+        <circle cx="200" cy="368" r="5" fill="#c8e6c9"/><circle cx="200" cy="368" r="2" fill="#ffe066"/>
+        <circle cx="430" cy="370" r="7" fill="#ff9eb5"/><circle cx="430" cy="370" r="3" fill="#ffe066"/>
+        <circle cx="680" cy="369" r="6" fill="#c8e6c9"/><circle cx="680" cy="369" r="2.5" fill="#ffe066"/>
+        <circle cx="780" cy="370" r="5" fill="#ff9eb5"/><circle cx="780" cy="370" r="2" fill="#ffe066"/>
+        <circle cx="860" cy="368" r="7" fill="#c8e6c9"/><circle cx="860" cy="368" r="3" fill="#ffe066"/>
+      </g>
+
+      <!-- Trees (golden sunset lit) -->
+      <g class="tree-sway" style="transform-origin:140px 290px">
+        <rect x="128" y="242" width="24" height="150" rx="8" fill="#6b4c1e"/>
+        <ellipse cx="140" cy="222" rx="62" ry="78" fill="#3a7a35"/>
+        <ellipse cx="118" cy="248" rx="48" ry="62" fill="#4a8c3f"/>
+      </g>
+      <g class="tree-sway" style="transform-origin:820px 280px;animation-delay:-2s">
+        <rect x="808" y="232" width="24" height="160" rx="8" fill="#6b4c1e"/>
+        <ellipse cx="820" cy="212" rx="66" ry="82" fill="#2d6628"/>
+        <ellipse cx="800" cy="240" rx="52" ry="66" fill="#3a7a35"/>
+      </g>
+
+      <!-- LION (left, free, happy, standing tall) -->
+      <g id="s6lion" class="lion-happy" filter="url(#sh6)" style="transform-origin:310px 390px">
+        <!-- Golden glow aura -->
+        <ellipse cx="310" cy="390" rx="140" ry="100" fill="url(#goldenGlow)" opacity="0.6"/>
+        <!-- Body -->
+        <ellipse cx="310" cy="408" rx="118" ry="63" fill="#c8860a"/>
+        <ellipse cx="310" cy="396" rx="108" ry="56" fill="#d4980f"/>
+        <!-- Tail (up, happy) -->
+        <path d="M424,415 Q468,380 482,350 Q494,322 485,308" stroke="#c8860a" stroke-width="13" fill="none" stroke-linecap="round"/>
+        <ellipse cx="483" cy="302" rx="16" ry="10" fill="#8b5e08"/>
+        <!-- Legs -->
+        <rect x="252" y="452" width="26" height="65" rx="11" fill="#b8760a"/>
+        <rect x="290" y="454" width="26" height="65" rx="11" fill="#b8760a"/>
+        <rect x="330" y="452" width="26" height="65" rx="11" fill="#b8760a"/>
+        <rect x="368" y="454" width="26" height="65" rx="11" fill="#b8760a"/>
+        <ellipse cx="265" cy="516" rx="18" ry="9" fill="#a06608"/>
+        <ellipse cx="303" cy="518" rx="18" ry="9" fill="#a06608"/>
+        <ellipse cx="343" cy="516" rx="18" ry="9" fill="#a06608"/>
+        <ellipse cx="381" cy="518" rx="18" ry="9" fill="#a06608"/>
+        <!-- Neck -->
+        <ellipse cx="202" cy="376" rx="40" ry="52" fill="#c8860a"/>
+        <!-- Mane (glorious) -->
+        <ellipse cx="178" cy="338" rx="90" ry="86" fill="#8b4a0a"/>
+        <ellipse cx="178" cy="342" rx="76" ry="72" fill="#9b5a0e"/>
+        <!-- Head (looking forward, happy) -->
+        <ellipse cx="175" cy="330" rx="66" ry="60" fill="#d4980f"/>
+        <!-- Ears -->
+        <ellipse cx="122" cy="278" rx="18" ry="22" fill="#c8860a"/>
+        <ellipse cx="228" cy="276" rx="18" ry="22" fill="#c8860a"/>
+        <!-- Happy eyes (slightly closed, warm) -->
+        <path d="M152,322 Q166,314 180,322" stroke="#2d1a00" stroke-width="5" fill="none"/>
+        <path d="M190,320 Q204,312 218,320" stroke="#2d1a00" stroke-width="5" fill="none"/>
+        <ellipse cx="166" cy="326" rx="8" ry="5" fill="#f0a020" opacity="0.6"/>
+        <ellipse cx="204" cy="324" rx="8" ry="5" fill="#f0a020" opacity="0.6"/>
+        <!-- Big smile -->
+        <path d="M152,358 Q175,374 198,358" stroke="#8b4a0a" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <!-- Nose -->
+        <ellipse cx="175" cy="346" rx="13" ry="8" fill="#8b4a0a"/>
+        <ellipse cx="175" cy="345" rx="9" ry="6" fill="#d4696a"/>
+        <!-- Whiskers -->
+        <line x1="125" y1="344" x2="162" y2="348" stroke="#fffde7" stroke-width="1.5" opacity="0.8"/>
+        <line x1="125" y1="351" x2="162" y2="352" stroke="#fffde7" stroke-width="1.5" opacity="0.8"/>
+        <line x1="188" y1="348" x2="225" y2="344" stroke="#fffde7" stroke-width="1.5" opacity="0.8"/>
+        <line x1="188" y1="352" x2="225" y2="351" stroke="#fffde7" stroke-width="1.5" opacity="0.8"/>
+      </g>
+
+      <!-- RAT (right of lion, also happy, tiny) -->
+      <g id="s6rat" class="rat-happy" filter="url(#sh6)" style="transform-origin:540px 445px;animation-delay:-0.2s">
+        <ellipse cx="540" cy="452" rx="20" ry="14" fill="#9a8a7a"/>
+        <ellipse cx="520" cy="443" rx="18" ry="16" fill="#9a8a7a"/>
+        <ellipse cx="510" cy="430" rx="8" ry="10" fill="#9a8a7a"/>
+        <ellipse cx="510" cy="430" rx="4" ry="6" fill="#d4a0a0"/>
+        <ellipse cx="528" cy="428" rx="8" ry="10" fill="#9a8a7a"/>
+        <ellipse cx="528" cy="428" rx="4" ry="6" fill="#d4a0a0"/>
+        <!-- Happy sparkling eyes -->
+        <circle cx="510" cy="437" r="5.5" fill="#1a1a1a"/>
+        <circle cx="508" cy="435" r="2" fill="white"/>
+        <circle cx="513" cy="435" r="1.5" fill="#f4c430"/>
+        <ellipse cx="504" cy="443" rx="3" ry="2" fill="#d4696a"/>
+        <!-- Arms raised in joy -->
+        <path d="M506,450 Q490,435 482,420" stroke="#9a8a7a" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M534,450 Q548,435 555,420" stroke="#9a8a7a" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M560,456 Q578,450 584,442 Q590,434 584,428" stroke="#7a6a5a" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <rect x="526" y="464" width="8" height="14" rx="4" fill="#7a6a5a"/>
+        <rect x="540" y="464" width="8" height="14" rx="4" fill="#7a6a5a"/>
+      </g>
+
+      <!-- Friendship sparkles between them -->
+      <g class="sparkle-star">
+        <text x="428" y="400" font-size="22" fill="#f4c430">✨</text>
+      </g>
+      <g class="sparkle-star" style="animation-delay:-0.8s">
+        <text x="460" y="370" font-size="16" fill="#f4c430">⭐</text>
+      </g>
+      <g class="sparkle-star" style="animation-delay:-1.3s">
+        <text x="448" y="340" font-size="14" fill="#ffb347">✦</text>
+      </g>
+
+      <!-- Birds flying free -->
+      <g class="bird" style="animation-delay:-2s; opacity:0.7">
+        <path d="M600,150 Q606,143 612,150" stroke="#333" stroke-width="2.5" fill="none"/>
+        <path d="M618,146 Q624,139 630,146" stroke="#333" stroke-width="2.5" fill="none"/>
+        <path d="M636,148 Q642,141 648,148" stroke="#333" stroke-width="2.5" fill="none"/>
+      </g>
+    </svg>
+
+
+
+    <!-- Speech Bubbles -->
+    <div class="speech-bubble bubble-lion" id="bubbleLion"></div>
+    <div class="speech-bubble bubble-rat"  id="bubbleRat"></div>
+
+    <!-- Scene title card -->
+    <div class="scene-title-card" id="sceneTitleCard"></div>
+
+    <!-- Moral card overlay -->
+    <div class="moral-card" id="moralCard">
+      <div class="moral-icon">🌟</div>
+      <div class="moral-text">
+        <strong>Moral of the Story</strong>
+        <span>Never judge someone by their size. Even the smallest friend can be the greatest help.</span>
+      </div>
+    </div>
+
+  </div><!-- /scene-stage -->
+</div><!-- /stage-wrap -->
+
+<div class="narration-box">
+  <div class="narration-text" id="narrationText"></div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">0 / 0</div>
+</div>
+
+<p class="status-bar" id="statusBar">Press ▶ Play to begin the story…</p>
+
+<div class="controls">
+  <label class="audio-label">
+    <input type="checkbox" id="audioToggle" checked> 🔊 Narration Voice
+  </label>
+  <button class="btn btn-reset" onclick="resetStory()">↺ Start Again</button>
+  <button class="btn btn-play"  id="playBtn" onclick="togglePlay()">▶ Play</button>
+</div>
+
+
+
+<!-- ═══════════════════════════════════ SCRIPT ═══════════════════════════════════ -->
 <script>
-
+/* ─── Story beats ─────────────────────────────────────────────────────────── */
 const beats = [
-
-{ sceneTitle:'🌿 లోతైన పచ్చని అడవి',
+  // Scene 1 – Introduction
+  { scene:1, sceneTitle:'🌿 లోతైన పచ్చని అడవి',type:'narrator',
   text:'ఒక లోతైన పచ్చని అడవిలో, జంతువుల రాజైన ఒక శక్తివంతమైన సింహం మరియు ఒక చిన్న ఎలుక నివసించేవి.',
-  speaker:'narrator' },
+    lionState:'breath', ratState:'run', showLionBubble:false, showRatBubble:false },
 
-{ sceneTitle:'🌿 లోతైన పచ్చని అడవి',
+  { scene:1, sceneTitle:'🌿 లోతైన పచ్చని అడవి',type:'narrator',
+  text:'ఒక లోతైన పచ్చని అడవిలో, జంతువుల రాజైన ఒక శక్తివంతమైన సింహం మరియు ఒక చిన్న ఎలుక నివసించేవి.',
+    lionState:'breath', ratState:'run', showLionBubble:false, showRatBubble:false },
+
+  // Scene 2 – Lion catches rat
+  { scene:2, sceneTitle:'🌿 లోతైన పచ్చని అడవి',type:'narrator',
   text:'సింహం బలంగా మరియు గర్వంగా ఉండేది. చిన్న ఎలుక చురుకుగా పరుగులు తీస్తూ ఉండేది.',
-  speaker:'narrator' },
+    lionState:'walk', ratState:'run', showLionBubble:false, showRatBubble:false },
 
-{ sceneTitle:'🦁 సింహం దాడి చేసింది!',
-  text:'ఒక రోజు సింహం చాలా ఆకలిగా ఉంది. అది చిన్న ఎలుకను పట్టుకుంది!',
-  speaker:'narrator' },
+  { scene:2, sceneTitle:'🌿 లోతైన పచ్చని అడవి',type:'narrator',
+  text:'సింహం బలంగా మరియు గర్వంగా ఉండేది. చిన్న ఎలుక చురుకుగా పరుగులు తీస్తూ ఉండేది.',
+    lionState:'roar', ratState:'tremble', showLionBubble:false, showRatBubble:false },
 
-{ sceneTitle:'🦁 సింహం',
-  text:'నేను నిన్ను తినేస్తాను!',
-  speaker:'lion' },
+  { scene:2, sceneTitle:'🦁 The Lion Strikes!', type:'lion',
+    text:'"I will eat you!"', lionBubble:'"I will eat you!"',
+    lionState:'roar', ratState:'tremble', showLionBubble:true, showRatBubble:false },
 
-{ sceneTitle:'🐀 ఎలుక వేడుకుంది',
-  text:'దయచేసి నన్ను వదిలేయండి! ఒకరోజు నేను మీకు సహాయం చేస్తాను!',
-  speaker:'rat' },
+  // Scene 3 – Rat pleads
+  { scene:3, sceneTitle:'🐀 A Brave Little Plea', type:'narrator',
+    text:'The little rat trembled with fear, but spoke up bravely.',
+    lionState:'breath', ratState:'brave', showLionBubble:false, showRatBubble:false },
 
-{ sceneTitle:'🦁 సింహం నవ్వింది',
-  text:'హా హా హా! నువ్వా నాకా సహాయం చేస్తావా?',
-  speaker:'lion' },
+  { scene:3, sceneTitle:'🐀 A Brave Little Plea', type:'rat',
+    text:'"Please let me go! If you spare my life today, I promise I will help you one day!"',
+    ratBubble:'"Please let me go! I promise I will help you one day!"',
+    lionState:'breath', ratState:'brave', showLionBubble:false, showRatBubble:true },
 
-{ sceneTitle:'🪤 సింహం చిక్కుకుంది',
-  text:'కొన్ని రోజుల తరువాత, సింహం వేటగాళ్ల వలలో చిక్కుకుంది.',
-  speaker:'narrator' },
+  { scene:3, sceneTitle:'🦁 The Lion Laughs', type:'lion',
+    text:'"Ha ha ha! You? Help ME? You are so tiny! What could you possibly do for a mighty lion like me?!"',
+    lionBubble:'"Ha! You help ME? You\'re so tiny!"',
+    lionState:'roar', ratState:'brave', showLionBubble:true, showRatBubble:false },
 
-{ sceneTitle:'🐀 చిన్న సహాయం',
-  text:'మహారాజా! భయపడకండి. ఇప్పుడు నేను మీకు సహాయం చేస్తాను!',
-  speaker:'rat' },
+  { scene:3, sceneTitle:'🦁 The Lion\'s Kindness', type:'lion',
+    text:'But after a moment, the lion felt amused. "You are too tiny to satisfy my hunger anyway. Go on, run away!"',
+    lionBubble:'"You\'re too tiny anyway. Run away, little one!"',
+    lionState:'breath', ratState:'run', showLionBubble:true, showRatBubble:false },
 
-{ sceneTitle:'🐀 చిన్న సహాయం',
-  text:'ఎలుక తన పళ్లతో వలను కొరికి తెంచింది.',
-  speaker:'narrator' },
+  { scene:3, sceneTitle:'🐀 Grateful & Free', type:'narrator',
+    text:'And he released the rat. The grateful little rat quickly disappeared into the forest.',
+    lionState:'breath', ratState:'run', showLionBubble:false, showRatBubble:false },
 
-{ sceneTitle:'🤝 నిజమైన స్నేహం',
-  text:'చిన్నవాళ్లు కూడా పెద్ద సహాయం చేయగలరు. ధన్యవాదాలు నా చిన్న స్నేహితుడా!',
-  speaker:'lion' },
+  // Scene 4 – Lion trapped
+  { scene:4, sceneTitle:"🪤 The Hunter's Trap", type:'narrator',
+    text:"A few days later, the lion was walking through the jungle when he stepped right into a hunter's trap!",
+    lionState:'walk', showLionBubble:false, showRatBubble:false },
 
-{ sceneTitle:'🤝 నిజమైన స్నేహం',
-  text:'ఆ రోజు నుండి వారు మంచి స్నేహితులయ్యారు.',
-  speaker:'narrator' }
+  { scene:4, sceneTitle:"🪤 Trapped!", type:'narrator',
+    text:'A strong net fell over him. No matter how hard he struggled, he could not escape.',
+    lionState:'shake', showLionBubble:false, showRatBubble:false },
 
+  { scene:4, sceneTitle:"🦁 Crying for Help", type:'lion',
+    text:'The mighty lion roared loudly for help — ROOOAR!',
+    lionBubble:'ROOOAR! Help me! Anyone!!',
+    lionState:'roar', showLionBubble:true, showRatBubble:false },
+
+  // Scene 5 – Rat rescues lion
+  { scene:5, sceneTitle:'🐀 To The Rescue!', type:'narrator',
+    text:'Hearing the roar, the little rat recognised the voice and hurried to the scene at once.',
+    lionState:'breath', ratState:'nibble', showLionBubble:false, showRatBubble:false },
+
+  { scene:5, sceneTitle:'🐀 Gnawing The Net', type:'narrator',
+    text:'Seeing the lion trapped, the rat immediately began to gnaw at the ropes with his sharp little teeth. Bit by bit, he chewed through the net.',
+    lionState:'trap', ratState:'nibble', showLionBubble:false, showRatBubble:false },
+
+  { scene:5, sceneTitle:'🐀 Almost There!', type:'rat',
+    text:'"Hold on, my friend! I promised I would help you — and I keep my promises!"',
+    ratBubble:'"Hold on! I keep my promises!"',
+    lionState:'trap', ratState:'nibble', showLionBubble:false, showRatBubble:true },
+
+  { scene:5, sceneTitle:'🎉 The Net Breaks!', type:'narrator',
+    text:'Soon, the ropes broke apart, and the mighty lion was FREE!',
+    lionState:'roar', ratState:'brave', showLionBubble:false, showRatBubble:false },
+
+  // Scene 6 – Gratitude and moral
+  { scene:6, sceneTitle:'🌅 Friendship & Gratitude', type:'narrator',
+    text:'The lion looked at the small rat with deep gratitude and warmth in his eyes.',
+    lionState:'happy', ratState:'happy', showLionBubble:false, showRatBubble:false },
+
+  { scene:6, sceneTitle:'🦁 The Lion Speaks', type:'lion',
+    text:'"Thank you, my friend. Today you have proved that even the smallest animal can be the greatest help."',
+    lionBubble:'"Thank you, dear friend. You are truly great!"',
+    lionState:'happy', ratState:'happy', showLionBubble:true, showRatBubble:false },
+
+  { scene:6, sceneTitle:'🐀 Friends Forever', type:'narrator',
+    text:'And from that day on, the lion and the rat became the best of friends. The lion never underestimated anyone again.',
+    lionState:'happy', ratState:'happy', showLionBubble:false, showRatBubble:false },
+
+  { scene:6, sceneTitle:'🌟 The Moral', type:'narrator',
+    text:'Moral: Never judge someone by their size. Even the smallest friend can be the greatest help.',
+    lionState:'happy', ratState:'happy', showLionBubble:false, showRatBubble:false, showMoral:true },
 ];
 
-let index=0;
+/* ─── State ───────────────────────────────────────────────────────────────── */
+let idx        = 0;
+let isPlaying  = false;
+let isPaused   = false;
+let timer      = null;
+let voices     = [];
 
-function startStory(){
-  index=0;
-  nextBeat();
+window.speechSynthesis.onvoiceschanged = () => { voices = window.speechSynthesis.getVoices(); };
+setTimeout(() => { voices = window.speechSynthesis.getVoices(); }, 600);
+
+/* ─── Helpers ─────────────────────────────────────────────────────────────── */
+function getVoice(type) {
+  if (!voices.length) voices = window.speechSynthesis.getVoices();
+  if (type === 'lion') {
+    return voices.find(v => /david|mark|daniel|alex|google uk|microsoft david/i.test(v.name))
+        || voices.find(v => /en/i.test(v.lang) && !/female|zira|samantha|karen|victoria|alice/i.test(v.name))
+        || voices[0];
+  }
+  if (type === 'rat') {
+    return voices.find(v => /samantha|karen|victoria|alice|female/i.test(v.name))
+        || voices.find(v => /en-gb|en-au/i.test(v.lang))
+        || voices[1] || voices[0];
+  }
+  // narrator – calm, clear
+  return voices.find(v => /google us|daniel|alex|karen/i.test(v.name))
+      || voices.find(v => /en-us/i.test(v.lang))
+      || voices[0];
 }
 
-function nextBeat(){
-  if(index>=beats.length){
-    document.getElementById('statusBar').textContent=
-      '🎉 ముగింపు! ఒక అందమైన స్నేహం ప్రారంభమైంది.';
+function speak(text, type, onEnd) {
+  if (!document.getElementById('audioToggle').checked) { onEnd && setTimeout(onEnd, 80); return; }
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text.replace(/[^\w\s,!?.'"\-]/g, ''));
+  u.rate   = type === 'narrator' ? 0.92 : type === 'lion' ? 0.82 : 1.05;
+  u.pitch  = type === 'lion' ? 0.65 : type === 'rat' ? 1.45 : 1.0;
+  u.volume = 0.95;
+  const v  = getVoice(type);
+  if (v) u.voice = v;
+  u.onend  = () => onEnd && onEnd();
+  u.onerror = () => onEnd && onEnd();
+  window.speechSynthesis.speak(u);
+}
+
+function activateScene(n) {
+  document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+  const s = document.getElementById('scene-' + n);
+  if (s) s.classList.add('active');
+}
+
+function showNarration(text, type) {
+  const el = document.getElementById('narrationText');
+  el.classList.remove('show');
+  let tag = '';
+  if (type === 'narrator') tag = '<span class="speaker-tag tag-narrator">📖 NARRATOR</span>';
+  else if (type === 'lion') tag = '<span class="speaker-tag tag-lion">🦁 LION</span>';
+  else if (type === 'rat')  tag = '<span class="speaker-tag tag-rat">🐀 RAT</span>';
+  setTimeout(() => {
+    el.innerHTML = tag + text;
+    el.classList.add('show');
+  }, 200);
+}
+
+function showSceneTitle(title) {
+  const el = document.getElementById('sceneTitleCard');
+  el.textContent = title;
+  el.classList.add('show');
+  clearTimeout(el._hideTimer);
+  el._hideTimer = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+function setBubble(which, text, show) {
+  const el = document.getElementById(which === 'lion' ? 'bubbleLion' : 'bubbleRat');
+  if (show && text) { el.textContent = text; el.classList.add('show'); }
+  else              { el.classList.remove('show'); }
+}
+
+function clearBubbles() {
+  document.getElementById('bubbleLion').classList.remove('show');
+  document.getElementById('bubbleRat').classList.remove('show');
+}
+
+/* ─── Main playback ───────────────────────────────────────────────────────── */
+function playBeat() {
+  if (!isPlaying || isPaused) return;
+  if (idx >= beats.length) {
+    // Done
+    isPlaying = false;
+    document.getElementById('playBtn').textContent = '✅ Done!';
+    document.getElementById('statusBar').textContent = '🎉 The End! A beautiful friendship was born.';
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('progressLabel').textContent = `${beats.length} / ${beats.length}`;
+    clearBubbles();
     return;
   }
 
-  const beat=beats[index];
+  const b = beats[idx];
 
-  document.getElementById('sceneTitle').textContent=beat.sceneTitle;
-  document.getElementById('storyBox').innerHTML=beat.text;
+  // Progress
+  document.getElementById('progressFill').style.width  = ((idx / beats.length) * 100) + '%';
+  document.getElementById('progressLabel').textContent = `${idx + 1} / ${beats.length}`;
 
-  document.getElementById('lionBubble').style.display='none';
-  document.getElementById('ratBubble').style.display='none';
+  // Scene
+  activateScene(b.scene);
 
-  if(beat.speaker==='lion'){
-    const bubble=document.getElementById('lionBubble');
-    bubble.innerText=beat.text;
-    bubble.style.left='20%';
-    bubble.style.bottom='220px';
-    bubble.style.display='block';
+  // Scene title
+  if (b.sceneTitle) showSceneTitle(b.sceneTitle);
+
+  // Narration
+  showNarration(b.text, b.type);
+
+  // Bubbles
+  clearBubbles();
+  if (b.showLionBubble && b.lionBubble) setBubble('lion', b.lionBubble, true);
+  if (b.showRatBubble  && b.ratBubble)  setBubble('rat',  b.ratBubble,  true);
+
+  // Moral
+  if (b.showMoral) {
+    setTimeout(() => document.getElementById('moralCard').classList.add('show'), 1200);
   }
 
-  if(beat.speaker==='rat'){
-    const bubble=document.getElementById('ratBubble');
-    bubble.innerText=beat.text;
-    bubble.style.right='20%';
-    bubble.style.bottom='220px';
-    bubble.style.display='block';
+  // Status
+  const who = b.type === 'narrator' ? '📖 Narrator' : b.type === 'lion' ? '🦁 Lion' : '🐀 Rat';
+  document.getElementById('statusBar').textContent = `${who} speaking…`;
+
+  // Speak then advance
+  speak(b.text, b.type, () => {
+    if (!isPlaying || isPaused) return;
+    timer = setTimeout(() => {
+      idx++;
+      playBeat();
+    }, 900);
+  });
+}
+
+function togglePlay() {
+  if (!isPlaying) {
+    isPlaying = true;
+    isPaused  = false;
+    document.getElementById('playBtn').textContent = '⏸ Pause';
+    if (idx === 0) {
+      showSceneTitle('🌿 The Deep Green Forest');
+      setTimeout(playBeat, 700);
+    } else {
+      playBeat();
+    }
+  } else if (!isPaused) {
+    isPaused = true;
+    clearTimeout(timer);
+    window.speechSynthesis.pause();
+    document.getElementById('playBtn').textContent = '▶ Resume';
+    document.getElementById('statusBar').textContent = '⏸ Paused…';
+  } else {
+    isPaused = false;
+    window.speechSynthesis.resume();
+    document.getElementById('playBtn').textContent = '⏸ Pause';
+    playBeat();
   }
-
-  speak(beat.text);
-
-  index++;
-  setTimeout(nextBeat,6000);
 }
 
-function speak(text){
-  const utterance=new SpeechSynthesisUtterance(text);
-  utterance.lang="te-IN";
-  utterance.rate=0.9;
-  speechSynthesis.speak(utterance);
+function resetStory() {
+  clearTimeout(timer);
+  window.speechSynthesis.cancel();
+  isPlaying = false;
+  isPaused  = false;
+  idx       = 0;
+  activateScene(1);
+  clearBubbles();
+  document.getElementById('narrationText').classList.remove('show');
+  document.getElementById('sceneTitleCard').classList.remove('show');
+  document.getElementById('moralCard').classList.remove('show');
+  document.getElementById('playBtn').textContent      = '▶ Play';
+  document.getElementById('progressFill').style.width = '0%';
+  document.getElementById('progressLabel').textContent = `0 / ${beats.length}`;
+  document.getElementById('statusBar').textContent    = 'Press ▶ Play to begin the story…';
 }
-
 </script>
-
 </body>
 </html>
