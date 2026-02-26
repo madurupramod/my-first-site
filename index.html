@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>🌈 Story World</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    body {
+        margin: 0;
+        font-family: 'Comic Sans MS', cursive, sans-serif;
+        background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb, #a6c1ee);
+        background-size: 400% 400%;
+        animation: gradientBG 10s ease infinite;
+        text-align: center;
+        color: white;
+    }
+
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    h1 {
+        margin-top: 50px;
+        font-size: 3rem;
+        text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    }
+
+    p {
+        font-size: 1.3rem;
+        margin-bottom: 40px;
+    }
+
+    .story-container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 30px;
+        margin-bottom: 60px;
+    }
+
+    .story-card {
+        background: white;
+        color: #444;
+        width: 250px;
+        padding: 20px;
+        border-radius: 20px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .story-card:hover {
+        transform: scale(1.1) rotate(-2deg);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    }
+
+    .story-card h2 {
+        margin-bottom: 15px;
+    }
+
+    .story-card button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 20px;
+        background: #ff6f61;
+        color: white;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .story-card button:hover {
+        background: #ff3b2e;
+    }
+
+    footer {
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+
+</style>
+</head>
+
+<body>
+
+<h1>📚 Welcome to Story World 🌟</h1>
+<p>Click a story and start your adventure!</p>
+
+<div class="story-container">
+
+    <div class="story-card">
+        <h2>🦁 The Lion and The Rat</h2>
+        <button onclick="openStory('Lion_and_Rat.html')">
+            Read Story
+        </button>
+    </div>
+
+    <div class="story-card">
+        <h2>💻 The Magic Software Story</h2>
+        <button onclick="openStory('Software.html')">
+            Read Story
+        </button>
+    </div>
+
+</div>
+
+<footer>
+    Made with ❤️ for Kids | 2026
+</footer>
+
+<script>
+    function openStory(page) {
+        window.location.href = page;
+    }
+</script>
+
+</body>
+</html>
