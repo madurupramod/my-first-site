@@ -4,257 +4,145 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Software Drama 🎭</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Bangers&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing:border-box; margin:0; padding:0; }
 
 body {
-  background: #1a0533;
+  background: linear-gradient(135deg, #0d0221 0%, #1a0533 50%, #0d0221 100%);
   font-family: 'Nunito', sans-serif;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  overflow-x: hidden;
+  display: flex; flex-direction: column; align-items: center;
+  min-height: 100vh; overflow-x: hidden;
 }
 
 h1 {
   font-family: 'Bangers', cursive;
-  font-size: clamp(1.6rem, 4vw, 2.8rem);
-  letter-spacing: 3px;
-  background: linear-gradient(135deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-align: center;
-  padding: 18px 20px 6px;
-  text-shadow: none;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  letter-spacing: 4px;
+  background: linear-gradient(135deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #ff6b6b);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  background-size: 300%; animation: titleShimmer 4s linear infinite;
+  text-align: center; padding: 18px 20px 4px;
 }
+@keyframes titleShimmer { 0%{background-position:0%} 100%{background-position:300%} }
 
-.tagline {
-  color: #a78bfa;
-  font-size: 0.85rem;
-  margin-bottom: 10px;
-  letter-spacing: 1px;
-}
+.tagline { color:#a78bfa; font-size:0.85rem; margin-bottom:12px; letter-spacing:1.5px; text-align:center; }
 
-/* Main scene wrapper */
 .scene-wrapper {
   position: relative;
-  width: min(900px, 98vw);
-  height: min(520px, 56vw);
-  min-height: 300px;
+  width: min(960px, 98vw);
+  height: min(540px, 58vw);
+  min-height: 320px;
 }
 
-/* Full scene SVG */
 #sceneSVG {
-  width: 100%;
-  height: 100%;
-  display: block;
-  border-radius: 20px;
-  box-shadow: 0 0 60px rgba(109,40,217,0.5);
+  width: 100%; height: 100%; display: block;
+  border-radius: 22px;
+  box-shadow: 0 0 60px rgba(124,58,237,0.5), 0 0 120px rgba(0,0,0,0.8);
   border: 3px solid #7c3aed;
 }
 
-/* Speech bubbles */
+/* SPEECH BUBBLES */
 .speech-bubble {
   position: absolute;
   background: white;
-  border-radius: 18px;
-  padding: 10px 14px;
-  font-size: clamp(0.65rem, 1.5vw, 0.9rem);
-  font-weight: 700;
-  color: #1e1b4b;
-  max-width: 220px;
-  text-align: center;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-  opacity: 0;
-  transform: scale(0.5);
+  border-radius: 18px; padding: 10px 14px;
+  font-size: clamp(0.62rem, 1.4vw, 0.88rem);
+  font-weight: 800; color: #1e1b4b;
+  max-width: 230px; text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+  opacity: 0; transform: scale(0.4);
   transition: opacity 0.35s cubic-bezier(.34,1.56,.64,1), transform 0.35s cubic-bezier(.34,1.56,.64,1);
-  pointer-events: none;
-  line-height: 1.4;
-  z-index: 20;
-  border: 3px solid #7c3aed;
+  pointer-events: none; line-height: 1.45; z-index: 20;
+  border: 3px solid #7c3aed; white-space: pre-line;
 }
+.speech-bubble.show { opacity:1; transform:scale(1); }
 
-.speech-bubble.show {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* Tail for husband bubble (left character, tail on right side bottom) */
 #bubble-husband {
-  left: 5%;
-  top: 8%;
-  border-color: #3b82f6;
+  left: 4%; top: 6%; border-color: #3b82f6;
 }
 #bubble-husband::after {
-  content: '';
-  position: absolute;
-  bottom: -14px;
-  left: 30px;
-  border: 8px solid transparent;
-  border-top-color: white;
-  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.15));
+  content:''; position:absolute; bottom:-14px; left:28px;
+  border:8px solid transparent; border-top-color:white;
 }
 #bubble-husband::before {
-  content: '';
-  position: absolute;
-  bottom: -18px;
-  left: 27px;
-  border: 10px solid transparent;
-  border-top-color: #3b82f6;
+  content:''; position:absolute; bottom:-18px; left:25px;
+  border:10px solid transparent; border-top-color:#3b82f6;
 }
 
-/* Tail for wife bubble (right character) */
 #bubble-wife {
-  right: 5%;
-  top: 8%;
-  border-color: #ec4899;
-  color: #4a044e;
+  right: 4%; top: 6%; border-color: #ec4899; color:#4a044e;
 }
 #bubble-wife::after {
-  content: '';
-  position: absolute;
-  bottom: -14px;
-  right: 30px;
-  border: 8px solid transparent;
-  border-top-color: white;
+  content:''; position:absolute; bottom:-14px; right:28px;
+  border:8px solid transparent; border-top-color:white;
 }
 #bubble-wife::before {
-  content: '';
-  position: absolute;
-  bottom: -18px;
-  right: 27px;
-  border: 10px solid transparent;
-  border-top-color: #ec4899;
+  content:''; position:absolute; bottom:-18px; right:25px;
+  border:10px solid transparent; border-top-color:#ec4899;
 }
 
-/* Terminal style for husband responses */
 .terminal-text {
-  font-family: 'Courier New', monospace;
-  background: #0f172a;
-  color: #22c55e;
-  border-color: #22c55e !important;
-  border-radius: 10px;
-  text-shadow: 0 0 8px #22c55e99;
+  font-family: 'Share Tech Mono', monospace !important;
+  background: #0a0f1a !important; color: #22c55e !important;
+  border-color: #22c55e !important; text-shadow: 0 0 8px #22c55e88;
+  font-size: clamp(0.65rem, 1.3vw, 0.85rem) !important;
 }
-.terminal-text::before { border-top-color: #22c55e !important; }
+.terminal-text::before { border-top-color:#22c55e !important; }
+.terminal-text::after  { border-top-color:#0a0f1a !important; }
 
-/* Emotion emojis floating */
+/* floating emoji */
 .float-emoji {
-  position: absolute;
-  font-size: 1.5rem;
-  animation: floatUp 1.8s ease-out forwards;
-  pointer-events: none;
-  z-index: 30;
+  position:absolute; font-size:1.6rem;
+  animation: floatUp 2s ease-out forwards; pointer-events:none; z-index:30;
 }
 @keyframes floatUp {
-  0% { opacity: 1; transform: translateY(0) scale(1); }
-  100% { opacity: 0; transform: translateY(-80px) scale(1.6); }
+  0%  { opacity:1; transform:translateY(0) scale(1) rotate(0deg); }
+  100%{ opacity:0; transform:translateY(-90px) scale(1.8) rotate(20deg); }
 }
 
-/* Controls */
-.controls {
-  display: flex;
-  gap: 12px;
-  margin: 16px 0 10px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
+/* CHARACTER ANIMATIONS */
+@keyframes idleBob    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+@keyframes talkWiggle { 0%,100%{transform:translateY(0) rotate(0deg)} 25%{transform:translateY(-7px) rotate(-2deg)} 75%{transform:translateY(-4px) rotate(2deg)} }
+@keyframes angryShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px) rotate(-3deg)} 75%{transform:translateX(5px) rotate(3deg)} }
+@keyframes laptopGlow { 0%,100%{opacity:0.8} 50%{opacity:1} }
 
-.btn {
-  font-family: 'Nunito', sans-serif;
-  font-weight: 900;
-  font-size: 1rem;
-  padding: 10px 26px;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s;
-  letter-spacing: 0.5px;
-}
-.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
-.btn:active { transform: translateY(0); }
-.btn:disabled { opacity: 0.5; cursor: default; transform: none; }
+#husband-char { transform-origin: 200px 390px; }
+#wife-char    { transform-origin: 720px 390px; }
 
-.btn-play { background: linear-gradient(135deg, #7c3aed, #4f46e5); color: white; }
-.btn-reset { background: linear-gradient(135deg, #374151, #1f2937); color: #d1d5db; }
-.btn-skip { background: linear-gradient(135deg, #059669, #047857); color: white; }
+.husband-idle   #husband-char { animation: idleBob    2.5s ease-in-out infinite; }
+.wife-idle      #wife-char    { animation: idleBob    2.5s ease-in-out infinite 0.6s; }
+.husband-talking #husband-char{ animation: talkWiggle 0.4s ease-in-out infinite; }
+.wife-talking   #wife-char    { animation: talkWiggle 0.4s ease-in-out infinite; }
+.wife-angry     #wife-char    { animation: angryShake 0.28s ease-in-out infinite; }
 
-.speed-btn {
-  background: linear-gradient(135deg, #b45309, #92400e);
-  color: #fde68a;
-}
-
-/* Progress */
+/* PROGRESS */
 .progress-track {
-  width: min(900px, 98vw);
-  height: 6px;
-  background: #2d1b69;
-  border-radius: 10px;
-  margin-bottom: 8px;
-  overflow: hidden;
+  width: min(960px, 98vw); height: 7px;
+  background: #2d1b69; border-radius: 10px; margin: 10px 0 6px; overflow: hidden;
 }
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #7c3aed, #ec4899);
-  border-radius: 10px;
-  transition: width 0.4s ease;
-  width: 0%;
+  background: linear-gradient(90deg, #7c3aed, #ec4899, #ffd93d);
+  background-size: 200%; animation: pgFlow 3s linear infinite;
+  border-radius: 10px; transition: width 0.4s ease; width: 0%;
 }
+@keyframes pgFlow { 0%{background-position:0%} 100%{background-position:200%} }
 
-.status {
-  color: #a78bfa;
-  font-size: 0.82rem;
-  margin-bottom: 14px;
-  min-height: 20px;
-  text-align: center;
-}
+.status { color:#a78bfa; font-size:0.82rem; margin:4px 0 10px; min-height:20px; text-align:center; }
 
-/* Audio toggle */
-.audio-toggle {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #c4b5fd;
-  font-size: 0.85rem;
-  cursor: pointer;
-  user-select: none;
+/* CONTROLS */
+.controls { display:flex; gap:14px; margin-bottom:24px; flex-wrap:wrap; justify-content:center; }
+.btn {
+  font-family:'Nunito',sans-serif; font-weight:900; font-size:1rem;
+  padding:11px 30px; border:none; border-radius:50px; cursor:pointer;
+  transition:transform 0.15s, box-shadow 0.15s; letter-spacing:0.5px; min-width:130px;
 }
-.audio-toggle input { cursor: pointer; accent-color: #7c3aed; width: 16px; height: 16px; }
-
-/* Character bounce animations in SVG */
-@keyframes idleBounceH {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-4px); }
-}
-@keyframes idleBounceW {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-4px); }
-}
-@keyframes talkBounce {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  25% { transform: translateY(-6px) rotate(-2deg); }
-  75% { transform: translateY(-3px) rotate(2deg); }
-}
-@keyframes angryShake {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-4px) rotate(-2deg); }
-  40% { transform: translateX(4px) rotate(2deg); }
-  60% { transform: translateX(-3px); }
-  80% { transform: translateX(3px); }
-}
-
-#husband-char { transform-origin: 180px 380px; }
-#wife-char { transform-origin: 680px 380px; }
-
-.husband-idle #husband-char { animation: idleBounceH 2.5s ease-in-out infinite; }
-.wife-idle #wife-char { animation: idleBounceW 2.5s ease-in-out infinite 0.5s; }
-.husband-talking #husband-char { animation: talkBounce 0.4s ease-in-out infinite; }
-.wife-talking #wife-char { animation: talkBounce 0.4s ease-in-out infinite; }
-.wife-angry #wife-char { animation: angryShake 0.3s ease-in-out infinite; }
-
+.btn:hover  { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,0.4); }
+.btn:active { transform:translateY(1px); }
+.btn:disabled { opacity:0.45; cursor:default; transform:none; }
+.btn-play  { background:linear-gradient(135deg,#7c3aed,#4f46e5); color:white; box-shadow:0 4px 0 #3b1faa; }
+.btn-stop  { background:linear-gradient(135deg,#374151,#1f2937); color:#d1d5db; box-shadow:0 4px 0 #111; }
 </style>
 </head>
 <body>
@@ -265,585 +153,651 @@ h1 {
 <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
 
 <div class="scene-wrapper" id="sceneWrapper">
-  <!-- SVG Scene -->
-  <svg id="sceneSVG" viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" style="stop-color:#1e0a3c"/>
-        <stop offset="100%" style="stop-color:#3b1a6b"/>
-      </linearGradient>
-      <linearGradient id="floorGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" style="stop-color:#7c5c2e"/>
-        <stop offset="100%" style="stop-color:#5a3d1a"/>
-      </linearGradient>
-      <linearGradient id="wallGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" style="stop-color:#f5e6d0"/>
-        <stop offset="100%" style="stop-color:#e8d5b7"/>
-      </linearGradient>
-      <linearGradient id="skinH" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" style="stop-color:#fcd5b5"/>
-        <stop offset="100%" style="stop-color:#f5b78e"/>
-      </linearGradient>
-      <linearGradient id="skinW" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" style="stop-color:#fde8cf"/>
-        <stop offset="100%" style="stop-color:#f8c99a"/>
-      </linearGradient>
-      <filter id="glow">
-        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-        <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-        <feDropShadow dx="3" dy="4" stdDeviation="4" flood-color="#00000033"/>
-      </filter>
-    </defs>
+<svg id="sceneSVG" viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <linearGradient id="wallG" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#f5e6d0"/><stop offset="100%" stop-color="#e8d4b0"/>
+  </linearGradient>
+  <linearGradient id="floorG" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#7c5c2e"/><stop offset="100%" stop-color="#5a3d1a"/>
+  </linearGradient>
+  <radialGradient id="skinH" cx="50%" cy="35%" r="55%">
+    <stop offset="0%" stop-color="#fcd5b5"/><stop offset="100%" stop-color="#f0a870"/>
+  </radialGradient>
+  <radialGradient id="skinW" cx="50%" cy="35%" r="55%">
+    <stop offset="0%" stop-color="#fde8cf"/><stop offset="100%" stop-color="#f8c48a"/>
+  </radialGradient>
+  <radialGradient id="shadeH" cx="50%" cy="60%" r="50%">
+    <stop offset="0%" stop-color="rgba(0,0,0,0)"/><stop offset="100%" stop-color="rgba(0,0,0,0.18)"/>
+  </radialGradient>
+  <radialGradient id="shadeW" cx="50%" cy="60%" r="50%">
+    <stop offset="0%" stop-color="rgba(0,0,0,0)"/><stop offset="100%" stop-color="rgba(0,0,0,0.15)"/>
+  </radialGradient>
+  <filter id="softShadow">
+    <feDropShadow dx="3" dy="5" stdDeviation="5" flood-color="#00000044"/>
+  </filter>
+  <filter id="glow">
+    <feGaussianBlur stdDeviation="3" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <pattern id="wallpaper" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+    <circle cx="30" cy="30" r="2" fill="#d4b896" opacity="0.35"/>
+    <circle cx="0"  cy="0"  r="2" fill="#d4b896" opacity="0.35"/>
+    <circle cx="60" cy="0"  r="2" fill="#d4b896" opacity="0.35"/>
+    <circle cx="0"  cy="60" r="2" fill="#d4b896" opacity="0.35"/>
+    <circle cx="60" cy="60" r="2" fill="#d4b896" opacity="0.35"/>
+  </pattern>
+</defs>
 
-    <!-- === BACKGROUND ROOM === -->
-    <!-- Wall -->
-    <rect x="0" y="0" width="900" height="520" fill="url(#wallGrad)"/>
-    <!-- Wallpaper pattern -->
-    <pattern id="wallpaper" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
-      <circle cx="30" cy="30" r="2" fill="#d4b896" opacity="0.4"/>
-      <circle cx="0" cy="0" r="2" fill="#d4b896" opacity="0.4"/>
-      <circle cx="60" cy="0" r="2" fill="#d4b896" opacity="0.4"/>
-      <circle cx="0" cy="60" r="2" fill="#d4b896" opacity="0.4"/>
-      <circle cx="60" cy="60" r="2" fill="#d4b896" opacity="0.4"/>
-    </pattern>
-    <rect x="0" y="0" width="900" height="390" fill="url(#wallpaper)"/>
-    
-    <!-- Baseboard -->
-    <rect x="0" y="390" width="900" height="10" fill="#c8a882"/>
-    
-    <!-- Floor -->
-    <rect x="0" y="400" width="900" height="120" fill="url(#floorGrad)"/>
-    <!-- Floor planks -->
-    <line x1="0" y1="420" x2="900" y2="420" stroke="#6b4c1e" stroke-width="1.5" opacity="0.5"/>
-    <line x1="0" y1="440" x2="900" y2="440" stroke="#6b4c1e" stroke-width="1.5" opacity="0.5"/>
-    <line x1="0" y1="460" x2="900" y2="460" stroke="#6b4c1e" stroke-width="1.5" opacity="0.5"/>
-    <line x1="200" y1="400" x2="200" y2="520" stroke="#6b4c1e" stroke-width="1" opacity="0.3"/>
-    <line x1="450" y1="400" x2="450" y2="520" stroke="#6b4c1e" stroke-width="1" opacity="0.3"/>
-    <line x1="700" y1="400" x2="700" y2="520" stroke="#6b4c1e" stroke-width="1" opacity="0.3"/>
+<!-- ── ROOM ── -->
+<rect x="0" y="0" width="960" height="540" fill="url(#wallG)"/>
+<rect x="0" y="0" width="960" height="415" fill="url(#wallpaper)"/>
+<rect x="0" y="415" width="960" height="8"  fill="#c8a882"/>
+<rect x="0" y="423" width="960" height="117" fill="url(#floorG)"/>
+<line x1="0" y1="443" x2="960" y2="443" stroke="#6b4c1e" stroke-width="1.5" opacity="0.5"/>
+<line x1="0" y1="463" x2="960" y2="463" stroke="#6b4c1e" stroke-width="1.5" opacity="0.5"/>
+<line x1="0" y1="483" x2="960" y2="483" stroke="#6b4c1e" stroke-width="1.5" opacity="0.5"/>
+<line x1="220" y1="423" x2="220" y2="540" stroke="#6b4c1e" stroke-width="1" opacity="0.3"/>
+<line x1="480" y1="423" x2="480" y2="540" stroke="#6b4c1e" stroke-width="1" opacity="0.3"/>
+<line x1="740" y1="423" x2="740" y2="540" stroke="#6b4c1e" stroke-width="1" opacity="0.3"/>
 
-    <!-- Window center-back -->
-    <rect x="370" y="40" width="160" height="130" rx="6" fill="#87ceeb" stroke="#8b6914" stroke-width="6"/>
-    <rect x="374" y="44" width="152" height="122" fill="#b8e4f7" opacity="0.7"/>
-    <!-- Window cross -->
-    <line x1="450" y1="44" x2="450" y2="166" stroke="#8b6914" stroke-width="5"/>
-    <line x1="374" y1="104" x2="526" y2="104" stroke="#8b6914" stroke-width="5"/>
-    <!-- Curtains -->
-    <path d="M370,40 Q355,104 370,170 L390,170 Q375,104 390,40 Z" fill="#e74c6e" opacity="0.8"/>
-    <path d="M530,40 Q545,104 530,170 L510,170 Q525,104 510,40 Z" fill="#e74c6e" opacity="0.8"/>
-    <!-- Curtain rod -->
-    <rect x="340" y="34" width="220" height="10" rx="5" fill="#8b6914"/>
-    <!-- Moon outside window -->
-    <circle cx="420" cy="80" r="20" fill="#fffde7" opacity="0.9"/>
-    <circle cx="432" cy="72" r="16" fill="#87ceeb" opacity="0.8"/>
+<!-- window -->
+<rect x="400" y="38" width="160" height="130" rx="8" fill="#87ceeb" stroke="#8b6914" stroke-width="6"/>
+<rect x="406" y="44" width="148" height="118" fill="#b8e4f7" opacity="0.7"/>
+<line x1="480" y1="44" x2="480" y2="162" stroke="#8b6914" stroke-width="5"/>
+<line x1="406" y1="104" x2="554" y2="104" stroke="#8b6914" stroke-width="5"/>
+<path d="M400,38 Q384,104 400,168 L420,168 Q406,104 420,38Z" fill="#e74c6e" opacity="0.85"/>
+<path d="M560,38 Q576,104 560,168 L540,168 Q554,104 540,38Z" fill="#e74c6e" opacity="0.85"/>
+<rect x="364" y="32" width="232" height="10" rx="5" fill="#8b6914"/>
+<circle cx="448" cy="82" r="22" fill="#fffde7" opacity="0.9"/>
+<circle cx="462" cy="72" r="17" fill="#87ceeb" opacity="0.75"/>
 
-    <!-- Painting on wall -->
-    <rect x="60" y="60" width="120" height="90" rx="4" fill="#4a1942" stroke="#8b6914" stroke-width="5"/>
-    <circle cx="120" cy="105" r="25" fill="#ff6b6b" opacity="0.7"/>
-    <rect x="90" y="80" width="40" height="50" fill="#ffd93d" opacity="0.6"/>
-    
-    <!-- Bookshelf right wall -->
-    <rect x="740" y="100" width="120" height="200" rx="4" fill="#8b6914"/>
-    <rect x="748" y="108" width="104" height="30" fill="#d4a843"/>
-    <!-- Books -->
-    <rect x="752" y="112" width="14" height="22" fill="#e74c3c"/>
-    <rect x="768" y="112" width="12" height="22" fill="#3498db"/>
-    <rect x="782" y="112" width="16" height="22" fill="#2ecc71"/>
-    <rect x="800" y="112" width="10" height="22" fill="#f39c12"/>
-    <rect x="812" y="112" width="14" height="22" fill="#9b59b6"/>
-    <rect x="748" y="148" width="104" height="30" fill="#d4a843"/>
-    <rect x="752" y="152" width="18" height="22" fill="#1abc9c"/>
-    <rect x="772" y="152" width="14" height="22" fill="#e67e22"/>
-    <rect x="788" y="152" width="16" height="22" fill="#e91e63"/>
-    <rect x="806" y="152" width="12" height="22" fill="#00bcd4"/>
-    <rect x="748" y="188" width="104" height="30" fill="#d4a843"/>
-    <rect x="748" y="228" width="104" height="30" fill="#d4a843"/>
+<!-- painting -->
+<rect x="55" y="55" width="130" height="95" rx="5" fill="#4a1942" stroke="#8b6914" stroke-width="5"/>
+<circle cx="120" cy="102" r="28" fill="#ff6b6b" opacity="0.7"/>
+<rect x="92" y="76" width="42" height="52" fill="#ffd93d" opacity="0.6"/>
 
-    <!-- Plant left corner -->
-    <rect x="30" y="330" width="30" height="60" rx="4" fill="#c25e3e"/>
-    <ellipse cx="45" cy="332" rx="28" ry="22" fill="#2d8a3e"/>
-    <ellipse cx="30" cy="315" rx="20" ry="16" fill="#3aaa50"/>
-    <ellipse cx="62" cy="318" rx="18" ry="14" fill="#3aaa50"/>
-    <ellipse cx="45" cy="308" rx="16" ry="12" fill="#4cc366"/>
+<!-- bookshelf -->
+<rect x="796" y="95" width="128" height="210" rx="5" fill="#8b6914"/>
+<rect x="804" y="103" width="112" height="32" fill="#d4a843"/>
+<rect x="808" y="107" width="14" height="24" fill="#e74c3c"/>
+<rect x="824" y="107" width="12" height="24" fill="#3498db"/>
+<rect x="838" y="107" width="16" height="24" fill="#2ecc71"/>
+<rect x="856" y="107" width="10" height="24" fill="#f39c12"/>
+<rect x="868" y="107" width="14" height="24" fill="#9b59b6"/>
+<rect x="804" y="145" width="112" height="32" fill="#d4a843"/>
+<rect x="808" y="149" width="18" height="24" fill="#1abc9c"/>
+<rect x="828" y="149" width="14" height="24" fill="#e67e22"/>
+<rect x="844" y="149" width="16" height="24" fill="#e91e63"/>
+<rect x="862" y="149" width="12" height="24" fill="#00bcd4"/>
+<rect x="804" y="187" width="112" height="32" fill="#d4a843"/>
+<rect x="804" y="227" width="112" height="32" fill="#d4a843"/>
 
-    <!-- TV on stand -->
-    <rect x="380" y="310" width="140" height="80" rx="6" fill="#1a1a2e" stroke="#4a4a6a" stroke-width="4"/>
-    <rect x="386" y="316" width="128" height="68" rx="4" fill="#0f3460"/>
-    <!-- TV screen glow - code on screen -->
-    <rect x="392" y="322" width="116" height="56" rx="2" fill="#0d1117"/>
-    <text x="398" y="338" font-family="monospace" font-size="8" fill="#22c55e">&gt; git commit -m "wife"</text>
-    <text x="398" y="350" font-family="monospace" font-size="8" fill="#ef4444">ERROR: Bad command</text>
-    <text x="398" y="362" font-family="monospace" font-size="8" fill="#22c55e">&gt; sudo love --force</text>
-    <text x="398" y="374" font-family="monospace" font-size="8" fill="#f59e0b">Permission denied</text>
-    <!-- TV stand -->
-    <rect x="430" y="390" width="40" height="12" rx="2" fill="#4a4a6a"/>
-    <rect x="420" y="402" width="60" height="6" rx="3" fill="#3a3a5a"/>
+<!-- plant -->
+<rect x="28" y="345" width="32" height="68" rx="5" fill="#c25e3e"/>
+<ellipse cx="44" cy="346" rx="30" ry="24" fill="#2d8a3e"/>
+<ellipse cx="28" cy="328" rx="22" ry="17" fill="#3aaa50"/>
+<ellipse cx="62" cy="332" rx="19" ry="15" fill="#3aaa50"/>
+<ellipse cx="44" cy="320" rx="17" ry="13" fill="#4cc366"/>
 
-    <!-- Lamp -->
-    <line x1="820" y1="300" x2="820" y2="390" stroke="#8b6914" stroke-width="8"/>
-    <ellipse cx="820" cy="395" rx="25" ry="8" fill="#6b4c1e"/>
-    <polygon points="790,300 850,300 835,220 805,220" fill="#fffde7" stroke="#f4d03f" stroke-width="3"/>
-    <circle cx="820" cy="300" r="8" fill="#ffd700" filter="url(#glow)" opacity="0.9"/>
-    <!-- Lamp glow effect -->
-    <ellipse cx="820" cy="310" rx="60" ry="40" fill="#fffde7" opacity="0.08"/>
+<!-- TV -->
+<rect x="400" y="318" width="160" height="92" rx="7" fill="#1a1a2e" stroke="#4a4a6a" stroke-width="4"/>
+<rect x="407" y="325" width="146" height="79" rx="4" fill="#0f3460"/>
+<rect x="413" y="331" width="134" height="67" rx="3" fill="#0d1117"/>
+<text x="419" y="348" font-family="monospace" font-size="9" fill="#22c55e">&gt; git commit -m "wife"</text>
+<text x="419" y="362" font-family="monospace" font-size="9" fill="#ef4444">ERROR: Bad command</text>
+<text x="419" y="376" font-family="monospace" font-size="9" fill="#22c55e">&gt; sudo love --force</text>
+<text x="419" y="390" font-family="monospace" font-size="9" fill="#f59e0b">Permission denied 😅</text>
+<rect x="456" y="410" width="48" height="13" rx="2" fill="#4a4a6a"/>
+<rect x="444" y="423" width="72" height="7" rx="3" fill="#3a3a5a"/>
 
-    <!-- Sofa hint in background -->
-    <rect x="300" y="370" width="300" height="30" rx="8" fill="#8b3a52"/>
-    <rect x="295" y="355" width="310" height="20" rx="6" fill="#a0455f"/>
-    <rect x="295" y="350" width="20" height="50" rx="5" fill="#a0455f"/>
-    <rect x="585" y="350" width="20" height="50" rx="5" fill="#a0455f"/>
+<!-- lamp -->
+<line x1="880" y1="300" x2="880" y2="415" stroke="#8b6914" stroke-width="9"/>
+<ellipse cx="880" cy="420" rx="27" ry="9" fill="#6b4c1e"/>
+<polygon points="848,300 912,300 896,215 864,215" fill="#fffde7" stroke="#f4d03f" stroke-width="3"/>
+<circle cx="880" cy="300" r="9" fill="#ffd700" filter="url(#glow)" opacity="0.9"/>
+<ellipse cx="880" cy="315" rx="65" ry="45" fill="#fffde7" opacity="0.07"/>
 
-    <!-- ====================== -->
-    <!-- HUSBAND CHARACTER (left, anime style) -->
-    <!-- ====================== -->
-    <g id="husband-char" filter="url(#shadow)">
-      <!-- Shadow -->
-      <ellipse cx="175" cy="408" rx="45" ry="10" fill="#00000033"/>
-      
-      <!-- Body / Shirt (blue tech company shirt) -->
-      <rect x="135" y="290" width="80" height="110" rx="15" fill="#2563eb"/>
-      <!-- Shirt collar -->
-      <path d="M165,290 L175,308 L185,290" fill="#1d4ed8" stroke="#1d4ed8" stroke-width="1"/>
-      <!-- Shirt pocket with pen -->
-      <rect x="140" y="310" width="25" height="18" rx="3" fill="#1d4ed8"/>
-      <rect x="148" y="306" width="3" height="14" rx="1" fill="#fbbf24"/>
-      <rect x="153" y="306" width="3" height="14" rx="1" fill="#ef4444"/>
-      <!-- Shirt logo -->
-      <circle cx="175" cy="330" r="8" fill="#1d4ed8"/>
-      <text x="175" y="334" text-anchor="middle" font-size="9" fill="#60a5fa" font-family="monospace">&lt;/&gt;</text>
-      
-      <!-- Pants -->
-      <rect x="140" y="390" width="30" height="90" rx="8" fill="#1e293b"/>
-      <rect x="176" y="390" width="30" height="90" rx="8" fill="#1e293b"/>
-      
-      <!-- Shoes -->
-      <ellipse cx="155" cy="478" rx="20" ry="10" fill="#111827"/>
-      <ellipse cx="191" cy="478" rx="20" ry="10" fill="#111827"/>
-      
-      <!-- Neck -->
-      <rect x="163" y="268" width="24" height="28" rx="8" fill="url(#skinH)"/>
-      
-      <!-- Head (anime large head) -->
-      <ellipse cx="175" cy="220" rx="52" ry="58" fill="url(#skinH)"/>
-      
-      <!-- Hair (dark, messy tech bro hair) -->
-      <ellipse cx="175" cy="175" rx="54" ry="34" fill="#1c1c1c"/>
-      <path d="M123,195 Q110,170 130,155 Q150,145 175,148 Q200,145 220,155 Q240,170 227,195" fill="#1c1c1c"/>
-      <!-- Hair strands -->
-      <path d="M130,165 Q125,148 138,145" stroke="#1c1c1c" stroke-width="6" fill="none" stroke-linecap="round"/>
-      <path d="M220,165 Q225,148 212,145" stroke="#1c1c1c" stroke-width="6" fill="none" stroke-linecap="round"/>
-      
-      <!-- Glasses (anime nerd glasses) -->
-      <circle cx="158" cy="218" r="17" fill="none" stroke="#1c1c1c" stroke-width="3"/>
-      <circle cx="192" cy="218" r="17" fill="none" stroke="#1c1c1c" stroke-width="3"/>
-      <line x1="175" y1="218" x2="175" y2="218" stroke="#1c1c1c" stroke-width="3"/>
-      <line x1="141" y1="218" x2="127" y2="213" stroke="#1c1c1c" stroke-width="3"/>
-      <line x1="209" y1="218" x2="223" y2="213" stroke="#1c1c1c" stroke-width="3"/>
-      <!-- Glasses lens reflection -->
-      <path d="M148,210 Q152,206 156,209" stroke="white" stroke-width="2" fill="none" opacity="0.7"/>
-      <path d="M182,210 Q186,206 190,209" stroke="white" stroke-width="2" fill="none" opacity="0.7"/>
-      
-      <!-- Eyes (behind glasses) -->
-      <circle cx="158" cy="218" r="6" fill="#1a1a2e"/>
-      <circle cx="192" cy="218" r="6" fill="#1a1a2e"/>
-      <circle cx="160" cy="216" r="2" fill="white"/>
-      <circle cx="194" cy="216" r="2" fill="white"/>
-      
-      <!-- Eyebrows -->
-      <path d="M144,205 Q158,200 170,205" stroke="#1c1c1c" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <path d="M180,205 Q192,200 206,205" stroke="#1c1c1c" stroke-width="3" fill="none" stroke-linecap="round"/>
-      
-      <!-- Nose -->
-      <path d="M172,228 Q175,238 178,228" stroke="#d4956a" stroke-width="2" fill="none"/>
-      
-      <!-- Mouth (smirk) -->
-      <path id="husband-mouth" d="M162,248 Q175,258 188,248" stroke="#c0725a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      
-      <!-- Blush -->
-      <ellipse cx="138" cy="235" rx="12" ry="8" fill="#ffb3b3" opacity="0.4"/>
-      <ellipse cx="212" cy="235" rx="12" ry="8" fill="#ffb3b3" opacity="0.4"/>
-      
-      <!-- Laptop in hand -->
-      <rect x="195" y="330" width="55" height="38" rx="4" fill="#374151"/>
-      <rect x="198" y="333" width="49" height="28" rx="2" fill="#0d1117"/>
-      <text x="222" y="348" text-anchor="middle" font-size="7" fill="#22c55e" font-family="monospace">&gt;_</text>
-      <rect x="190" y="368" width="65" height="6" rx="3" fill="#4b5563"/>
-      <!-- Arm holding laptop -->
-      <rect x="196" y="310" width="20" height="30" rx="8" fill="url(#skinH)"/>
-    </g>
+<!-- sofa hint -->
+<rect x="320" y="388" width="320" height="35" rx="10" fill="#8b3a52"/>
+<rect x="315" y="370" width="330" height="24" rx="8" fill="#a0455f"/>
+<rect x="315" y="385" width="15" height="40" rx="5" fill="#a0455f"/>
+<rect x="630" y="385" width="15" height="40" rx="5" fill="#a0455f"/>
 
-    <!-- ====================== -->
-    <!-- WIFE CHARACTER (right, anime style) -->
-    <!-- ====================== -->
-    <g id="wife-char" filter="url(#shadow)">
-      <!-- Shadow -->
-      <ellipse cx="695" cy="408" rx="45" ry="10" fill="#00000033"/>
-      
-      <!-- Dress (saree inspired, colorful) -->
-      <path d="M650,290 Q640,350 638,480 L660,480 Q658,400 665,350 Z" fill="#e91e9a"/>
-      <path d="M700,290 Q710,350 712,480 L730,480 Q728,400 725,350 Z" fill="#e91e9a"/>
-      <rect x="650" y="290" width="60" height="100" rx="15" fill="#e91e9a"/>
-      <!-- Saree drape details -->
-      <path d="M638,340 Q695,320 735,350" stroke="#f59e0b" stroke-width="3" fill="none" opacity="0.8"/>
-      <path d="M638,360 Q695,340 735,370" stroke="#f59e0b" stroke-width="2" fill="none" opacity="0.6"/>
-      <!-- Dupatta / saree end -->
-      <path d="M650,290 Q620,320 615,390 L635,395 Q638,330 658,295 Z" fill="#c2185b" opacity="0.8"/>
-      <!-- Gold border on dress -->
-      <path d="M638,480 L730,480" stroke="#f59e0b" stroke-width="5"/>
-      <!-- Decorative dots -->
-      <circle cx="670" cy="350" r="3" fill="#f59e0b"/>
-      <circle cx="680" cy="345" r="3" fill="#f59e0b"/>
-      <circle cx="690" cy="350" r="3" fill="#f59e0b"/>
-      
-      <!-- Feet / sandals -->
-      <ellipse cx="655" cy="479" rx="18" ry="9" fill="#c0392b"/>
-      <ellipse cx="695" cy="479" rx="18" ry="9" fill="#c0392b"/>
-      
-      <!-- Neck -->
-      <rect x="683" y="268" width="24" height="28" rx="8" fill="url(#skinW)"/>
-      
-      <!-- Necklace -->
-      <path d="M672,285 Q695,298 718,285" stroke="#f59e0b" stroke-width="3" fill="none"/>
-      <circle cx="695" cy="295" r="5" fill="#f59e0b"/>
-      
-      <!-- Head (anime large head) -->
-      <ellipse cx="695" cy="220" rx="52" ry="58" fill="url(#skinW)"/>
-      
-      <!-- Hair (long black hair, bun) -->
-      <ellipse cx="695" cy="172" rx="54" ry="32" fill="#111111"/>
-      <path d="M643,195 Q630,165 650,150 Q672,138 695,140 Q718,138 740,150 Q760,165 747,195" fill="#111111"/>
-      <!-- Long hair sides -->
-      <path d="M643,195 Q635,240 640,300" stroke="#111111" stroke-width="18" fill="none" stroke-linecap="round"/>
-      <path d="M747,195 Q760,250 750,310" stroke="#111111" stroke-width="14" fill="none" stroke-linecap="round"/>
-      <!-- Hair bun -->
-      <circle cx="695" cy="148" r="20" fill="#111111"/>
-      <circle cx="695" cy="148" r="8" fill="#e91e9a"/>
-      <!-- Hair accessory -->
-      <path d="M680,145 Q695,135 710,145" stroke="#f59e0b" stroke-width="3" fill="none"/>
-      <circle cx="695" cy="135" r="5" fill="#f59e0b"/>
-      
-      <!-- Eyes (large anime eyes) -->
-      <ellipse cx="676" cy="218" rx="14" ry="16" fill="#1a1a2e"/>
-      <ellipse cx="714" cy="218" rx="14" ry="16" fill="#1a1a2e"/>
-      <!-- Eye color -->
-      <ellipse cx="676" cy="218" rx="10" ry="12" fill="#5c1a7a"/>
-      <ellipse cx="714" cy="218" rx="10" ry="12" fill="#5c1a7a"/>
-      <!-- Eye shine -->
-      <circle cx="671" cy="212" r="4" fill="white"/>
-      <circle cx="709" cy="212" r="4" fill="white"/>
-      <circle cx="682" cy="222" r="2" fill="white" opacity="0.6"/>
-      <circle cx="720" cy="222" r="2" fill="white" opacity="0.6"/>
-      <!-- Eyelashes -->
-      <path d="M662,210 Q668,202 676,205" stroke="#111111" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <path d="M700,205 Q708,202 718,210" stroke="#111111" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      
-      <!-- Eyebrows (expressive) -->
-      <path id="wife-brow-l" d="M660,200 Q676,193 690,199" stroke="#111111" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-      <path id="wife-brow-r" d="M700,199 Q714,193 730,200" stroke="#111111" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-      
-      <!-- Nose -->
-      <path d="M692,232 Q695,240 698,232" stroke="#d4956a" stroke-width="1.5" fill="none"/>
-      
-      <!-- Mouth -->
-      <path id="wife-mouth" d="M682,252 Q695,262 708,252" stroke="#e91e9a" stroke-width="3" fill="none" stroke-linecap="round"/>
-      
-      <!-- Blush marks (anime style) -->
-      <ellipse cx="660" cy="235" rx="12" ry="7" fill="#ff9eb5" opacity="0.5"/>
-      <ellipse cx="730" cy="235" rx="12" ry="7" fill="#ff9eb5" opacity="0.5"/>
-      
-      <!-- Bindi -->
-      <circle cx="695" cy="197" r="4" fill="#e91e9a"/>
-      
-      <!-- Arms -->
-      <path d="M650,300 Q625,320 620,350" stroke="url(#skinW)" stroke-width="18" fill="none" stroke-linecap="round"/>
-      <!-- Hand pointing / rolling pin (angry pose) -->
-      <ellipse cx="614" cy="358" rx="12" ry="10" fill="url(#skinW)"/>
-      <!-- Rolling pin -->
-      <rect id="rolling-pin" x="590" y="354" width="50" height="10" rx="5" fill="#c8860a" opacity="0"/>
-      
-      <!-- Right arm -->
-      <path d="M740" cy="300" Q755,320 755,350" stroke="url(#skinW)" stroke-width="18" fill="none" stroke-linecap="round"/>
-      <path d="M740,305 Q762,325 758,355" stroke="url(#skinW)" stroke-width="18" fill="none" stroke-linecap="round"/>
-      <ellipse cx="760" cy="358" rx="12" ry="10" fill="url(#skinW)"/>
-    </g>
 
-    <!-- Decorative stars / sparkles -->
-    <g id="sparkles" opacity="0.6">
-      <text x="50" y="50" font-size="18" fill="#ffd700">✨</text>
-      <text x="840" y="80" font-size="14" fill="#ff6b9d">💫</text>
-      <text x="860" y="200" font-size="16" fill="#a78bfa">⭐</text>
-    </g>
+<!-- ════════════════════════════════════
+     HUSBAND CHARACTER — Full SVG
+════════════════════════════════════ -->
+<g id="husband-char" filter="url(#softShadow)">
 
-    <!-- Scene title bar -->
-    <rect x="0" y="0" width="900" height="0" fill="none"/>
-  </svg>
+  <!-- shadow -->
+  <ellipse cx="205" cy="422" rx="52" ry="11" fill="rgba(0,0,0,0.25)"/>
 
-  <!-- Speech Bubbles (HTML overlay for better text) -->
+  <!-- LEGS -->
+  <rect x="172" y="350" width="26" height="76" rx="9" fill="#1e3a5f" stroke="#152b46" stroke-width="2"/>
+  <rect x="207" y="350" width="26" height="76" rx="9" fill="#1e3a5f" stroke="#152b46" stroke-width="2"/>
+  <!-- shoes -->
+  <ellipse cx="185" cy="426" rx="20" ry="9"  fill="#111" stroke="#333" stroke-width="1.5"/>
+  <ellipse cx="220" cy="426" rx="20" ry="9"  fill="#111" stroke="#333" stroke-width="1.5"/>
+  <path d="M170,421 Q185,416 194,421" stroke="rgba(255,255,255,0.12)" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M205,421 Q220,416 229,421" stroke="rgba(255,255,255,0.12)" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+  <!-- BODY — office shirt -->
+  <rect x="160" y="218" width="90" height="140" rx="14" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <!-- shirt collar -->
+  <polygon points="205,218 190,245 205,258 220,245" fill="#f0f0f0" stroke="#ddd" stroke-width="1.5"/>
+  <!-- tie -->
+  <polygon points="205,245 198,254 203,355 207,355 212,254" fill="#dc2626" stroke="#991b1b" stroke-width="1"/>
+  <!-- shirt buttons -->
+  <circle cx="205" cy="272" r="4" fill="#1e40af" stroke="#1d4ed8" stroke-width="1"/>
+  <circle cx="205" cy="288" r="4" fill="#1e40af" stroke="#1d4ed8" stroke-width="1"/>
+  <circle cx="205" cy="304" r="4" fill="#1e40af" stroke="#1d4ed8" stroke-width="1"/>
+  <!-- shirt stripes subtle -->
+  <line x1="162" y1="265" x2="248" y2="265" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+  <line x1="162" y1="290" x2="248" y2="290" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+  <line x1="162" y1="315" x2="248" y2="315" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+  <!-- shirt pocket -->
+  <rect x="220" y="238" width="22" height="18" rx="3" fill="#2563eb" stroke="#1d4ed8" stroke-width="1"/>
+  <line x1="231" y1="238" x2="231" y2="256" stroke="#1d4ed8" stroke-width="1"/>
+  <!-- pen in pocket -->
+  <rect x="227" y="232" width="4" height="14" rx="2" fill="#ffd700"/>
+  <rect x="233" y="234" width="3" height="12" rx="1.5" fill="#ef4444"/>
+
+  <!-- LEFT ARM -->
+  <rect x="134" y="222" width="28" height="68" rx="12" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <!-- left hand open -->
+  <ellipse cx="148" cy="296" rx="14" ry="10" fill="url(#skinH)"/>
+  <line x1="140" y1="290" x2="138" y2="303" stroke="#d4956a" stroke-width="2" stroke-linecap="round"/>
+  <line x1="145" y1="288" x2="143" y2="303" stroke="#d4956a" stroke-width="2" stroke-linecap="round"/>
+  <line x1="150" y1="288" x2="148" y2="303" stroke="#d4956a" stroke-width="2" stroke-linecap="round"/>
+  <line x1="155" y1="289" x2="153" y2="303" stroke="#d4956a" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- RIGHT ARM holding laptop -->
+  <rect x="248" y="222" width="28" height="55" rx="12" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <!-- laptop -->
+  <rect x="248" y="290" width="68" height="48" rx="5" fill="#1f2937" stroke="#374151" stroke-width="2"/>
+  <rect x="252" y="294" width="60" height="38" rx="3" fill="#0d1117"/>
+  <!-- screen glow -->
+  <rect x="254" y="296" width="56" height="34" rx="2" fill="#0a1628"/>
+  <text x="257" y="311" font-family="monospace" font-size="8" fill="#22c55e">&gt; thinking...</text>
+  <text x="257" y="323" font-family="monospace" font-size="8" fill="#22c55e" id="laptopText">$ ERROR 404</text>
+  <animation id="laptopGlowAnim"/>
+  <!-- trackpad -->
+  <rect x="270" y="338" width="24" height="7" rx="3" fill="#374151"/>
+
+  <!-- NECK -->
+  <rect x="192" y="206" width="26" height="18" rx="7" fill="url(#skinH)" stroke="#d4956a" stroke-width="1"/>
+
+  <!-- HEAD -->
+  <!-- head shadow -->
+  <ellipse cx="208" cy="162" rx="46" ry="50" fill="#d4956a" opacity="0.5"/>
+  <!-- main head -->
+  <ellipse cx="206" cy="160" rx="44" ry="48" fill="url(#skinH)"/>
+  <ellipse cx="206" cy="160" rx="44" ry="48" fill="url(#shadeH)"/>
+
+  <!-- HAIR — nerdy short hair -->
+  <path d="M162,148 Q160,110 206,106 Q252,110 250,148" fill="#2a1800" stroke="#3a2000" stroke-width="1"/>
+  <path d="M170,140 Q168,116 206,112 Q244,116 242,140" fill="#321e00" stroke="#3a2000" stroke-width="1"/>
+  <!-- hair part line -->
+  <path d="M206,106 L206,130" stroke="#1a1000" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- hair highlight -->
+  <path d="M186,112 Q206,107 226,114" stroke="rgba(120,90,40,0.35)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+  <!-- EARS -->
+  <ellipse cx="162" cy="162" rx="8" ry="11" fill="#EFB887" stroke="#d4956a" stroke-width="1.5"/>
+  <ellipse cx="162" cy="162" rx="4.5" ry="6" fill="#DFA070"/>
+  <ellipse cx="250" cy="162" rx="8" ry="11" fill="#EFB887" stroke="#d4956a" stroke-width="1.5"/>
+  <ellipse cx="250" cy="162" rx="4.5" ry="6" fill="#DFA070"/>
+
+  <!-- GLASSES — signature nerdy glasses -->
+  <rect x="171" y="152" width="28" height="20" rx="8" fill="none" stroke="#1a1a1a" stroke-width="3"/>
+  <rect x="207" y="152" width="28" height="20" rx="8" fill="none" stroke="#1a1a1a" stroke-width="3"/>
+  <!-- lens tint -->
+  <rect x="172" y="153" width="26" height="18" rx="7" fill="rgba(59,130,246,0.12)"/>
+  <rect x="208" y="153" width="26" height="18" rx="7" fill="rgba(59,130,246,0.12)"/>
+  <!-- glasses bridge -->
+  <line x1="199" y1="162" x2="207" y2="162" stroke="#1a1a1a" stroke-width="3"/>
+  <!-- temple arms -->
+  <line x1="171" y1="162" x2="162" y2="160" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="235" y1="162" x2="250" y2="160" stroke="#1a1a1a" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- EYES behind glasses -->
+  <ellipse cx="185" cy="162" rx="9" ry="8" fill="white"/>
+  <ellipse cx="221" cy="162" rx="9" ry="8" fill="white"/>
+  <circle cx="185" cy="162" r="5.5" fill="#1a3a70"/>
+  <circle cx="221" cy="162" r="5.5" fill="#1a3a70"/>
+  <circle cx="185" cy="162" r="3.5" fill="#0a0a0a" id="hPupilL"/>
+  <circle cx="221" cy="162" r="3.5" fill="#0a0a0a" id="hPupilR"/>
+  <!-- eye shine -->
+  <circle cx="187" cy="160" r="2"   fill="white" opacity="0.9"/>
+  <circle cx="223" cy="160" r="2"   fill="white" opacity="0.9"/>
+
+  <!-- EYEBROWS -->
+  <path d="M172,148 Q185,143 196,147" stroke="#2a1800" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <path d="M208,147 Q219,143 232,148" stroke="#2a1800" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+
+  <!-- NOSE -->
+  <path d="M202,170 Q206,180 210,170" stroke="#c4834e" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <ellipse cx="200" cy="177" rx="5" ry="3.5" fill="#EFB887" stroke="#d4956a" stroke-width="1"/>
+  <ellipse cx="212" cy="177" rx="5" ry="3.5" fill="#EFB887" stroke="#d4956a" stroke-width="1"/>
+
+  <!-- MOUTH -->
+  <g id="husband-mouth-g">
+    <path id="husband-mouth" d="M194,192 Q206,200 218,192" stroke="#c0725a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- BLUSH subtle -->
+  <ellipse cx="174" cy="176" rx="12" ry="8" fill="#ffb3b3" opacity="0.3"/>
+  <ellipse cx="238" cy="176" rx="12" ry="8" fill="#ffb3b3" opacity="0.3"/>
+
+  <!-- STUBBLE -->
+  <path d="M188,195 Q206,204 224,195" stroke="#8a6040" stroke-width="1" fill="none" opacity="0.4"/>
+</g>
+
+
+<!-- ════════════════════════════════════
+     WIFE CHARACTER — Full SVG
+════════════════════════════════════ -->
+<g id="wife-char" filter="url(#softShadow)">
+
+  <!-- shadow -->
+  <ellipse cx="718" cy="422" rx="50" ry="11" fill="rgba(0,0,0,0.25)"/>
+
+  <!-- LEGS -->
+  <!-- Dress covers legs, just feet visible -->
+  <ellipse cx="700" cy="494" rx="22" ry="9" fill="#c0392b"/>
+  <ellipse cx="736" cy="494" rx="22" ry="9" fill="#c0392b"/>
+  <!-- sandal straps -->
+  <path d="M690,488 Q700,484 710,488" stroke="#f59e0b" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M726,488 Q736,484 746,488" stroke="#f59e0b" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+  <!-- SAREE / DRESS — detailed -->
+  <!-- main dress body -->
+  <path d="M678,295 Q666,370 664,495 L696,495 Q690,420 694,360Z" fill="#e91e9a"/>
+  <path d="M758,295 Q770,370 772,495 L740,495 Q746,420 742,360Z" fill="#e91e9a"/>
+  <rect x="672" y="292" width="92" height="108" rx="16" fill="#e91e9a"/>
+  <!-- blouse detail -->
+  <rect x="680" y="292" width="76" height="42" rx="12" fill="#c2185b"/>
+  <!-- saree drape left -->
+  <path d="M668,305 Q645,340 642,415 L660,418 Q660,348 676,315Z" fill="#c2185b" opacity="0.85"/>
+  <!-- pallu end decorative -->
+  <path d="M642,415 Q650,440 655,470 L668,470 Q660,444 652,415Z" fill="#c2185b" opacity="0.75"/>
+  <!-- gold border -->
+  <path d="M664,495 L772,495" stroke="#f59e0b" stroke-width="6"/>
+  <!-- gold saree border along hem -->
+  <path d="M644,418 Q648,445 652,470" stroke="#f59e0b" stroke-width="3" fill="none"/>
+  <!-- decorative gold dots on saree -->
+  <circle cx="695" cy="365" r="4" fill="#f59e0b"/>
+  <circle cx="707" cy="358" r="3.5" fill="#f59e0b"/>
+  <circle cx="719" cy="365" r="4" fill="#f59e0b"/>
+  <circle cx="731" cy="358" r="3" fill="#f59e0b"/>
+  <!-- embroidery pattern -->
+  <path d="M672,340 Q718,330 764,340" stroke="#f59e0b" stroke-width="1.5" fill="none" opacity="0.6"/>
+  <path d="M668,360 Q718,350 768,360" stroke="#f59e0b" stroke-width="1.5" fill="none" opacity="0.5"/>
+
+  <!-- LEFT ARM -->
+  <path d="M672,300 Q648,330 638,365" stroke="url(#skinW)" stroke-width="20" fill="none" stroke-linecap="round"/>
+  <!-- left hand / bangles -->
+  <ellipse cx="634" cy="372" rx="13" ry="11" fill="#f8c48a" stroke="#d4956a" stroke-width="1.5"/>
+  <!-- bangles on wrist -->
+  <ellipse cx="643" cy="365" rx="8" ry="5" fill="none" stroke="#f59e0b" stroke-width="2.5" transform="rotate(-30 643 365)"/>
+  <ellipse cx="643" cy="365" rx="8" ry="5" fill="none" stroke="#e91e9a" stroke-width="2" transform="rotate(-20 643 365)"/>
+  <!-- rolling pin (angry prop) -->
+  <rect id="rolling-pin" x="600" y="368" width="55" height="11" rx="5.5" fill="#c8860a" opacity="0" stroke="#a06808" stroke-width="1.5"/>
+
+  <!-- RIGHT ARM -->
+  <path d="M764,305 Q782,335 780,368" stroke="url(#skinW)" stroke-width="20" fill="none" stroke-linecap="round"/>
+  <ellipse cx="782" cy="374" rx="13" ry="11" fill="#f8c48a" stroke="#d4956a" stroke-width="1.5"/>
+  <!-- bangles right -->
+  <ellipse cx="774" cy="367" rx="8" ry="5" fill="none" stroke="#f59e0b" stroke-width="2.5" transform="rotate(30 774 367)"/>
+  <ellipse cx="774" cy="367" rx="8" ry="5" fill="none" stroke="#22c55e" stroke-width="2" transform="rotate(40 774 367)"/>
+
+  <!-- NECK -->
+  <rect x="706" y="274" width="26" height="26" rx="9" fill="url(#skinW)" stroke="#d4956a" stroke-width="1.5"/>
+  <!-- NECKLACE -->
+  <path d="M696,290 Q719,305 742,290" stroke="#f59e0b" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <circle cx="719" cy="302" r="6" fill="#f59e0b" stroke="#CC9900" stroke-width="1"/>
+  <circle cx="719" cy="302" r="3" fill="#ffd700"/>
+
+  <!-- HEAD -->
+  <!-- shadow -->
+  <ellipse cx="722" cy="228" rx="50" ry="54" fill="#d4956a" opacity="0.4"/>
+  <!-- face -->
+  <ellipse cx="720" cy="226" rx="48" ry="52" fill="url(#skinW)"/>
+  <ellipse cx="720" cy="226" rx="48" ry="52" fill="url(#shadeW)"/>
+
+  <!-- HAIR — long with bun -->
+  <!-- back long hair -->
+  <path d="M672,218 Q662,270 668,340" stroke="#111" stroke-width="22" fill="none" stroke-linecap="round"/>
+  <path d="M768,218 Q778,278 770,340" stroke="#111" stroke-width="18" fill="none" stroke-linecap="round"/>
+  <!-- top hair -->
+  <path d="M672,205 Q670,168 720,162 Q770,168 768,205" fill="#111" stroke="#1a1a1a" stroke-width="1"/>
+  <path d="M678,200 Q676,172 720,168 Q764,172 762,200" fill="#1a1a1a"/>
+  <!-- HAIR BUN -->
+  <circle cx="720" cy="158" r="26" fill="#111" stroke="#1a1a1a" stroke-width="1"/>
+  <!-- bun flower/pin -->
+  <circle cx="720" cy="158" r="10" fill="#e91e9a" stroke="#c2185b" stroke-width="1.5"/>
+  <!-- hairpin -->
+  <path d="M706,152 Q720,143 734,152" stroke="#f59e0b" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <circle cx="720" cy="142" r="6" fill="#f59e0b" stroke="#CC9900" stroke-width="1.5"/>
+  <!-- hair highlight -->
+  <path d="M698,168 Q720,162 742,168" stroke="rgba(255,255,255,0.12)" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+  <!-- EARS -->
+  <ellipse cx="672" cy="228" rx="8" ry="11" fill="#f0c090" stroke="#d4956a" stroke-width="1.5"/>
+  <ellipse cx="672" cy="228" rx="4.5" ry="6" fill="#e0a878"/>
+  <ellipse cx="768" cy="228" rx="8" ry="11" fill="#f0c090" stroke="#d4956a" stroke-width="1.5"/>
+  <ellipse cx="768" cy="228" rx="4.5" ry="6" fill="#e0a878"/>
+  <!-- earrings -->
+  <circle cx="672" cy="238" r="5" fill="#f59e0b" stroke="#CC9900" stroke-width="1"/>
+  <circle cx="768" cy="238" r="5" fill="#f59e0b" stroke="#CC9900" stroke-width="1"/>
+
+  <!-- EYEBROWS expressive -->
+  <path id="wife-brow-l" d="M686,206 Q702,198 716,204" stroke="#111" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path id="wife-brow-r" d="M724,204 Q738,198 754,206" stroke="#111" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+  <!-- EYES — large anime style -->
+  <!-- eye socket -->
+  <ellipse cx="702" cy="224" rx="16" ry="18" fill="#0d0d1a"/>
+  <ellipse cx="738" cy="224" rx="16" ry="18" fill="#0d0d1a"/>
+  <!-- iris -->
+  <ellipse cx="702" cy="224" rx="12" ry="14" fill="#6b21a8"/>
+  <ellipse cx="738" cy="224" rx="12" ry="14" fill="#6b21a8"/>
+  <!-- pupil -->
+  <circle cx="702" cy="224" r="7" fill="#0a0010" id="wPupilL"/>
+  <circle cx="738" cy="224" r="7" fill="#0a0010" id="wPupilR"/>
+  <!-- shine -->
+  <circle cx="696" cy="217" r="5" fill="white" opacity="0.95"/>
+  <circle cx="732" cy="217" r="5" fill="white" opacity="0.95"/>
+  <circle cx="708" cy="228" r="2" fill="white" opacity="0.5"/>
+  <circle cx="744" cy="228" r="2" fill="white" opacity="0.5"/>
+  <!-- eyelashes upper -->
+  <path d="M686,216 Q694,206 702,210" stroke="#111" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M702,208 Q710,204 718,210" stroke="#111" stroke-width="2"   fill="none" stroke-linecap="round"/>
+  <path d="M722,210 Q730,204 738,208" stroke="#111" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M738,208 Q746,206 754,216" stroke="#111" stroke-width="2"   fill="none" stroke-linecap="round"/>
+  <!-- lower lash -->
+  <path d="M690,232 Q700,238 712,234" stroke="#111" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <path d="M728,234 Q740,238 750,232" stroke="#111" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+  <!-- NOSE -->
+  <path d="M716,238 Q720,248 724,238" stroke="#c4834e" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <ellipse cx="714" cy="244" rx="5" ry="3.5" fill="#f0c090" stroke="#d4956a" stroke-width="1"/>
+  <ellipse cx="726" cy="244" rx="5" ry="3.5" fill="#f0c090" stroke="#d4956a" stroke-width="1"/>
+
+  <!-- MOUTH -->
+  <g id="wife-mouth-g">
+    <path id="wife-mouth" d="M706,262 Q720,272 734,262" stroke="#e91e9a" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <!-- upper lip -->
+    <path d="M708,262 Q714,258 720,260 Q726,258 732,262" stroke="#ff80b0" stroke-width="2" fill="none"/>
+  </g>
+
+  <!-- BINDI -->
+  <circle cx="720" cy="200" r="5" fill="#e91e9a" stroke="#c2185b" stroke-width="1"/>
+  <circle cx="720" cy="200" r="2.5" fill="#ff80b0"/>
+
+  <!-- ANIME BLUSH -->
+  <ellipse cx="684" cy="242" rx="13" ry="8" fill="#ff9eb5" opacity="0.45"/>
+  <ellipse cx="756" cy="242" rx="13" ry="8" fill="#ff9eb5" opacity="0.45"/>
+
+</g>
+
+<!-- decorative sparkles -->
+<text x="52"  y="48"  font-size="20" fill="#ffd700" opacity="0.7">✨</text>
+<text x="900" y="80"  font-size="16" fill="#ff6b9d" opacity="0.7">💫</text>
+<text x="920" y="200" font-size="18" fill="#a78bfa" opacity="0.6">⭐</text>
+
+</svg>
+
+  <!-- HTML speech bubbles overlay -->
   <div class="speech-bubble" id="bubble-husband"></div>
   <div class="speech-bubble" id="bubble-wife"></div>
 </div>
 
 <p class="status" id="status">Press ▶ Play to start the drama!</p>
 
-<div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap; justify-content:center; margin-bottom:10px;">
-  <label class="audio-toggle">
-    <input type="checkbox" id="audioToggle" checked>
-    🔊 Voice Narration
-  </label>
-</div>
-
 <div class="controls">
-  <button class="btn btn-reset" onclick="resetDrama()">↺ Start Again</button>
-  <button class="btn btn-play" id="playBtn" onclick="togglePlay()">▶ Play</button>
+  <button class="btn btn-play" id="playBtn">▶ Play</button>
+  <button class="btn btn-stop" id="stopBtn" disabled>⏹ Stop</button>
 </div>
 
 <script>
+// ── SCRIPT ────────────────────────────────────────────────────────────────────
 const script = [
-  { speaker:'husband', text:'Evening Dear, I\'m now logged in! 🖥️', isTerminal:false, emotion:'😊' },
-  { speaker:'wife',    text:'Have you brought the ring? 💍', isTerminal:false, emotion:'🥺' },
-  { speaker:'husband', text:'BAD COMMAND OR FILE NAME.', isTerminal:true, emotion:'🤓' },
-  { speaker:'wife',    text:'But I had told you in the morning...', isTerminal:false, emotion:'😤' },
-  { speaker:'husband', text:'ERRONEOUS SYNTAX. ABORT? [Y/N]', isTerminal:true, emotion:'🤓' },
-  { speaker:'wife',    text:'What about my Diwali saree? 🥻', isTerminal:false, emotion:'😤' },
-  { speaker:'husband', text:'VARIABLE NOT FOUND...', isTerminal:true, emotion:'😅' },
-  { speaker:'wife',    text:'It was a grave mistake that I married an idiot like you!', isTerminal:false, emotion:'😡' },
-  { speaker:'husband', text:'TRUE CASE OF DATA TYPE MISMATCH.', isTerminal:true, emotion:'😬' },
-  { speaker:'wife',    text:'You are a useless nut! 🥜', isTerminal:false, emotion:'😠' },
-  { speaker:'husband', text:'It\'s by DEFAULT.', isTerminal:true, emotion:'🤷' },
-  { speaker:'wife',    text:'What about your salary? 💸', isTerminal:false, emotion:'💢' },
-  { speaker:'husband', text:'FILE IN USE...', isTerminal:true, emotion:'😶' },
-  { speaker:'wife',    text:'Who was in the car this morning? 🚗', isTerminal:false, emotion:'🔥' },
-  { speaker:'husband', text:'SYSTEM UNSTABLE.\nPress CTRL+ALT+DEL to Reboot.', isTerminal:true, emotion:'😰' },
-  { speaker:'wife',    text:'Would you like some snacks? 🍿', isTerminal:false, emotion:'😊' },
-  { speaker:'husband', text:'HARD DISK FULL.', isTerminal:true, emotion:'😬' },
-  { speaker:'wife',    text:'What is the relation between you and the receptionist? 👀', isTerminal:false, emotion:'😡' },
-  { speaker:'husband', text:'THE ONLY USER WITH WRITE PERMISSION.', isTerminal:true, emotion:'😈' },
-  { speaker:'wife',    text:'What is my value in your life? 💔', isTerminal:false, emotion:'😢' },
-  { speaker:'husband', text:'UNKNOWN VIRUS DETECTED!', isTerminal:true, emotion:'😱' },
-  { speaker:'wife',    text:'Do you love me or your computer? 💻', isTerminal:false, emotion:'😤' },
-  { speaker:'husband', text:'TOO MANY PARAMETERS.', isTerminal:true, emotion:'🤯' },
-  { speaker:'wife',    text:"I'll go to my Dad's house! 🚪", isTerminal:false, emotion:'😤' },
-  { speaker:'husband', text:'PROGRAM PERFORMED ILLEGAL OPERATION.\nIT WILL CLOSE.', isTerminal:true, emotion:'😐' },
-  { speaker:'wife',    text:"I'll leave you forever! 😤", isTerminal:false, emotion:'😭' },
-  { speaker:'husband', text:'CLOSE ALL PROGRAMS.\nLOG OUT FOR ANOTHER USER.', isTerminal:true, emotion:'😏' },
-  { speaker:'wife',    text:'It is worthless talking with you!', isTerminal:false, emotion:'😤' },
-  { speaker:'husband', text:'SHUTTING DOWN COMPUTER...', isTerminal:true, emotion:'😌' },
-  { speaker:'wife',    text:"I'M GOING! 🚶‍♀️", isTerminal:false, emotion:'💨' },
-  { speaker:'husband', text:'✅ It is now SAFE to\nTurn Off Your Computer.', isTerminal:true, emotion:'😎' },
+  { speaker:'husband', text:'Evening Dear, I\'m now logged in! 🖥️',                       isTerminal:false, emotion:'😊' },
+  { speaker:'wife',    text:'Have you brought the ring? 💍',                                isTerminal:false, emotion:'🥺' },
+  { speaker:'husband', text:'BAD COMMAND OR FILE NAME.',                                    isTerminal:true,  emotion:'🤓' },
+  { speaker:'wife',    text:'But I had told you in the morning...',                         isTerminal:false, emotion:'😤' },
+  { speaker:'husband', text:'ERRONEOUS SYNTAX.\nABORT? [Y/N]',                             isTerminal:true,  emotion:'🤓' },
+  { speaker:'wife',    text:'What about my Diwali saree? 🥻',                              isTerminal:false, emotion:'😤' },
+  { speaker:'husband', text:'VARIABLE NOT FOUND...',                                        isTerminal:true,  emotion:'😅' },
+  { speaker:'wife',    text:'It was a grave mistake that I married an idiot like you!',     isTerminal:false, emotion:'😡' },
+  { speaker:'husband', text:'TRUE CASE OF DATA TYPE MISMATCH.',                             isTerminal:true,  emotion:'😬' },
+  { speaker:'wife',    text:'You are a useless nut! 🥜',                                   isTerminal:false, emotion:'😠' },
+  { speaker:'husband', text:'It\'s by DEFAULT.',                                            isTerminal:true,  emotion:'🤷' },
+  { speaker:'wife',    text:'What about your salary? 💸',                                  isTerminal:false, emotion:'💢' },
+  { speaker:'husband', text:'FILE IN USE...',                                               isTerminal:true,  emotion:'😶' },
+  { speaker:'wife',    text:'Who was in the car this morning? 🚗',                         isTerminal:false, emotion:'🔥' },
+  { speaker:'husband', text:'SYSTEM UNSTABLE.\nPress CTRL+ALT+DEL to Reboot.',             isTerminal:true,  emotion:'😰' },
+  { speaker:'wife',    text:'Would you like some snacks? 🍿',                              isTerminal:false, emotion:'😊' },
+  { speaker:'husband', text:'HARD DISK FULL.',                                              isTerminal:true,  emotion:'😬' },
+  { speaker:'wife',    text:'What is the relation between you and the receptionist? 👀',   isTerminal:false, emotion:'😡' },
+  { speaker:'husband', text:'THE ONLY USER WITH\nWRITE PERMISSION.',                       isTerminal:true,  emotion:'😈' },
+  { speaker:'wife',    text:'What is my value in your life? 💔',                           isTerminal:false, emotion:'😢' },
+  { speaker:'husband', text:'UNKNOWN VIRUS DETECTED!',                                     isTerminal:true,  emotion:'😱' },
+  { speaker:'wife',    text:'Do you love me or your computer? 💻',                         isTerminal:false, emotion:'😤' },
+  { speaker:'husband', text:'TOO MANY PARAMETERS.',                                         isTerminal:true,  emotion:'🤯' },
+  { speaker:'wife',    text:"I'll go to my Dad's house! 🚪",                              isTerminal:false, emotion:'😤' },
+  { speaker:'husband', text:'PROGRAM PERFORMED ILLEGAL OPERATION.\nIT WILL CLOSE.',        isTerminal:true,  emotion:'😐' },
+  { speaker:'wife',    text:"I'll leave you forever! 😤",                                  isTerminal:false, emotion:'😭' },
+  { speaker:'husband', text:'CLOSE ALL PROGRAMS.\nLOG OUT FOR ANOTHER USER.',              isTerminal:true,  emotion:'😏' },
+  { speaker:'wife',    text:'It is worthless talking with you!',                            isTerminal:false, emotion:'😤' },
+  { speaker:'husband', text:'SHUTTING DOWN COMPUTER...',                                   isTerminal:true,  emotion:'😌' },
+  { speaker:'wife',    text:"I'M GOING! 🚶‍♀️",                                            isTerminal:false, emotion:'💨' },
+  { speaker:'husband', text:'✅ It is now SAFE to\nTurn Off Your Computer.',               isTerminal:true,  emotion:'😎' },
 ];
 
-const speeds = [
-  { label:'Normal', delay:2500, typingMs:900 },
-];
-let speedIdx = 0;
-let currentIdx = 0;
-let isPlaying = false;
-let isPaused = false;
-let timeoutId = null;
-let speechUtterance = null;
-
-// Speech voices
+// ── VOICES ───────────────────────────────────────────────────────────────────
+const synth = window.speechSynthesis;
 let voices = [];
-window.speechSynthesis.onvoiceschanged = () => { voices = window.speechSynthesis.getVoices(); };
-setTimeout(() => { voices = window.speechSynthesis.getVoices(); }, 500);
+function loadVoices(){ voices = synth.getVoices(); }
+loadVoices();
+if(synth.onvoiceschanged !== undefined) synth.onvoiceschanged = loadVoices;
 
-function getVoice(speaker) {
-  if (!voices.length) voices = window.speechSynthesis.getVoices();
-  // Husband: male voice, Wife: female voice
-  if (speaker === 'husband') {
-    return voices.find(v => v.name.toLowerCase().includes('male') && !v.name.toLowerCase().includes('female'))
-        || voices.find(v => v.lang === 'en-US' && v.name.toLowerCase().includes('david'))
-        || voices.find(v => v.lang === 'en-US' && v.name.toLowerCase().includes('mark'))
-        || voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('male'))
-        || voices.find(v => v.lang === 'en-US')
-        || voices[0];
-  } else {
-    return voices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('samantha') || v.name.toLowerCase().includes('victoria') || v.name.toLowerCase().includes('karen') || v.name.toLowerCase().includes('zira'))
-        || voices.find(v => v.lang === 'en-US' && v.name.toLowerCase().includes('female'))
-        || voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female'))
-        || voices.find(v => v.lang === 'en-GB')
-        || voices[1]
-        || voices[0];
+function getVoice(speaker){
+  if(!voices.length) voices = synth.getVoices();
+  const en = voices.filter(v=>v.lang.startsWith('en'));
+  if(speaker==='husband'){
+    return en.find(v=>/david|mark|daniel|george|james/i.test(v.name))
+        || en.find(v=>v.lang==='en-US') || en[0];
   }
+  return en.find(v=>/samantha|victoria|karen|zira|female|woman/i.test(v.name))
+      || en.find(v=>v.lang==='en-GB') || en[1] || en[0];
 }
 
-function speak(text, speaker, onEnd) {
-  if (!document.getElementById('audioToggle').checked) {
-    onEnd && setTimeout(onEnd, 100);
-    return;
-  }
-  window.speechSynthesis.cancel();
-  const utter = new SpeechSynthesisUtterance(text.replace(/[🖥️💍🥻💸🚗🍿👀💔💻🚪😤😊😡💢💨💫✨⭐🔥😰😬😶😭😏😌😈😱😁🤓😅😬😐😎🤯😢🤷😏]/gu, ''));
-  utter.rate = speedIdx === 0 ? 0.85 : speedIdx === 1 ? 1.0 : 1.3;
-  utter.pitch = speaker === 'wife' ? 1.4 : 0.85;
+function speak(text, speaker, onEnd){
+  synth.cancel();
+  const clean = text.replace(/[^\w\s,!?.''\-\n]/g,'').trim();
+  const utter = new SpeechSynthesisUtterance(clean);
+  utter.pitch  = speaker==='wife' ? 1.45 : 0.82;
+  utter.rate   = speaker==='wife' ? 0.95 : 0.88;
   utter.volume = 0.95;
-  const v = getVoice(speaker);
-  if (v) utter.voice = v;
-  utter.onend = () => onEnd && onEnd();
-  utter.onerror = () => onEnd && onEnd();
-  window.speechSynthesis.speak(utter);
+  const v = getVoice(speaker); if(v) utter.voice = v;
+  utter.onend  = ()=>onEnd&&onEnd();
+  utter.onerror = ()=>onEnd&&onEnd();
+  synth.speak(utter);
 }
 
-
-
-function showBubble(speaker, text, isTerminal) {
-  // Hide both
-  document.getElementById('bubble-husband').classList.remove('show');
-  document.getElementById('bubble-wife').classList.remove('show');
-
-  const el = document.getElementById(`bubble-${speaker}`);
-  el.className = 'speech-bubble' + (isTerminal ? ' terminal-text' : '');
-  el.style.whiteSpace = 'pre-line';
-  el.textContent = text;
-
-  setTimeout(() => el.classList.add('show'), 30);
+// ── EXPRESSION HELPERS ────────────────────────────────────────────────────────
+function setHusbandMouth(type){
+  const m = document.getElementById('husband-mouth');
+  if(type==='talk')   m.setAttribute('d','M194,192 Q206,206 218,192');
+  else if(type==='smirk') m.setAttribute('d','M194,192 Q210,198 218,188');
+  else                m.setAttribute('d','M194,192 Q206,200 218,192');
 }
-
-function hideBubbles() {
-  document.getElementById('bubble-husband').classList.remove('show');
-  document.getElementById('bubble-wife').classList.remove('show');
-}
-
-function setCharacterState(speaker, state) {
-  const svg = document.getElementById('sceneSVG');
-  // Remove all states
-  svg.classList.remove('husband-idle','husband-talking','wife-idle','wife-talking','wife-angry');
-  if (state === 'talking') {
-    svg.classList.add(`${speaker}-talking`);
-    // Other character idle
-    const other = speaker === 'husband' ? 'wife' : 'husband';
-    svg.classList.add(`${other}-idle`);
+function setWifeMouth(type){
+  const g = document.getElementById('wife-mouth-g');
+  if(type==='angry'){
+    g.innerHTML=`<path id="wife-mouth" d="M706,270 Q720,260 734,270" stroke="#e91e9a" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  } else if(type==='sad'){
+    g.innerHTML=`<path id="wife-mouth" d="M706,268 Q720,258 734,268" stroke="#e91e9a" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  } else if(type==='happy'){
+    g.innerHTML=`<path id="wife-mouth" d="M706,262 Q720,276 734,262" stroke="#e91e9a" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M708,262 Q714,258 720,260 Q726,258 732,262" stroke="#ff80b0" stroke-width="2" fill="none"/>`;
+  } else {
+    g.innerHTML=`<path id="wife-mouth" d="M706,262 Q720,272 734,262" stroke="#e91e9a" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M708,262 Q714,258 720,260 Q726,258 732,262" stroke="#ff80b0" stroke-width="2" fill="none"/>`;
   }
-  // Change expressions
-  updateExpression(speaker, state);
 }
-
-function updateExpression(speaker, state) {
-  if (speaker === 'wife') {
-    const browL = document.getElementById('wife-brow-l');
-    const browR = document.getElementById('wife-brow-r');
-    const mouth = document.getElementById('wife-mouth');
-    if (state === 'angry') {
-      browL.setAttribute('d', 'M660,205 Q676,196 690,202');
-      browR.setAttribute('d', 'M700,202 Q714,196 730,205');
-      mouth.setAttribute('d', 'M682,260 Q695,252 708,260');
-      document.getElementById('sceneSVG').classList.add('wife-angry');
-    } else {
-      browL.setAttribute('d', 'M660,200 Q676,193 690,199');
-      browR.setAttribute('d', 'M700,199 Q714,193 730,200');
-      mouth.setAttribute('d', 'M682,252 Q695,262 708,252');
-    }
+function setWifeBrows(type){
+  const l=document.getElementById('wife-brow-l');
+  const r=document.getElementById('wife-brow-r');
+  if(type==='angry'){
+    l.setAttribute('d','M686,212 Q702,202 716,208'); r.setAttribute('d','M724,208 Q738,202 754,212');
+  } else if(type==='sad'){
+    l.setAttribute('d','M686,208 Q702,202 716,208'); r.setAttribute('d','M724,208 Q738,202 754,208');
+  } else {
+    l.setAttribute('d','M686,206 Q702,198 716,204'); r.setAttribute('d','M724,204 Q738,198 754,206');
   }
-  if (speaker === 'husband') {
-    const mouth = document.getElementById('husband-mouth');
-    if (state === 'talking') {
-      mouth.setAttribute('d', 'M162,248 Q175,262 188,248');
-    } else {
-      mouth.setAttribute('d', 'M162,248 Q175,256 188,248');
-    }
+}
+function setRollingPin(show){
+  document.getElementById('rolling-pin').style.opacity = show ? '1' : '0';
+}
+function lookAt(who){
+  // husband looks right at wife
+  const hl = document.getElementById('hPupilL');
+  const hr = document.getElementById('hPupilR');
+  // wife looks left at husband
+  const wl = document.getElementById('wPupilL');
+  const wr = document.getElementById('wPupilR');
+  if(who==='husband'){
+    hl.setAttribute('cx','187'); hr.setAttribute('cx','223');
+    wl.setAttribute('cx','699'); wr.setAttribute('cx','735');
+  } else {
+    hl.setAttribute('cx','183'); hr.setAttribute('cx','219');
+    wl.setAttribute('cx','705'); wr.setAttribute('cx','741');
   }
 }
 
-function spawnEmoji(speaker, emoji) {
-  const wrapper = document.querySelector('.scene-wrapper');
-  const el = document.createElement('div');
-  el.className = 'float-emoji';
-  el.textContent = emoji;
-  el.style.left = speaker === 'husband' ? (80 + Math.random()*80) + 'px' : (680 + Math.random()*80) + 'px';
-  el.style.top = '150px';
-  wrapper.appendChild(el);
-  setTimeout(() => el.remove(), 1900);
-}
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let currentIdx=0, isPlaying=false, isPaused=false, timeoutId=null;
+const playBtn = document.getElementById('playBtn');
+const stopBtn = document.getElementById('stopBtn');
 
-function showStatus(text) {
-  document.getElementById('status').textContent = text;
-}
+// ── CONTROLS ──────────────────────────────────────────────────────────────────
+playBtn.addEventListener('click',()=>{
+  if(!isPlaying && currentIdx===0){
+    isPlaying=true; isPaused=false; stopBtn.disabled=false;
+    playBtn.textContent='⏸ Pause';
+    document.getElementById('status').textContent='🎭 And... ACTION!';
+    setTimeout(showNext,600);
+  } else if(!isPlaying && currentIdx>=script.length){
+    resetDrama(); isPlaying=true; isPaused=false; stopBtn.disabled=false;
+    playBtn.textContent='⏸ Pause';
+    setTimeout(showNext,600);
+  } else if(isPlaying && !isPaused){
+    isPaused=true; clearTimeout(timeoutId); synth.pause();
+    playBtn.textContent='▶ Resume';
+    document.getElementById('status').textContent='⏸ Paused';
+  } else if(isPaused){
+    isPaused=false; synth.resume(); playBtn.textContent='⏸ Pause';
+    showNext();
+  }
+});
 
-function showNext() {
-  if (!isPlaying || isPaused) return;
-  if (currentIdx >= script.length) {
-    // Done
-    isPlaying = false;
-    document.getElementById('playBtn').textContent = '✅ Done!';
-    document.getElementById('progressFill').style.width = '100%';
-    showStatus('🎭 Drama Complete! The computer wins! 😂');
-    hideBubbles();
-    setCharacterState('husband','idle');
+stopBtn.addEventListener('click',()=>{
+  resetDrama(); stopBtn.disabled=true;
+});
+
+// ── PLAY LOOP ─────────────────────────────────────────────────────────────────
+function showNext(){
+  if(!isPlaying||isPaused) return;
+  if(currentIdx>=script.length){
+    isPlaying=false; playBtn.textContent='↺ Replay';
+    document.getElementById('progressFill').style.width='100%';
+    document.getElementById('status').textContent='🎭 Drama Complete! The computer wins! 😂';
+    hideBubbles(); setCharState('husband','idle'); setRollingPin(false);
     return;
   }
-
   const item = script[currentIdx];
-  const progress = (currentIdx / script.length) * 100;
-  document.getElementById('progressFill').style.width = progress + '%';
+  const pct  = (currentIdx/script.length)*100;
+  document.getElementById('progressFill').style.width = pct+'%';
 
-  const isAngry = item.speaker === 'wife' && currentIdx > 6;
-  setCharacterState(item.speaker, isAngry ? 'angry' : 'talking');
+  const isAngry = item.speaker==='wife' && currentIdx>6;
+  const isHappy = item.speaker==='wife' && item.emotion==='😊';
+  const isSad   = item.speaker==='wife' && (item.emotion==='😢'||item.emotion==='😭');
 
-  const speakerLabel = item.speaker === 'husband' ? '👨‍💻 Husband' : '👩 Wife';
-  const shortText = item.text.replace(/[^\w\s,!?.'\-]/g, '').trim();
-  showStatus(`${speakerLabel}: "${shortText.substring(0,50)}${shortText.length > 50 ? '...' : ''}"`);
+  setCharState(item.speaker, isAngry?'angry':'talking');
+  lookAt(item.speaker);
 
-  // Show bubble
+  // Expressions
+  if(item.speaker==='wife'){
+    if(isAngry)      { setWifeBrows('angry'); setWifeMouth('angry'); setRollingPin(currentIdx>10); }
+    else if(isSad)   { setWifeBrows('sad');   setWifeMouth('sad');   setRollingPin(false); }
+    else if(isHappy) { setWifeBrows('normal');setWifeMouth('happy'); setRollingPin(false); }
+    else             { setWifeBrows('normal');setWifeMouth('normal');setRollingPin(false); }
+  } else {
+    setHusbandMouth(item.isTerminal?'smirk':'talk');
+  }
+
+  // Update laptop text
+  if(item.isTerminal){
+    const lt=document.getElementById('laptopText');
+    if(lt) lt.textContent='$ '+item.text.split('\n')[0].substring(0,14);
+  }
+
+  const label = item.speaker==='husband'?'👨‍💻 Husband':'👩 Wife';
+  const short = item.text.replace(/[^\w\s,!?.'\-]/g,'').trim();
+  document.getElementById('status').textContent=`${label}: "${short.substring(0,55)}${short.length>55?'...':''}"`;
+
   showBubble(item.speaker, item.text, item.isTerminal);
   spawnEmoji(item.speaker, item.emotion);
 
-  speak(item.text, item.speaker, () => {
-    if (isPlaying && !isPaused) {
-      timeoutId = setTimeout(() => {
-        currentIdx++;
-        showNext();
-      }, 800);
+  speak(item.text, item.speaker, ()=>{
+    if(isPlaying&&!isPaused){
+      timeoutId=setTimeout(()=>{ currentIdx++; showNext(); }, 700);
     }
   });
 }
 
-function togglePlay() {
-  if (!isPlaying) {
-    isPlaying = true;
-    isPaused = false;
-    document.getElementById('playBtn').textContent = '⏸ Pause';
-    if (currentIdx === 0) {
-      showStatus('🎭 And... ACTION!');
-      setTimeout(showNext, 600);
-    } else {
-      showNext();
-    }
-  } else if (!isPaused) {
-    // Pause
-    isPaused = true;
-    clearTimeout(timeoutId);
-    window.speechSynthesis.pause();
-    document.getElementById('playBtn').textContent = '▶ Resume';
-    showStatus('⏸ Paused');
-  } else {
-    // Resume
-    isPaused = false;
-    window.speechSynthesis.resume();
-    document.getElementById('playBtn').textContent = '⏸ Pause';
-    showNext();
+function setCharState(speaker, state){
+  const svg=document.getElementById('sceneSVG');
+  svg.className='';
+  if(state==='talking'||state==='angry'){
+    svg.classList.add(`${speaker}-${state}`);
+    const other=speaker==='husband'?'wife':'husband';
+    svg.classList.add(`${other}-idle`);
   }
 }
 
-
-
-function resetDrama() {
-  clearTimeout(timeoutId);
-  window.speechSynthesis.cancel();
-  isPlaying = false;
-  isPaused = false;
-  currentIdx = 0;
+function showBubble(speaker, text, isTerminal){
   hideBubbles();
-  document.getElementById('playBtn').textContent = '▶ Play';
-  document.getElementById('progressFill').style.width = '0%';
-  showStatus('Press ▶ Play to start the drama!');
-  // Reset expressions
-  document.getElementById('wife-brow-l').setAttribute('d', 'M660,200 Q676,193 690,199');
-  document.getElementById('wife-brow-r').setAttribute('d', 'M700,199 Q714,193 730,200');
-  document.getElementById('wife-mouth').setAttribute('d', 'M682,252 Q695,262 708,252');
-  document.getElementById('husband-mouth').setAttribute('d', 'M162,248 Q175,258 188,248');
-  const svg = document.getElementById('sceneSVG');
-  svg.classList.remove('husband-idle','husband-talking','wife-idle','wife-talking','wife-angry');
+  const el=document.getElementById(`bubble-${speaker}`);
+  el.className='speech-bubble'+(isTerminal?' terminal-text':'');
+  el.style.whiteSpace='pre-line'; el.textContent=text;
+  setTimeout(()=>el.classList.add('show'),30);
+}
+function hideBubbles(){
+  document.getElementById('bubble-husband').classList.remove('show');
+  document.getElementById('bubble-wife').classList.remove('show');
+}
+function spawnEmoji(speaker, emoji){
+  const w=document.querySelector('.scene-wrapper'); if(!w) return;
+  const el=document.createElement('div'); el.className='float-emoji'; el.textContent=emoji;
+  el.style.left = speaker==='husband' ? (60+Math.random()*100)+'px' : (680+Math.random()*100)+'px';
+  el.style.top  = '160px'; w.appendChild(el); setTimeout(()=>el.remove(),2100);
+}
+
+function resetDrama(){
+  clearTimeout(timeoutId); synth.cancel();
+  isPlaying=false; isPaused=false; currentIdx=0;
+  hideBubbles(); setRollingPin(false);
+  playBtn.textContent='▶ Play';
+  document.getElementById('progressFill').style.width='0%';
+  document.getElementById('status').textContent='Press ▶ Play to start the drama!';
+  setWifeBrows('normal'); setWifeMouth('normal'); setHusbandMouth('normal');
+  document.getElementById('sceneSVG').className='';
+  const lt=document.getElementById('laptopText'); if(lt) lt.textContent='$ ERROR 404';
 }
 </script>
 </body>
