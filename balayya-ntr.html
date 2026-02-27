@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balayya & Jr.NTR - Mass Conversation 🔥</title>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #FFD700;
+  --orange: #FF6B00;
+  --red: #CC0000;
+  --dark: #0A0A0A;
+  --darker: #050505;
+  --balayya-color: #FF6B00;
+  --ntr-color: #00BFFF;
+  --balayya-dark: #CC4400;
+  --ntr-dark: #0080AA;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--darker);
+  font-family: 'Nunito', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── HEADER ── */
+.header {
+  width: 100%;
+  background: linear-gradient(135deg, #1a0000 0%, #330000 40%, #1a0500 100%);
+  padding: 14px 20px 10px;
+  text-align: center;
+  border-bottom: 4px solid var(--gold);
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(45deg, rgba(255,215,0,0.03) 0px, rgba(255,215,0,0.03) 1px, transparent 1px, transparent 16px);
+}
+.header-title {
+  font-family: 'Teko', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  background: linear-gradient(90deg, #FF6B00, #FFD700, #FF6B00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  text-shadow: none;
+  animation: shimmer 3s linear infinite;
+  background-size: 200%;
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.header-sub {
+  color: rgba(255,215,0,0.7);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  position: relative;
+  margin-top: 2px;
+}
+.star-row {
+  color: var(--gold);
+  font-size: 1rem;
+  letter-spacing: 6px;
+  margin-top: 4px;
+  position: relative;
+}
+
+/* ── STAGE ── */
+.stage {
+  width: 100%;
+  max-width: 960px;
+  padding: 20px 16px 16px;
+}
+
+/* ── SCENE ── */
+.scene {
+  background: linear-gradient(180deg, #1a0a00 0%, #0d1a0d 50%, #0a0a1a 100%);
+  border-radius: 20px;
+  border: 3px solid #333;
+  box-shadow: 0 0 40px rgba(255,107,0,0.15), 0 0 80px rgba(0,0,0,0.8), inset 0 0 60px rgba(0,0,0,0.5);
+  padding: 20px 30px 0;
+  position: relative;
+  overflow: hidden;
+  min-height: 480px;
+  margin-bottom: 14px;
+}
+
+/* spotlights */
+.scene::before {
+  content: '';
+  position: absolute;
+  top: -80px; left: 15%;
+  width: 200px; height: 400px;
+  background: radial-gradient(ellipse, rgba(255,107,0,0.12) 0%, transparent 70%);
+  transform: rotate(10deg);
+  pointer-events: none;
+}
+.scene::after {
+  content: '';
+  position: absolute;
+  top: -80px; right: 15%;
+  width: 200px; height: 400px;
+  background: radial-gradient(ellipse, rgba(0,191,255,0.10) 0%, transparent 70%);
+  transform: rotate(-10deg);
+  pointer-events: none;
+}
+
+/* scene label */
+.scene-label {
+  position: absolute;
+  top: 12px; left: 50%; transform: translateX(-50%);
+  font-family: 'Teko', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  background: rgba(255,215,0,0.15);
+  color: var(--gold);
+  padding: 4px 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,215,0,0.3);
+  white-space: nowrap;
+  z-index: 10;
+  transition: all 0.4s ease;
+}
+
+/* stars bg */
+.stars {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.star {
+  position: absolute;
+  width: 2px; height: 2px;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle var(--d, 2s) ease-in-out infinite;
+  opacity: 0.4;
+}
+@keyframes twinkle {
+  0%,100% { opacity: 0.2; transform: scale(1); }
+  50%      { opacity: 0.9; transform: scale(1.5); }
+}
+
+/* FLOOR */
+.floor {
+  height: 60px;
+  background: linear-gradient(180deg, #1a1000 0%, #0d0800 100%);
+  margin: 0 -30px;
+  border-top: 4px solid #3a2800;
+  position: relative;
+}
+.floor::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, rgba(255,215,0,0.04) 0px, rgba(255,215,0,0.04) 80px, transparent 80px, transparent 160px);
+}
+
+/* ── CHARACTERS ── */
+.characters {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  padding-top: 50px;
+  position: relative;
+  z-index: 2;
+  min-height: 360px;
+}
+
+.character {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+/* MASS entry glow */
+.character.speaking.balayya-char {
+  animation: massEntry 0.4s ease infinite alternate;
+  filter: drop-shadow(0 0 20px rgba(255,107,0,0.8));
+}
+.character.speaking.ntr-char {
+  animation: tigerEntry 0.4s ease infinite alternate;
+  filter: drop-shadow(0 0 20px rgba(0,191,255,0.8));
+}
+@keyframes massEntry {
+  from { transform: translateY(0) scale(1); }
+  to   { transform: translateY(-10px) scale(1.04); }
+}
+@keyframes tigerEntry {
+  from { transform: translateY(0) rotate(0deg); }
+  to   { transform: translateY(-8px) rotate(-1deg); }
+}
+
+/* ── SPEECH BUBBLE on body ── */
+.body-speech {
+  width: 210px;
+  min-height: 55px;
+  border-radius: 16px;
+  padding: 10px 14px 10px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  line-height: 1.5;
+  text-align: center;
+  opacity: 0;
+  transform: scale(0.5) translateY(10px);
+  transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events: none;
+  position: relative;
+  border: 3px solid;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+.body-speech.visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+/* tail up */
+.body-speech::before {
+  content: '';
+  position: absolute;
+  top: -13px; left: 50%; transform: translateX(-50%);
+  border: 8px solid transparent;
+}
+.body-speech::after {
+  content: '';
+  position: absolute;
+  top: -7px; left: 50%; transform: translateX(-50%);
+  border: 5px solid transparent;
+  z-index: 1;
+}
+
+.balayya-bubble {
+  background: linear-gradient(135deg, #1a0800, #2a1000);
+  border-color: var(--balayya-color);
+  color: #FFD090;
+  box-shadow: 0 4px 20px rgba(255,107,0,0.3), inset 0 0 20px rgba(255,107,0,0.05);
+}
+.balayya-bubble::before { border-bottom-color: var(--balayya-color); }
+.balayya-bubble::after  { border-bottom-color: #1a0800; }
+
+.ntr-bubble {
+  background: linear-gradient(135deg, #000d1a, #001a2a);
+  border-color: var(--ntr-color);
+  color: #90D8FF;
+  box-shadow: 0 4px 20px rgba(0,191,255,0.3), inset 0 0 20px rgba(0,191,255,0.05);
+}
+.ntr-bubble::before { border-bottom-color: var(--ntr-color); }
+.ntr-bubble::after  { border-bottom-color: #000d1a; }
+
+.bubble-name {
+  display: block;
+  font-family: 'Teko', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.balayya-name { color: var(--balayya-color); }
+.ntr-name     { color: var(--ntr-color); }
+
+/* ═══════════════════════════
+   BALAYYA CHARACTER
+═══════════════════════════ */
+.balayya-head {
+  width: 68px; height: 65px;
+  background: linear-gradient(160deg, #C8885A, #A86A38);
+  border-radius: 50% 50% 44% 44%;
+  position: relative;
+  border: 3px solid #8A5020;
+  box-shadow: 4px 4px 0 #5A3010, 0 0 20px rgba(255,107,0,0.2);
+  z-index: 2;
+}
+/* Balayya iconic thick hair */
+.b-hair {
+  position: absolute;
+  top: -12px; left: -5px; right: -5px;
+  height: 26px;
+  background: linear-gradient(160deg, #1a1a1a, #0a0a0a);
+  border-radius: 60% 60% 0 0;
+  border: 3px solid #333;
+}
+.b-hair::after {
+  content: '';
+  position: absolute;
+  top: 8px; left: -4px;
+  width: 12px; height: 30px;
+  background: #1a1a1a;
+  border-radius: 50%;
+  border: 2px solid #333;
+}
+/* thick brows */
+.b-brows {
+  position: absolute;
+  top: 16px;
+  display: flex; gap: 14px;
+  left: 50%; transform: translateX(-50%);
+}
+.b-brow {
+  width: 18px; height: 5px;
+  background: #1a1a1a;
+  border-radius: 3px;
+  transform: rotate(-5deg);
+}
+.b-brow:last-child { transform: rotate(5deg); }
+.b-eyes {
+  display: flex; gap: 14px;
+  justify-content: center;
+  padding-top: 26px;
+}
+.b-eye {
+  width: 13px; height: 13px;
+  background: #2a1800;
+  border-radius: 50%;
+  border: 2px solid #1a0a00;
+  position: relative;
+  box-shadow: 0 0 6px rgba(255,100,0,0.4);
+}
+.b-eye::after {
+  content: '';
+  position: absolute;
+  top: 1px; right: 2px;
+  width: 4px; height: 4px;
+  background: white;
+  border-radius: 50%;
+}
+/* Balayya iconic mustache */
+.b-mustache {
+  width: 38px; height: 10px;
+  background: #1a1a1a;
+  border-radius: 50%;
+  margin: 4px auto 0;
+  position: relative;
+}
+.b-mustache::before, .b-mustache::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  width: 16px; height: 8px;
+  background: #1a1a1a;
+  border-radius: 0 0 50% 50%;
+}
+.b-mustache::before { left: 0; transform: rotate(-10deg); }
+.b-mustache::after  { right: 0; transform: rotate(10deg); }
+.b-mouth {
+  width: 22px; height: 8px;
+  background: #8B3A10;
+  border-radius: 0 0 12px 12px;
+  margin: 3px auto 0;
+  border: 2px solid #6B2808;
+  transition: all 0.2s;
+}
+.b-mouth.roar {
+  width: 28px; height: 14px;
+  border-radius: 0 0 16px 16px;
+  background: #6B1800;
+  animation: roarPulse 0.3s ease infinite alternate;
+}
+@keyframes roarPulse {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(1.2); }
+}
+/* Balayya body - thick & mass */
+.balayya-body {
+  width: 74px; height: 80px;
+  background: linear-gradient(160deg, #8B1a00, #5A0800);
+  border-radius: 10px 10px 5px 5px;
+  position: relative;
+  border: 3px solid #6B1200;
+  box-shadow: 5px 5px 0 #3a0800, inset 2px 2px 0 rgba(255,150,0,0.1);
+  margin-top: 2px;
+  display: flex; align-items: center; justify-content: center;
+}
+/* shirt buttons */
+.b-shirt-detail {
+  width: 8px; height: 40px;
+  background: rgba(255,215,0,0.2);
+  border-radius: 4px;
+  border: 1px solid rgba(255,215,0,0.3);
+}
+.balayya-arms {
+  position: absolute;
+  top: 5px;
+  width: calc(100% + 32px);
+  left: -16px;
+  display: flex;
+  justify-content: space-between;
+}
+.b-arm {
+  width: 16px; height: 44px;
+  background: linear-gradient(180deg, #7A1800, #4A0800);
+  border-radius: 6px;
+  border: 2px solid #5A1000;
+  position: relative;
+}
+/* fist at bottom of arm */
+.b-arm::after {
+  content: '✊';
+  position: absolute;
+  bottom: -14px; left: 50%; transform: translateX(-50%);
+  font-size: 12px;
+}
+.b-arm.raised { transform: rotate(-45deg) translateY(-10px); }
+.balayya-legs {
+  display: flex; gap: 14px;
+  margin-top: 2px;
+}
+.b-leg {
+  width: 20px; height: 26px;
+  background: linear-gradient(180deg, #2a1000, #1a0800);
+  border-radius: 3px 3px 8px 8px;
+  border: 2px solid #3a1800;
+}
+
+/* ═══════════════════════════
+   JR. NTR CHARACTER
+═══════════════════════════ */
+.ntr-head {
+  width: 62px; height: 60px;
+  background: linear-gradient(160deg, #C8905A, #A87040);
+  border-radius: 50% 50% 44% 44%;
+  position: relative;
+  border: 3px solid #8A6030;
+  box-shadow: 4px 4px 0 #5A4020, 0 0 20px rgba(0,191,255,0.15);
+  z-index: 2;
+}
+/* NTR stylish hair */
+.n-hair {
+  position: absolute;
+  top: -10px; left: -4px; right: -4px;
+  height: 22px;
+  background: linear-gradient(160deg, #2a1a00, #1a0a00);
+  border-radius: 50% 50% 0 0;
+  border: 2px solid #444;
+}
+/* NTR front hair tuft */
+.n-hair::before {
+  content: '';
+  position: absolute;
+  top: -4px; left: 50%; transform: translateX(-50%);
+  width: 20px; height: 14px;
+  background: #2a1a00;
+  border-radius: 50% 50% 0 0;
+  border: 2px solid #444;
+}
+.n-brows {
+  position: absolute;
+  top: 14px;
+  display: flex; gap: 12px;
+  left: 50%; transform: translateX(-50%);
+}
+.n-brow {
+  width: 14px; height: 3px;
+  background: #2a1800;
+  border-radius: 2px;
+}
+.n-eyes {
+  display: flex; gap: 12px;
+  justify-content: center;
+  padding-top: 22px;
+}
+.n-eye {
+  width: 12px; height: 12px;
+  background: #1a0a00;
+  border-radius: 50%;
+  border: 2px solid #0a0000;
+  position: relative;
+  box-shadow: 0 0 6px rgba(0,191,255,0.3);
+}
+.n-eye::after {
+  content: '';
+  position: absolute;
+  top: 1px; right: 2px;
+  width: 3px; height: 3px;
+  background: white;
+  border-radius: 50%;
+}
+.n-mouth {
+  width: 18px; height: 7px;
+  background: #A06030;
+  border-radius: 0 0 10px 10px;
+  margin: 6px auto 0;
+  border: 2px solid #805020;
+  transition: all 0.2s;
+}
+.n-mouth.smirk {
+  width: 20px; height: 9px;
+  border-radius: 0 0 14px 14px;
+  background: #8B3A10;
+}
+/* NTR body - lean & stylish */
+.ntr-body {
+  width: 66px; height: 74px;
+  background: linear-gradient(160deg, #001a33, #000d1a);
+  border-radius: 10px 10px 5px 5px;
+  position: relative;
+  border: 3px solid #00BFFF44;
+  box-shadow: 5px 5px 0 #000a14, inset 2px 2px 0 rgba(0,191,255,0.1), 0 0 20px rgba(0,191,255,0.1);
+  margin-top: 2px;
+  display: flex; align-items: center; justify-content: center;
+}
+/* NTR chest chain */
+.n-chain {
+  width: 30px; height: 28px;
+  border: 2px solid rgba(255,215,0,0.5);
+  border-radius: 50%;
+  margin-top: 8px;
+  box-shadow: 0 0 8px rgba(255,215,0,0.3);
+}
+.ntr-arms {
+  position: absolute;
+  top: 5px;
+  width: calc(100% + 28px);
+  left: -14px;
+  display: flex;
+  justify-content: space-between;
+}
+.n-arm {
+  width: 14px; height: 40px;
+  background: linear-gradient(180deg, #001a33, #000d1a);
+  border-radius: 6px;
+  border: 2px solid #00BFFF33;
+  position: relative;
+}
+.n-arm::after {
+  content: '🤙';
+  position: absolute;
+  bottom: -14px; left: 50%; transform: translateX(-50%);
+  font-size: 11px;
+}
+.n-arm.tiger-claw { transform: rotate(30deg) translateY(-6px); }
+.ntr-legs {
+  display: flex; gap: 12px;
+  margin-top: 2px;
+}
+.n-leg {
+  width: 18px; height: 24px;
+  background: linear-gradient(180deg, #001120, #000a14);
+  border-radius: 3px 3px 8px 8px;
+  border: 2px solid #001a33;
+}
+
+/* char labels */
+.char-label {
+  margin-top: 8px;
+  font-family: 'Teko', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 4px 14px;
+  border-radius: 20px;
+  letter-spacing: 2px;
+  color: white;
+  text-transform: uppercase;
+}
+.balayya-lbl {
+  background: linear-gradient(135deg, #FF6B00, #CC4400);
+  box-shadow: 0 3px 0 #882200, 0 0 15px rgba(255,107,0,0.4);
+}
+.ntr-lbl {
+  background: linear-gradient(135deg, #0080AA, #004466);
+  box-shadow: 0 3px 0 #002233, 0 0 15px rgba(0,191,255,0.4);
+}
+
+/* EFFECTS */
+.boom-effect {
+  position: absolute;
+  font-family: 'Teko', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--gold);
+  text-shadow: 0 0 20px var(--gold), 3px 3px 0 var(--orange);
+  pointer-events: none;
+  z-index: 20;
+  opacity: 0;
+  animation: boom 0.6s ease forwards;
+}
+@keyframes boom {
+  0%   { opacity:0; transform: scale(0.3) rotate(-10deg); }
+  50%  { opacity:1; transform: scale(1.3) rotate(5deg); }
+  80%  { opacity:1; transform: scale(1) rotate(0deg); }
+  100% { opacity:0; transform: scale(0.8) translateY(-20px); }
+}
+
+/* PROGRESS */
+.progress-wrap {
+  background: #1a1000;
+  border-radius: 10px;
+  height: 8px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  border: 2px solid #3a2800;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #FF6B00, #FFD700, #FF6B00);
+  background-size: 200%;
+  border-radius: 10px;
+  width: 0%;
+  transition: width 0.4s ease;
+  animation: goldFlow 2s linear infinite;
+}
+@keyframes goldFlow {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* CONTROLS */
+.controls {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  padding-bottom: 24px;
+}
+.btn {
+  font-family: 'Teko', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 10px 32px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  letter-spacing: 2px;
+  min-width: 140px;
+  text-transform: uppercase;
+}
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-play {
+  background: linear-gradient(135deg, #FF6B00, #CC4400);
+  color: white;
+  box-shadow: 0 4px 0 #882200, 0 0 20px rgba(255,107,0,0.3);
+  border: 2px solid #FF8844;
+}
+.btn-play:not(:disabled):hover  { transform: translateY(-2px); box-shadow: 0 6px 0 #882200, 0 0 30px rgba(255,107,0,0.5); }
+.btn-play:not(:disabled):active { transform: translateY(2px);  box-shadow: 0 2px 0 #882200; }
+.btn-stop {
+  background: #111;
+  color: #aaa;
+  border: 2px solid #444;
+  box-shadow: 0 4px 0 #222;
+}
+.btn-stop:not(:disabled):hover  { transform: translateY(-2px); color: white; border-color: #888; }
+.btn-stop:not(:disabled):active { transform: translateY(2px); }
+
+/* PARTICLES */
+.particle {
+  position: fixed;
+  pointer-events: none;
+  font-size: 1.6rem;
+  animation: particleFly 1.2s ease forwards;
+  z-index: 200;
+}
+@keyframes particleFly {
+  0%   { transform: translateY(0) scale(1) rotate(0deg); opacity:1; }
+  100% { transform: translateY(-100px) scale(0.2) rotate(360deg); opacity:0; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-title">⚡ MASS BABAI vs YOUNG TIGER ⚡</div>
+  <div class="header-sub">Balayya & Jr.NTR — Iconic Telugu Conversation</div>
+  <div class="star-row">★ ★ ★ ★ ★</div>
+</div>
+
+<div class="stage">
+  <div class="scene" id="scene">
+    <!-- stars -->
+    <div class="stars" id="starsContainer"></div>
+    <div class="scene-label" id="sceneLabel">🎬 Scene: Cine Life Discussions</div>
+
+    <div class="characters">
+
+      <!-- BALAYYA -->
+      <div class="character balayya-char" id="balayya">
+        <div class="balayya-head">
+          <div class="b-hair"></div>
+          <div class="b-brows"><div class="b-brow"></div><div class="b-brow"></div></div>
+          <div class="b-eyes"><div class="b-eye"></div><div class="b-eye"></div></div>
+          <div class="b-mustache"></div>
+          <div class="b-mouth" id="balMouth"></div>
+        </div>
+        <div class="body-speech balayya-bubble" id="balBubble">
+          <span class="bubble-name balayya-name">🔥 Balayya Babu</span>
+          <span id="balText"></span>
+        </div>
+        <div class="balayya-body">
+          <div class="balayya-arms" id="balArms">
+            <div class="b-arm" id="balArmL"></div>
+            <div class="b-arm" id="balArmR"></div>
+          </div>
+          <div class="b-shirt-detail"></div>
+        </div>
+        <div class="balayya-legs"><div class="b-leg"></div><div class="b-leg"></div></div>
+        <div class="char-label balayya-lbl">Mass Babai</div>
+      </div>
+
+      <!-- JR. NTR -->
+      <div class="character ntr-char" id="ntr">
+        <div class="ntr-head">
+          <div class="n-hair"></div>
+          <div class="n-brows"><div class="n-brow"></div><div class="n-brow"></div></div>
+          <div class="n-eyes"><div class="n-eye"></div><div class="n-eye"></div></div>
+          <div class="n-mouth" id="ntrMouth"></div>
+        </div>
+        <div class="body-speech ntr-bubble" id="ntrBubble">
+          <span class="bubble-name ntr-name">⚡ Jr. NTR</span>
+          <span id="ntrText"></span>
+        </div>
+        <div class="ntr-body">
+          <div class="ntr-arms" id="ntrArms">
+            <div class="n-arm" id="ntrArmL"></div>
+            <div class="n-arm" id="ntrArmR"></div>
+          </div>
+          <div class="n-chain"></div>
+        </div>
+        <div class="ntr-legs"><div class="n-leg"></div><div class="n-leg"></div></div>
+        <div class="char-label ntr-lbl">Young Tiger</div>
+      </div>
+
+    </div>
+    <div class="floor"></div>
+  </div>
+
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+
+  <div class="controls">
+    <button class="btn btn-play" id="playBtn">▶ Play</button>
+    <button class="btn btn-stop" id="stopBtn" disabled>⏹ Stop</button>
+  </div>
+</div>
+
+<script>
+// ── STARS BACKGROUND ──────────────────────────────────────────────
+const sc = document.getElementById('starsContainer');
+for (let i=0;i<60;i++){
+  const s=document.createElement('div');
+  s.className='star';
+  s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${1.5+Math.random()*3}s;animation-delay:${Math.random()*3}s`;
+  sc.appendChild(s);
+}
+
+// ── SCRIPT ────────────────────────────────────────────────────────
+const script = [
+  {
+    who:'ntr',
+    line:'Babai... why Narendra Modi garu daily evening walk ki veltharu?',
+    display:'Babai… why Narendra Modi garu daily evening walk ki veltharu? 🤔',
+    action:'curious'
+  },
+  {
+    who:'balayya',
+    line:'Endukante... he is PM ra not AM!',
+    display:'Endukante… he is PM ra not AM! 😂',
+    action:'roar', boom:'😂 MASS JOKE!'
+  },
+  {
+    who:'balayya',
+    line:'Naa entry ki background score start ayyaka theatre seats shake avvali!',
+    display:'Naa entry ki background score start ayyaka… theatre seats shake avvali! 🔥',
+    action:'roar', boom:'🔥 MASS ENTRY!'
+  },
+  {
+    who:'ntr',
+    line:'Babai seats shake avvadam okay but overseas collections kuda shake avvali.',
+    display:'Babai… seats shake avvadam okay… but overseas collections kuda shake avvali! 💰',
+    action:'smirk'
+  },
+  {
+    who:'balayya',
+    line:'Collections ante dialogue cheppaka vastayi!',
+    display:'Collections ante… dialogue cheppaka vastayi! 🎤',
+    action:'roar', boom:'💬 DIALOGUE!'
+  },
+  {
+    who:'ntr',
+    line:'Dialogue viral ayyaka reels vastayi Babai.',
+    display:'Dialogue viral ayyaka reels vastayi Babai. 📱',
+    action:'smirk'
+  },
+  {
+    who:'balayya',
+    line:'Reels aa? Naa dialogue ki interval block vestharu!',
+    display:'Reels aa? Naa dialogue ki interval block vestharu! 🎬',
+    action:'roar', boom:'🎬 BLOCKBUSTER!'
+  },
+  {
+    who:'ntr',
+    line:'Babai ippudu interval kuda skip chestharu. Direct climax ki vellipotharu.',
+    display:'Babai… ippudu interval kuda skip chestharu. Direct climax ki vellipotharu! ⏭️',
+    action:'curious'
+  },
+  {
+    who:'balayya',
+    line:'Climax ante theatre lo whistles continuous ga ravali!',
+    display:'Climax ante… theatre lo whistles continuous ga ravali! 🎉',
+    action:'roar', boom:'🎉 WHISTLE POD!'
+  },
+  {
+    who:'ntr',
+    line:'Whistles ravali but Twitter trends kuda ravali Babai!',
+    display:'Whistles ravali… but Twitter trends kuda ravali Babai! 🐦',
+    action:'smirk'
+  },
+  {
+    who:'balayya',
+    line:'Trend aa? Naa stare ki WiFi signal drop avvali!',
+    display:'Trend aa? Naa stare ki WiFi signal drop avvali! 📶',
+    action:'roar', boom:'📶 SIGNAL DROP!'
+  },
+  {
+    who:'ntr',
+    line:'Babai calm. Meme pages mana PR team ippudu.',
+    display:'Babai calm… meme pages mana PR team ippudu. 😄',
+    action:'smirk'
+  },
+];
+
+// ── VOICE SETUP ───────────────────────────────────────────────────
+const synth = window.speechSynthesis;
+let voices = [];
+function loadVoices(){ voices = synth.getVoices(); }
+loadVoices();
+if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = loadVoices;
+
+function getBestVoice(who) {
+  const en = voices.filter(v => v.lang.startsWith('en'));
+  if (!en.length) return null;
+  if (who === 'balayya') {
+    // Deep, authoritative male voice for Balayya
+    return en.find(v => /daniel|george|james|david|male/i.test(v.name))
+        || en.find(v => v.name.includes('UK'))
+        || en[0];
+  }
+  // NTR — slightly younger sounding
+  return en.find(v => /alex|ryan|mark/i.test(v.name))
+      || en.find(v => v.name.includes('US'))
+      || en[1] || en[0];
+}
+
+function speakLine(who, text, onDone) {
+  synth.cancel();
+  // Clean text for TTS (remove emojis)
+  const clean = text.replace(/[\u{1F300}-\u{1F9FF}]/gu,'').trim();
+  const utter = new SpeechSynthesisUtterance(clean);
+
+  if (who === 'balayya') {
+    utter.pitch  = 0.5;  // very deep
+    utter.rate   = 0.85; // slow & powerful
+    utter.volume = 1;
+  } else {
+    utter.pitch  = 1.0;  // medium
+    utter.rate   = 1.05; // normal-quick
+    utter.volume = 1;
+  }
+
+  const v = getBestVoice(who);
+  if (v) utter.voice = v;
+  utter.onend  = () => setTimeout(onDone, 500);
+  utter.onerror = () => setTimeout(onDone, 500);
+  synth.speak(utter);
+}
+
+// ── STATE ─────────────────────────────────────────────────────────
+let currentLine = 0;
+let paused  = false;
+let running = false;
+let pendingTimeout = null;
+
+const playBtn = document.getElementById('playBtn');
+const stopBtn = document.getElementById('stopBtn');
+
+// ── CONTROLS ──────────────────────────────────────────────────────
+playBtn.addEventListener('click', () => {
+  if (!running && currentLine === 0) {
+    running = true; stopBtn.disabled = false;
+    playBtn.textContent = '⏸ Pause'; playLine();
+  } else if (!running && currentLine >= script.length) {
+    fullReset(); running = true; stopBtn.disabled = false;
+    playBtn.textContent = '⏸ Pause'; playLine();
+  } else if (running && !paused) {
+    paused = true; synth.pause();
+    if (pendingTimeout){ clearTimeout(pendingTimeout); pendingTimeout=null; }
+    playBtn.textContent = '▶ Resume';
+  } else if (paused) {
+    paused = false; synth.resume();
+    playBtn.textContent = '⏸ Pause';
+    if (!synth.speaking) scheduleNext(300);
+  }
+});
+
+stopBtn.addEventListener('click', () => {
+  synth.cancel(); fullReset();
+  running=false; paused=false;
+  stopBtn.disabled=true; playBtn.textContent='▶ Play';
+});
+
+function scheduleNext(d){
+  pendingTimeout = setTimeout(()=>{ pendingTimeout=null; if(!paused&&running) playLine(); }, d);
+}
+
+// ── PLAY LOOP ─────────────────────────────────────────────────────
+function playLine() {
+  if (currentLine >= script.length) {
+    running=false; playBtn.textContent='↺ Replay';
+    spawnParticles(); return;
+  }
+  const e = script[currentLine];
+
+  clearAll();
+
+  // Actions / expressions
+  if (e.who==='balayya') {
+    document.getElementById('balayya').classList.add('speaking');
+    if(e.action==='roar'){
+      document.getElementById('balMouth').className='b-mouth roar';
+      document.getElementById('balArmR').classList.add('raised');
+    }
+    document.getElementById('balText').textContent = e.display || e.line;
+    setTimeout(()=>document.getElementById('balBubble').classList.add('visible'),40);
+    if(e.boom) spawnBoom(e.boom, 'balayya');
+  } else {
+    document.getElementById('ntr').classList.add('speaking');
+    if(e.action==='smirk') document.getElementById('ntrMouth').className='n-mouth smirk';
+    if(e.action==='curious'){
+      document.getElementById('ntrArmR').classList.add('tiger-claw');
+    }
+    document.getElementById('ntrText').textContent = e.display || e.line;
+    setTimeout(()=>document.getElementById('ntrBubble').classList.add('visible'),40);
+  }
+
+  currentLine++;
+  document.getElementById('progressBar').style.width=(currentLine/script.length*100)+'%';
+
+  speakLine(e.who, e.line, ()=>{
+    if(!paused&&running){ clearAll(); scheduleNext(600); }
+  });
+}
+
+function clearAll() {
+  ['balayya','ntr'].forEach(id=>document.getElementById(id).classList.remove('speaking'));
+  ['balBubble','ntrBubble'].forEach(id=>document.getElementById(id).classList.remove('visible'));
+  document.getElementById('balMouth').className='b-mouth';
+  document.getElementById('ntrMouth').className='n-mouth';
+  document.getElementById('balArmR').classList.remove('raised');
+  document.getElementById('ntrArmR').classList.remove('tiger-claw');
+}
+
+function fullReset() {
+  synth.cancel();
+  if(pendingTimeout){clearTimeout(pendingTimeout);pendingTimeout=null;}
+  currentLine=0; clearAll();
+  document.getElementById('progressBar').style.width='0%';
+  document.getElementById('sceneLabel').textContent='🎬 Scene: Cine Life Discussions';
+}
+
+function spawnBoom(text, who) {
+  const scene = document.getElementById('scene');
+  const el = document.createElement('div');
+  el.className='boom-effect';
+  el.textContent = text;
+  el.style.top = (80+Math.random()*80)+'px';
+  el.style.left = who==='balayya' ? '5%' : '60%';
+  scene.appendChild(el);
+  setTimeout(()=>el.remove(), 800);
+}
+
+function spawnParticles() {
+  const items = ['🔥','⚡','🎬','💥','⭐','🏆','🎉','✨','💰','🎤'];
+  for(let i=0;i<18;i++){
+    setTimeout(()=>{
+      const p=document.createElement('div');
+      p.className='particle';
+      p.textContent=items[Math.floor(Math.random()*items.length)];
+      p.style.left=Math.random()*window.innerWidth+'px';
+      p.style.top=(100+Math.random()*window.innerHeight*0.6)+'px';
+      document.body.appendChild(p);
+      setTimeout(()=>p.remove(),1200);
+    },i*70);
+  }
+}
+</script>
+</body>
+</html>

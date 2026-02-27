@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Robot's First Day 🤖</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Baloo+2:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #FFF5E6;
+    font-family: 'Nunito', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .header {
+    width: 100%;
+    background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+    padding: 16px 30px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(255,107,107,0.4);
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -10%;
+    width: 120%; height: 200%;
+    background: repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 2px, transparent 2px, transparent 20px);
+  }
+  .header h1 {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.8rem;
+    color: white;
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+    position: relative;
+  }
+  .header p {
+    color: rgba(255,255,255,0.85);
+    font-size: 0.8rem;
+    margin-top: 2px;
+    position: relative;
+  }
+
+  .stage {
+    width: 100%;
+    max-width: 900px;
+    padding: 24px 20px 20px;
+  }
+
+  /* SCENE */
+  .scene {
+    background: linear-gradient(180deg, #E8F4FD 0%, #D0EAF8 60%, #C5D8E8 100%);
+    border-radius: 24px;
+    padding: 20px 30px 0;
+    position: relative;
+    overflow: hidden;
+    border: 4px solid #A8C8E8;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    margin-bottom: 14px;
+    min-height: 460px;
+  }
+
+  .scene-label {
+    position: absolute;
+    top: 12px; left: 16px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    background: rgba(255,107,107,0.92);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    z-index: 10;
+  }
+
+  .window {
+    position: absolute;
+    top: 18px; right: 36px;
+    width: 80px; height: 90px;
+    background: linear-gradient(135deg, #87CEEB, #B0E0FF);
+    border: 5px solid #5A9EC0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .window::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    width: 4px; height: 100%;
+    background: #5A9EC0;
+    transform: translateX(-50%);
+  }
+  .window::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 0;
+    width: 100%; height: 4px;
+    background: #5A9EC0;
+    transform: translateY(-50%);
+  }
+  .sun {
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 20px; height: 20px;
+    background: #FFD700;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #FFD700;
+    animation: sunPulse 3s ease-in-out infinite;
+  }
+  @keyframes sunPulse {
+    0%,100% { box-shadow: 0 0 10px #FFD700; }
+    50% { box-shadow: 0 0 22px #FFD700, 0 0 32px #FFA500; }
+  }
+
+  .desk {
+    position: absolute;
+    bottom: 56px; left: 36px;
+    width: 130px; height: 15px;
+    background: linear-gradient(180deg, #D4A055, #B8873A);
+    border-radius: 4px;
+    box-shadow: 0 4px 0 #8B6320;
+  }
+  .desk::before {
+    content: '';
+    position: absolute;
+    bottom: -22px; left: 10px;
+    width: 10px; height: 22px;
+    background: #8B6320;
+    border-radius: 2px;
+  }
+  .desk::after {
+    content: '';
+    position: absolute;
+    bottom: -22px; right: 10px;
+    width: 10px; height: 22px;
+    background: #8B6320;
+    border-radius: 2px;
+  }
+
+  .coffee-cup {
+    position: absolute;
+    bottom: 72px; left: 80px;
+    width: 22px; height: 24px;
+    background: #E8E8E8;
+    border-radius: 2px 2px 6px 6px;
+    border: 2px solid #CCC;
+    transition: transform 0.3s ease;
+    z-index: 3;
+  }
+  .coffee-cup::before {
+    content: '';
+    position: absolute;
+    top: 3px; left: 2px; right: 2px;
+    height: 6px;
+    background: #6B3A2A;
+    border-radius: 1px;
+  }
+  .coffee-cup::after {
+    content: '~';
+    position: absolute;
+    top: -14px; left: 5px;
+    font-size: 12px;
+    color: #AAA;
+    animation: steamWiggle 1.5s ease-in-out infinite;
+  }
+  @keyframes steamWiggle {
+    0%,100% { transform: translateX(0) translateY(0); opacity: 1; }
+    50% { transform: translateX(3px) translateY(-5px); opacity: 0.3; }
+  }
+
+  .floor {
+    height: 56px;
+    background: linear-gradient(180deg, #8B6914 0%, #6B4F0A 100%);
+    margin: 0 -30px;
+    border-top: 6px solid #A07820;
+    position: relative;
+  }
+  .floor::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 100%;
+    background: repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 60px, transparent 60px, transparent 120px);
+  }
+
+  /* CHARACTERS ROW */
+  .characters {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 50px;
+    padding-top: 40px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .character {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+  .character.speaking { animation: charBounce 0.5s ease infinite alternate; }
+  @keyframes charBounce {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-8px); }
+  }
+
+  /* ── SPEECH BUBBLE — sits between head and body ── */
+  .body-speech {
+    width: 180px;
+    min-height: 50px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 14px;
+    padding: 8px 12px 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #222;
+    line-height: 1.45;
+    text-align: center;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.12);
+    opacity: 0;
+    transform: scale(0.6);
+    transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    pointer-events: none;
+    position: relative;
+    /* tail pointing UP toward head */
+  }
+  .body-speech::before {
+    content: '';
+    position: absolute;
+    top: -12px; left: 50%; transform: translateX(-50%);
+    border: 7px solid transparent;
+    border-bottom-color: #333;
+  }
+  .body-speech::after {
+    content: '';
+    position: absolute;
+    top: -7px; left: 50%; transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-bottom-color: white;
+    z-index: 1;
+  }
+  .body-speech.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .bubble-name {
+    display: block;
+    font-size: 0.58rem;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+  .robot-color   { color: #0099CC; }
+  .manager-color { color: #4A7FD4; }
+  .jeff-color    { color: #5A9C38; }
+
+  /* ── ROBOT ── */
+  .robot-head {
+    width: 56px; height: 50px;
+    background: linear-gradient(160deg, #8DCEF5, #5BA8D8);
+    border-radius: 14px 14px 10px 10px;
+    position: relative;
+    border: 3px solid #3A78A8;
+    box-shadow: 3px 3px 0 #2A5880, inset 2px 2px 0 rgba(255,255,255,0.3);
+    z-index: 2;
+  }
+  .robot-antenna {
+    position: absolute;
+    top: -18px; left: 50%; transform: translateX(-50%);
+    width: 4px; height: 18px;
+    background: #3A78A8;
+    border-radius: 2px;
+  }
+  .robot-antenna::after {
+    content: '';
+    position: absolute;
+    top: -6px; left: 50%; transform: translateX(-50%);
+    width: 10px; height: 10px;
+    background: #FF6B6B;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #FF6B6B;
+    animation: antennaPulse 0.8s ease-in-out infinite;
+  }
+  @keyframes antennaPulse {
+    0%,100% { transform: translateX(-50%) scale(1); }
+    50%      { transform: translateX(-50%) scale(1.4); }
+  }
+  .robot-eyes {
+    display: flex; gap: 10px;
+    justify-content: center;
+    padding-top: 12px;
+  }
+  .robot-eye {
+    width: 14px; height: 14px;
+    background: #00EEFF;
+    border-radius: 50%;
+    border: 2px solid #008899;
+    box-shadow: 0 0 10px #00EEFF;
+    animation: eyeGlow 2s ease-in-out infinite;
+  }
+  @keyframes eyeGlow {
+    0%,100% { box-shadow: 0 0 8px #00EEFF; }
+    50%      { box-shadow: 0 0 18px #00EEFF, 0 0 28px #00BBDD; }
+  }
+  .robot-face-mouth {
+    width: 24px; height: 6px;
+    background: #1A3A5C;
+    border-radius: 3px;
+    margin: 5px auto 0;
+    border: 2px solid #0A2A4C;
+  }
+  .robot-face-mouth.talking { animation: mouthTalk 0.25s ease infinite alternate; }
+  @keyframes mouthTalk {
+    from { height: 4px; }
+    to   { height: 10px; border-radius: 3px 3px 8px 8px; }
+  }
+  .robot-body-box {
+    width: 62px; height: 68px;
+    background: linear-gradient(160deg, #78C1F0, #4A90C4);
+    border-radius: 10px;
+    position: relative;
+    border: 3px solid #3A78A8;
+    box-shadow: 4px 4px 0 #2A5880, inset 2px 2px 0 rgba(255,255,255,0.3);
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 2px;
+  }
+  .robot-panel {
+    width: 36px; height: 26px;
+    background: #1A3A5C;
+    border-radius: 6px;
+    border: 2px solid #0A2A4C;
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px;
+  }
+  .robot-light {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #00FF88;
+    box-shadow: 0 0 8px #00FF88;
+    animation: blink 1.2s ease-in-out infinite;
+  }
+  .robot-light.red { background: #FF4444; box-shadow: 0 0 8px #FF4444; animation-delay: 0.6s; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+  .robot-arms-wrap {
+    position: absolute;
+    top: 6px;
+    width: calc(100% + 28px);
+    left: -14px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .r-arm {
+    width: 14px; height: 38px;
+    background: linear-gradient(180deg, #5BA8D8, #3A78A8);
+    border-radius: 6px;
+    border: 2px solid #2A5880;
+  }
+  .robot-legs-row {
+    display: flex; gap: 14px;
+    margin-top: 2px;
+  }
+  .r-leg {
+    width: 16px; height: 22px;
+    background: linear-gradient(180deg, #4A90C4, #2A6090);
+    border-radius: 4px 4px 6px 6px;
+    border: 2px solid #2A5880;
+  }
+
+  /* ── MANAGER ── */
+  .manager-head {
+    width: 52px; height: 52px;
+    background: linear-gradient(160deg, #FFD5A8, #FFBA7A);
+    border-radius: 50% 50% 45% 45%;
+    position: relative;
+    border: 3px solid #E8A060;
+    box-shadow: 3px 3px 0 #C07840;
+    z-index: 2;
+  }
+  .m-hair {
+    position: absolute;
+    top: -8px; left: -4px; right: -4px;
+    height: 20px;
+    background: #3A2010;
+    border-radius: 50% 50% 0 0;
+    border: 3px solid #2A1008;
+  }
+  .manager-eyes {
+    display: flex; gap: 12px;
+    justify-content: center;
+    padding-top: 16px;
+  }
+  .m-eye {
+    width: 10px; height: 10px;
+    background: #3A2810;
+    border-radius: 50%;
+    position: relative;
+  }
+  .m-eye::after {
+    content: '';
+    position: absolute;
+    top: 1px; right: 1px;
+    width: 3px; height: 3px;
+    background: white;
+    border-radius: 50%;
+  }
+  .m-mouth {
+    width: 18px; height: 8px;
+    background: #C07840;
+    border-radius: 0 0 10px 10px;
+    margin: 4px auto 0;
+    border: 2px solid #A06030;
+    transition: all 0.2s;
+  }
+  .m-mouth.shocked {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: #8B4513;
+  }
+  .manager-body-box {
+    width: 58px; height: 65px;
+    background: linear-gradient(160deg, #4A7FD4, #2A5CAA);
+    border-radius: 10px 10px 4px 4px;
+    position: relative;
+    border: 3px solid #1A4C8A;
+    box-shadow: 4px 4px 0 #0A3070, inset 2px 2px 0 rgba(255,255,255,0.2);
+    margin-top: 2px;
+  }
+  .m-tie {
+    position: absolute;
+    top: 8px; left: 50%; transform: translateX(-50%);
+    width: 10px; height: 34px;
+    background: #FF4444;
+    clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 50% 85%, 0% 100%);
+  }
+  .manager-arms-wrap {
+    position: absolute;
+    top: 6px;
+    width: calc(100% + 26px);
+    left: -13px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .m-arm {
+    width: 13px; height: 36px;
+    background: linear-gradient(180deg, #3A6EC4, #1A4CA0);
+    border-radius: 6px;
+    border: 2px solid #1A4C8A;
+  }
+  .manager-legs-row {
+    display: flex; gap: 10px;
+    margin-top: 2px;
+  }
+  .m-leg {
+    width: 18px; height: 20px;
+    background: #1A2A5A;
+    border-radius: 2px 2px 6px 6px;
+    border: 2px solid #0A1A3A;
+  }
+
+  /* ── JEFF ── */
+  .jeff-head {
+    width: 50px; height: 50px;
+    background: linear-gradient(160deg, #FFD5A8, #FFBA7A);
+    border-radius: 50% 50% 45% 45%;
+    position: relative;
+    border: 3px solid #E8A060;
+    box-shadow: 3px 3px 0 #C07840;
+    z-index: 2;
+  }
+  .j-hair {
+    position: absolute;
+    top: -6px; left: -3px; right: -3px;
+    height: 16px;
+    background: #8B5520;
+    border-radius: 50% 50% 0 0;
+    border: 2px solid #6B3510;
+  }
+  .jeff-eyes {
+    display: flex; gap: 10px;
+    justify-content: center;
+    padding-top: 16px;
+  }
+  .j-eye {
+    width: 10px; height: 5px;
+    background: #3A2810;
+    border-radius: 50%;
+  }
+  .j-mouth {
+    width: 18px; height: 6px;
+    background: #C07840;
+    border-radius: 0 0 8px 8px;
+    margin: 5px auto 0;
+    border: 2px solid #A06030;
+  }
+  .jeff-zzz {
+    position: absolute;
+    top: -22px; right: -24px;
+    font-size: 1.1rem;
+    animation: floatZzz 1.8s ease-in-out infinite;
+    display: none;
+  }
+  @keyframes floatZzz {
+    0%   { transform: translateY(0) scale(0.8); opacity: 0; }
+    50%  { opacity: 1; transform: translateY(-10px) scale(1); }
+    100% { transform: translateY(-20px) scale(1.2); opacity: 0; }
+  }
+  .jeff-body-box {
+    width: 54px; height: 62px;
+    background: linear-gradient(160deg, #98C878, #6AA850);
+    border-radius: 10px 10px 4px 4px;
+    position: relative;
+    border: 3px solid #508838;
+    box-shadow: 4px 4px 0 #306820;
+    margin-top: 2px;
+  }
+  .j-arms-wrap {
+    position: absolute;
+    top: 6px;
+    width: calc(100% + 26px);
+    left: -13px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .j-arm {
+    width: 12px; height: 34px;
+    background: linear-gradient(180deg, #7AAA58, #508838);
+    border-radius: 6px;
+    border: 2px solid #407030;
+  }
+  .jeff-legs-row {
+    display: flex; gap: 10px;
+    margin-top: 2px;
+  }
+  .j-leg {
+    width: 16px; height: 20px;
+    background: #2A4A1A;
+    border-radius: 2px 2px 6px 6px;
+    border: 2px solid #1A3A0A;
+  }
+
+  /* SHARED LABEL */
+  .char-label {
+    margin-top: 7px;
+    font-size: 0.68rem;
+    font-weight: 900;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    color: white;
+  }
+  .robot-lbl   { background: #0099CC; box-shadow: 0 2px 0 #007799; }
+  .manager-lbl { background: #4A7FD4; box-shadow: 0 2px 0 #2A5CA0; }
+  .jeff-lbl    { background: #6AA850; box-shadow: 0 2px 0 #408830; }
+
+  /* PROGRESS */
+  .progress-wrap {
+    background: #FFE0D0;
+    border-radius: 10px;
+    height: 10px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    border: 2px solid #FFB090;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #FF6B6B, #FF8E53);
+    border-radius: 10px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  /* CONTROLS */
+  .controls {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    padding-bottom: 24px;
+  }
+  .btn {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 0.9rem;
+    padding: 11px 30px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    letter-spacing: 0.5px;
+    min-width: 130px;
+  }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn-play {
+    background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+    color: white;
+    box-shadow: 0 4px 0 #CC4444;
+  }
+  .btn-play:not(:disabled):hover  { transform: translateY(-2px); box-shadow: 0 6px 0 #CC4444; }
+  .btn-play:not(:disabled):active { transform: translateY(2px);  box-shadow: 0 2px 0 #CC4444; }
+  .btn-stop {
+    background: white;
+    color: #666;
+    border: 3px solid #CCC;
+    box-shadow: 0 4px 0 #BBB;
+  }
+  .btn-stop:not(:disabled):hover  { transform: translateY(-2px); box-shadow: 0 6px 0 #BBB; border-color: #999; }
+  .btn-stop:not(:disabled):active { transform: translateY(2px);  box-shadow: 0 2px 0 #BBB; }
+
+  /* PARTICLES */
+  .particle {
+    position: fixed;
+    pointer-events: none;
+    font-size: 1.4rem;
+    animation: particleFly 1s ease forwards;
+    z-index: 200;
+  }
+  @keyframes particleFly {
+    0%   { transform: translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateY(-90px) scale(0.2); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🤖 Robot's First Day at the Office</h1>
+  <p>A totally normal day. Nothing weird here at all.</p>
+</div>
+
+<div class="stage">
+  <div class="scene" id="scene">
+    <div class="scene-label" id="sceneLabel">🏢 The Office — Morning</div>
+    <div class="window"><div class="sun"></div></div>
+    <div class="desk"></div>
+    <div class="coffee-cup" id="coffeeCup"></div>
+
+    <div class="characters">
+
+      <!-- MANAGER -->
+      <div class="character" id="managerChar">
+        <div class="manager-head">
+          <div class="m-hair"></div>
+          <div class="manager-eyes"><div class="m-eye"></div><div class="m-eye"></div></div>
+          <div class="m-mouth" id="managerMouth"></div>
+        </div>
+        <div class="body-speech" id="managerBubble">
+          <span class="bubble-name manager-color">Manager Mike</span>
+          <span id="managerText"></span>
+        </div>
+        <div class="manager-body-box">
+          <div class="manager-arms-wrap"><div class="m-arm"></div><div class="m-arm"></div></div>
+          <div class="m-tie"></div>
+        </div>
+        <div class="manager-legs-row"><div class="m-leg"></div><div class="m-leg"></div></div>
+        <div class="char-label manager-lbl">Manager</div>
+      </div>
+
+      <!-- ROBOT -->
+      <div class="character" id="robotChar">
+        <div class="robot-head">
+          <div class="robot-antenna"></div>
+          <div class="robot-eyes"><div class="robot-eye"></div><div class="robot-eye"></div></div>
+          <div class="robot-face-mouth" id="robotMouth"></div>
+        </div>
+        <div class="body-speech" id="robotBubble">
+          <span class="bubble-name robot-color">ROB (Unit-7749)</span>
+          <span id="robotText"></span>
+        </div>
+        <div class="robot-body-box">
+          <div class="robot-arms-wrap"><div class="r-arm"></div><div class="r-arm"></div></div>
+          <div class="robot-panel">
+            <div class="robot-light"></div>
+            <div class="robot-light red"></div>
+          </div>
+        </div>
+        <div class="robot-legs-row"><div class="r-leg"></div><div class="r-leg"></div></div>
+        <div class="char-label robot-lbl">ROB</div>
+      </div>
+
+      <!-- JEFF -->
+      <div class="character" id="jeffChar" style="opacity:0;transition:opacity 0.5s;">
+        <div class="jeff-head">
+          <div class="j-hair"></div>
+          <div class="jeff-eyes"><div class="j-eye"></div><div class="j-eye"></div></div>
+          <div class="j-mouth"></div>
+          <div class="jeff-zzz" id="jeffZzz">💤</div>
+        </div>
+        <div class="body-speech" id="jeffBubble">
+          <span class="bubble-name jeff-color">Jeff</span>
+          <span id="jeffText"></span>
+        </div>
+        <div class="jeff-body-box">
+          <div class="j-arms-wrap"><div class="j-arm"></div><div class="j-arm"></div></div>
+        </div>
+        <div class="jeff-legs-row"><div class="j-leg"></div><div class="j-leg"></div></div>
+        <div class="char-label jeff-lbl">Jeff</div>
+      </div>
+
+    </div>
+    <div class="floor"></div>
+  </div>
+
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+
+  <div class="controls">
+    <button class="btn btn-play" id="playBtn">▶ Play</button>
+    <button class="btn btn-stop" id="stopBtn" disabled>⏹ Stop</button>
+  </div>
+</div>
+
+<script>
+// ── SCRIPT ──────────────────────────────────────────────────────────────────
+const script = [
+  { scene:"🏢 The Office — Morning", who:"manager", line:"Welcome! First, grab a coffee and introduce yourself to the team!" },
+  { who:"robot",   line:"Scanning team. Dave smells like regret. Linda has 47 unread emails. Jeff is pretending to work.", showJeff:true },
+  { who:"manager", line:"Maybe... don't say that out loud.", expression:"shocked" },
+  { who:"robot",   line:"Understood. Activating Fake Smile protocol.", flash:true },
+  { who:"manager", line:"Do you even drink coffee?" },
+  { who:"robot",   line:"No. But I will hold the cup to appear relatable.", coffeeCup:true },
+  { scene:"☕ Break Room", who:"manager", line:"You're going to fit in perfectly." },
+  { who:"robot",   line:"I know. I calculated it." },
+  { who:"manager", line:"Ha! Any questions before the big meeting?" },
+  { who:"robot",   line:"Yes. Why does Dave have 3 bobbleheads of himself? That is concerning behavior." },
+  { who:"manager", line:"Just... don't bring that up in the meeting.", expression:"shocked" },
+  { scene:"📊 The Meeting Room", who:"manager", line:"So team, Q3 numbers are looking a little soft." },
+  { who:"robot",   line:"Incorrect. Q3 is catastrophic. Down 34 percent. Also Linda's pivot table has 3 errors.", flash:true },
+  { who:"manager", line:"ROB. We ease into bad news here.", expression:"shocked" },
+  { who:"robot",   line:"I can add a sad violin sound effect if that helps." },
+  { who:"manager", line:"Please don't." },
+  { scene:"🌙 3PM Energy Crash", who:"jeff", line:"Man... Mondays are rough, am I right Rob?", jeffAwake:true },
+  { who:"robot",   line:"Today is Wednesday." },
+  { who:"jeff",    line:"It feels like a Monday..." },
+  { who:"robot",   line:"That is a you problem, Jeff." },
+  { who:"jeff",    line:"I don't like this robot.", jeffSleep:true },
+  { who:"robot",   line:"The feeling is mutual. Fish microwave man." },
+  { scene:"🌆 End of Day", who:"manager", line:"Great first day Rob! How are you feeling?" },
+  { who:"robot",   line:"I experienced 14 moments of secondhand embarrassment, 3 passive-aggressive emails, and Jeff." },
+  { who:"manager", line:"So... a pretty normal day?" },
+  { who:"robot",   line:"Your species is held together by coffee and fear of awkward silence." },
+  { who:"manager", line:"Welcome to the team, Rob." },
+  { who:"robot",   line:"Thank you, Dave.", flash:true },
+  { who:"manager", line:"My name is Mike.", expression:"shocked" },
+  { who:"robot",   line:"I know. Internal log: Day 1 complete. Friends made: zero. Enemies: Jeff. Status: Acceptable." },
+];
+
+// ── VOICE SETUP ──────────────────────────────────────────────────────────────
+const synth = window.speechSynthesis;
+let voices = [];
+
+// Voice profiles per character
+const voiceProfiles = {
+  robot: {
+    pitch: 0.4,   // very low robotic
+    rate:  1.35,  // fast & clipped
+    volume: 1
+  },
+  manager: {
+    pitch: 1.1,
+    rate:  0.95,
+    volume: 1
+  },
+  jeff: {
+    pitch: 0.85,
+    rate:  0.75,  // slow & sleepy
+    volume: 0.9
+  }
+};
+
+function loadVoices() {
+  voices = synth.getVoices();
+}
+loadVoices();
+if (speechSynthesis.onvoiceschanged !== undefined) {
+  speechSynthesis.onvoiceschanged = loadVoices;
+}
+
+function getBestVoice(who) {
+  // Prefer an English voice; for robot try a male/deep one
+  const en = voices.filter(v => v.lang.startsWith('en'));
+  if (!en.length) return null;
+  if (who === 'robot') {
+    // Prefer a male UK or US voice for robotic feel
+    return en.find(v => /male|david|george|daniel|alex/i.test(v.name))
+        || en.find(v => v.name.includes('UK') || v.name.includes('US'))
+        || en[0];
+  }
+  if (who === 'jeff') {
+    return en.find(v => /male|david/i.test(v.name)) || en[0];
+  }
+  // manager — prefer female or any clear voice
+  return en.find(v => /female|samantha|karen|moira|victoria|zira/i.test(v.name))
+      || en[1] || en[0];
+}
+
+function speakLine(who, text, onDone) {
+  synth.cancel(); // stop any previous speech
+  const utter = new SpeechSynthesisUtterance(text);
+  const profile = voiceProfiles[who] || voiceProfiles.manager;
+  utter.pitch  = profile.pitch;
+  utter.rate   = profile.rate;
+  utter.volume = profile.volume;
+  const voice = getBestVoice(who);
+  if (voice) utter.voice = voice;
+  utter.onend = () => { setTimeout(onDone, 400); };
+  utter.onerror = () => { setTimeout(onDone, 400); };
+  synth.speak(utter);
+}
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let currentLine = 0;
+let paused      = false;
+let running     = false;
+let pendingTimeout = null;
+
+const playBtn = document.getElementById('playBtn');
+const stopBtn = document.getElementById('stopBtn');
+
+// ── CONTROLS ─────────────────────────────────────────────────────────────────
+playBtn.addEventListener('click', () => {
+  if (!running && currentLine === 0) {
+    running = true;
+    stopBtn.disabled = false;
+    playBtn.textContent = '⏸ Pause';
+    playLine();
+  } else if (!running && currentLine >= script.length) {
+    fullReset();
+    running = true;
+    stopBtn.disabled = false;
+    playBtn.textContent = '⏸ Pause';
+    playLine();
+  } else if (running && !paused) {
+    paused = true;
+    synth.pause();
+    if (pendingTimeout) { clearTimeout(pendingTimeout); pendingTimeout = null; }
+    playBtn.textContent = '▶ Resume';
+  } else if (paused) {
+    paused = false;
+    synth.resume();
+    playBtn.textContent = '⏸ Pause';
+    // If synth has nothing left to resume, just go next
+    if (!synth.speaking) scheduleNext(300);
+  }
+});
+
+stopBtn.addEventListener('click', () => {
+  synth.cancel();
+  fullReset();
+  running = false;
+  paused  = false;
+  stopBtn.disabled = true;
+  playBtn.textContent = '▶ Play';
+});
+
+// ── PLAY LOOP ─────────────────────────────────────────────────────────────────
+function scheduleNext(delay) {
+  pendingTimeout = setTimeout(() => {
+    pendingTimeout = null;
+    if (!paused && running) playLine();
+  }, delay);
+}
+
+function playLine() {
+  if (currentLine >= script.length) {
+    running = false;
+    playBtn.textContent = '↺ Replay';
+    spawnParticles();
+    return;
+  }
+  const e = script[currentLine];
+
+  // Scene / prop updates
+  if (e.scene) document.getElementById('sceneLabel').textContent = e.scene;
+  if (e.showJeff)  { document.getElementById('jeffChar').style.opacity='1'; document.getElementById('jeffZzz').style.display='block'; }
+  if (e.jeffAwake) document.getElementById('jeffZzz').style.display='none';
+  if (e.jeffSleep) document.getElementById('jeffZzz').style.display='block';
+  if (e.coffeeCup) { document.getElementById('coffeeCup').style.transform='scale(1.7)'; setTimeout(()=>document.getElementById('coffeeCup').style.transform='',700); }
+  if (e.expression==='shocked') {
+    document.getElementById('managerMouth').className='m-mouth shocked';
+    setTimeout(()=>document.getElementById('managerMouth').className='m-mouth',1800);
+  }
+
+  clearAllSpeech();
+
+  // Show visual for current speaker
+  if (e.who==='robot') {
+    document.getElementById('robotChar').classList.add('speaking');
+    document.getElementById('robotMouth').classList.add('talking');
+    document.getElementById('robotText').textContent = e.line;
+    setTimeout(()=>document.getElementById('robotBubble').classList.add('visible'),40);
+    if (e.flash) { document.getElementById('robotChar').style.filter='drop-shadow(0 0 16px #00EEFF)'; setTimeout(()=>document.getElementById('robotChar').style.filter='',900); }
+  } else if (e.who==='manager') {
+    document.getElementById('managerChar').classList.add('speaking');
+    document.getElementById('managerText').textContent = e.line;
+    setTimeout(()=>document.getElementById('managerBubble').classList.add('visible'),40);
+  } else if (e.who==='jeff') {
+    document.getElementById('jeffChar').classList.add('speaking');
+    document.getElementById('jeffText').textContent = e.line;
+    setTimeout(()=>document.getElementById('jeffBubble').classList.add('visible'),40);
+  }
+
+  // Progress
+  currentLine++;
+  document.getElementById('progressBar').style.width = (currentLine/script.length*100)+'%';
+
+  // Speak — next line triggers only after voice finishes
+  speakLine(e.who, e.line, () => {
+    if (!paused && running) {
+      clearAllSpeech();
+      scheduleNext(500); // brief pause between lines
+    }
+  });
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function clearAllSpeech() {
+  ['robotChar','managerChar','jeffChar'].forEach(id=>document.getElementById(id).classList.remove('speaking'));
+  ['robotBubble','managerBubble','jeffBubble'].forEach(id=>document.getElementById(id).classList.remove('visible'));
+  document.getElementById('robotMouth').classList.remove('talking');
+}
+
+function fullReset() {
+  synth.cancel();
+  if (pendingTimeout) { clearTimeout(pendingTimeout); pendingTimeout=null; }
+  currentLine = 0;
+  clearAllSpeech();
+  document.getElementById('progressBar').style.width='0%';
+  document.getElementById('jeffChar').style.opacity='0';
+  document.getElementById('jeffZzz').style.display='none';
+  document.getElementById('managerMouth').className='m-mouth';
+  document.getElementById('sceneLabel').textContent='🏢 The Office — Morning';
+  document.getElementById('coffeeCup').style.transform='';
+  document.getElementById('robotChar').style.filter='';
+}
+
+function spawnParticles() {
+  const emojis = ['🤖','⭐','💫','✨','🎉','😂','☕','💼'];
+  for (let i=0;i<14;i++) {
+    setTimeout(()=>{
+      const p=document.createElement('div');
+      p.className='particle';
+      p.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+      p.style.left=Math.random()*window.innerWidth+'px';
+      p.style.top=(window.innerHeight*0.3+Math.random()*window.innerHeight*0.4)+'px';
+      document.body.appendChild(p);
+      setTimeout(()=>p.remove(),1000);
+    },i*80);
+  }
+}
+</script>
+</body>
+</html>
