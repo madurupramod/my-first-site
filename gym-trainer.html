@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gym Trainer vs Lazy Member 💪😴</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #f44336; --orange: #ff6f00; --yellow: #ffd600;
+  --dark: #0d0d0d; --darker: #060606;
+  --trainer-color: #ff6f00; --member-color: #42a5f5;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+
+body {
+  background: linear-gradient(135deg, #1a0000 0%, #0d0d0d 50%, #001a00 100%);
+  font-family: 'Nunito', sans-serif;
+  display:flex; flex-direction:column; align-items:center;
+  min-height:100vh; overflow-x:hidden;
+}
+
+h1 {
+  font-family:'Bebas Neue', cursive;
+  font-size:clamp(2rem,5vw,3.4rem);
+  letter-spacing:6px;
+  background:linear-gradient(90deg,#ff6f00,#ffd600,#ff6f00,#ffd600);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  background-size:300%; animation:shimmer 3s linear infinite;
+  text-align:center; padding:16px 20px 2px;
+}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:300%}}
+.tagline{color:#ffcc80;font-size:0.82rem;margin-bottom:10px;letter-spacing:2px;text-align:center;font-weight:700;text-transform:uppercase;}
+
+.scene-wrapper{
+  position:relative;
+  width:min(960px,98vw);
+  height:min(540px,58vw);
+  min-height:320px;
+}
+
+#sceneSVG{
+  width:100%;height:100%;display:block;
+  border-radius:20px;
+  box-shadow:0 0 60px rgba(255,111,0,0.3),0 8px 40px rgba(0,0,0,0.6);
+  border:3px solid #ff6f00;
+}
+
+/* SPEECH BUBBLES */
+.speech-bubble{
+  position:absolute; background:#111;
+  border-radius:16px; padding:10px 14px;
+  font-size:clamp(0.6rem,1.35vw,0.84rem);
+  font-weight:800; color:#fff;
+  max-width:230px; text-align:center;
+  box-shadow:0 4px 20px rgba(0,0,0,0.5);
+  opacity:0; transform:scale(0.4);
+  transition:opacity 0.35s cubic-bezier(.34,1.56,.64,1),transform 0.35s cubic-bezier(.34,1.56,.64,1);
+  pointer-events:none; line-height:1.45; z-index:20;
+  border:3px solid var(--trainer-color); white-space:pre-line;
+}
+.speech-bubble.show{opacity:1;transform:scale(1);}
+
+#bubble-trainer{left:4%;top:6%;border-color:#ff6f00;color:#fff3e0;}
+#bubble-trainer::after{content:'';position:absolute;bottom:-14px;left:28px;border:8px solid transparent;border-top-color:#111;}
+#bubble-trainer::before{content:'';position:absolute;bottom:-18px;left:25px;border:10px solid transparent;border-top-color:#ff6f00;}
+
+#bubble-member{right:4%;top:6%;border-color:#42a5f5;color:#e3f2fd;}
+#bubble-member::after{content:'';position:absolute;bottom:-14px;right:28px;border:8px solid transparent;border-top-color:#111;}
+#bubble-member::before{content:'';position:absolute;bottom:-18px;right:25px;border:10px solid transparent;border-top-color:#42a5f5;}
+
+.lazy-bubble{
+  background:#0a1520!important;border-color:#42a5f5!important;
+  font-style:italic;color:#b3d9ff!important;
+}
+
+/* float emoji */
+.float-emoji{
+  position:absolute;font-size:1.7rem;
+  animation:floatUp 2s ease-out forwards;pointer-events:none;z-index:30;
+}
+@keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1) rotate(0deg)}100%{opacity:0;transform:translateY(-100px) scale(2) rotate(15deg)}}
+
+/* BOOM text */
+.boom-text{
+  position:absolute;
+  font-family:'Bebas Neue',cursive;
+  font-size:clamp(1.5rem,3vw,2.5rem);
+  letter-spacing:3px;
+  color:#ffd600;
+  text-shadow:0 0 20px #ff6f00,3px 3px 0 #8B3A00;
+  pointer-events:none; z-index:25; opacity:0;
+  animation:boomPop 0.8s ease forwards;
+}
+@keyframes boomPop{
+  0%{opacity:0;transform:scale(0.2) rotate(-10deg);}
+  45%{opacity:1;transform:scale(1.5) rotate(5deg);}
+  80%{opacity:1;transform:scale(1.1);}
+  100%{opacity:0;transform:scale(0.9) translateY(-30px);}
+}
+
+/* CHARACTER ANIMS */
+@keyframes trainerPump{0%,100%{transform:translateY(0) scaleY(1)}25%{transform:translateY(-14px) scaleY(1.04)}75%{transform:translateY(-8px) scaleY(1.02)}}
+@keyframes memberSag  {0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(6px) rotate(1.5deg)}}
+@keyframes trainerJump{0%,100%{transform:translateY(0)}30%{transform:translateY(-18px)}60%{transform:translateY(-8px)}}
+@keyframes memberSnore{0%,100%{transform:rotate(0deg)}50%{transform:rotate(2deg) translateY(4px)}}
+@keyframes idleBob    {0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+#trainer-char{transform-origin:215px 410px;}
+#member-char {transform-origin:730px 410px;}
+
+.trainer-idle    #trainer-char{animation:idleBob    2.5s ease-in-out infinite;}
+.member-idle     #member-char {animation:idleBob    2.5s ease-in-out infinite 0.5s;}
+.trainer-talking #trainer-char{animation:trainerPump 0.45s ease-in-out infinite;}
+.trainer-jump    #trainer-char{animation:trainerJump 0.5s ease-in-out infinite;}
+.member-talking  #member-char {animation:memberSag   0.6s ease-in-out infinite;}
+.member-snore    #member-char {animation:memberSnore 0.8s ease-in-out infinite;}
+
+/* PROGRESS */
+.progress-track{width:min(960px,98vw);height:8px;background:#1a1a1a;border-radius:10px;margin:10px 0 6px;overflow:hidden;border:2px solid #333;}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,#ff6f00,#ffd600,#ff6f00);
+  background-size:200%;animation:pgFlow 2s linear infinite;
+  border-radius:10px;transition:width 0.4s ease;width:0%;
+}
+@keyframes pgFlow{0%{background-position:0%}100%{background-position:200%}}
+
+.status{color:#ffcc80;font-size:0.82rem;font-weight:700;margin:4px 0 10px;min-height:20px;text-align:center;}
+
+.controls{display:flex;gap:14px;margin-bottom:24px;flex-wrap:wrap;justify-content:center;}
+.btn{
+  font-family:'Bebas Neue',cursive;font-weight:400;font-size:1.2rem;
+  padding:11px 34px;border:none;border-radius:50px;cursor:pointer;
+  transition:transform 0.15s,box-shadow 0.15s;letter-spacing:2px;min-width:140px;
+}
+.btn:hover {transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.4);}
+.btn:active{transform:translateY(1px);}
+.btn:disabled{opacity:0.4;cursor:default;transform:none;}
+.btn-play{background:linear-gradient(135deg,#ff6f00,#e65100);color:white;box-shadow:0 4px 0 #8B3A00;border:2px solid #ff8c00;}
+.btn-stop{background:linear-gradient(135deg,#37474f,#263238);color:#cfd8dc;box-shadow:0 4px 0 #111;}
+</style>
+</head>
+<body>
+
+<h1>💪 GYM TRAINER vs LAZY MEMBER 😴</h1>
+<p class="tagline">No Pain No Gain… But First, Can We Lower the AC?</p>
+
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="scene-wrapper" id="sceneWrapper">
+<svg id="sceneSVG" viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <linearGradient id="gymWall" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#1a1a1a"/><stop offset="100%" stop-color="#2a1a00"/>
+  </linearGradient>
+  <linearGradient id="gymFloor" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#1a1000"/><stop offset="100%" stop-color="#0d0800"/>
+  </linearGradient>
+  <linearGradient id="matGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#1b5e20"/><stop offset="100%" stop-color="#2e7d32"/>
+  </linearGradient>
+  <radialGradient id="skinT" cx="50%" cy="35%" r="55%">
+    <stop offset="0%" stop-color="#c8703a"/><stop offset="100%" stop-color="#a04820"/>
+  </radialGradient>
+  <radialGradient id="skinM" cx="50%" cy="35%" r="55%">
+    <stop offset="0%" stop-color="#fcd5b5"/><stop offset="100%" stop-color="#f0a870"/>
+  </radialGradient>
+  <radialGradient id="shadeT" cx="50%" cy="65%" r="50%">
+    <stop offset="0%" stop-color="rgba(0,0,0,0)"/><stop offset="100%" stop-color="rgba(0,0,0,0.25)"/>
+  </radialGradient>
+  <radialGradient id="muscleGrad" cx="30%" cy="30%" r="70%">
+    <stop offset="0%" stop-color="#d4844a"/><stop offset="100%" stop-color="#8B4010"/>
+  </radialGradient>
+  <filter id="shadow">
+    <feDropShadow dx="3" dy="5" stdDeviation="5" flood-color="#00000055"/>
+  </filter>
+  <filter id="glow">
+    <feGaussianBlur stdDeviation="5" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</defs>
+
+<!-- ══════════════════════════
+     GYM BACKGROUND
+══════════════════════════ -->
+<!-- Wall dark -->
+<rect x="0" y="0" width="960" height="540" fill="url(#gymWall)"/>
+
+<!-- Motivational wall stripe orange -->
+<rect x="0" y="180" width="960" height="8" fill="#ff6f00" opacity="0.3"/>
+<rect x="0" y="188" width="960" height="3" fill="#ffd600" opacity="0.2"/>
+
+<!-- BIG motivational poster center -->
+<rect x="360" y="28" width="240" height="135" rx="8" fill="#1a0500" stroke="#ff6f00" stroke-width="3"/>
+<rect x="365" y="33" width="230" height="125" rx="6" fill="#0d0300"/>
+<text x="480" y="72"  text-anchor="middle" font-family="'Bebas Neue',cursive" font-size="26" fill="#ff6f00" letter-spacing="3">NO PAIN</text>
+<text x="480" y="102" text-anchor="middle" font-family="'Bebas Neue',cursive" font-size="26" fill="#ffd600" letter-spacing="3">NO GAIN</text>
+<text x="480" y="125" text-anchor="middle" font-family="'Nunito',sans-serif" font-size="11" fill="#ff9800" font-weight="800">...unless you're here for the AC 😂</text>
+<text x="480" y="148" text-anchor="middle" font-family="'Nunito',sans-serif" font-size="10" fill="#ff6f00" font-weight="700">— GYM WISDOM</text>
+
+<!-- Wall clock -->
+<circle cx="88" cy="72" r="44" fill="#111" stroke="#ff6f00" stroke-width="3"/>
+<circle cx="88" cy="72" r="38" fill="#1a1a1a"/>
+<line x1="88" y1="38" x2="88" y2="52" stroke="#ff6f00" stroke-width="3" stroke-linecap="round"/>
+<line x1="88" y1="92" x2="88" y2="106" stroke="#ff6f00" stroke-width="2" stroke-linecap="round"/>
+<line x1="54" y1="72" x2="68" y2="72" stroke="#ff6f00" stroke-width="2" stroke-linecap="round"/>
+<line x1="108" y1="72" x2="122" y2="72" stroke="#ff6f00" stroke-width="2" stroke-linecap="round"/>
+<!-- clock hands -->
+<line x1="88" y1="72" x2="88" y2="48" stroke="white" stroke-width="3" stroke-linecap="round"/>
+<line x1="88" y1="72" x2="104" y2="72" stroke="#ffd600" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="88" cy="72" r="4" fill="#ff6f00"/>
+<text x="88" y="126" text-anchor="middle" font-family="'Bebas Neue',cursive" font-size="12" fill="#666" letter-spacing="1">GYM TIME</text>
+
+<!-- Left wall: BODY CHART poster -->
+<rect x="22" y="130" width="90" height="160" rx="4" fill="#111" stroke="#444" stroke-width="2"/>
+<text x="67" y="148" text-anchor="middle" font-family="'Bebas Neue',cursive" font-size="11" fill="#ff6f00" letter-spacing="1">MUSCLE</text>
+<text x="67" y="160" text-anchor="middle" font-family="'Bebas Neue',cursive" font-size="11" fill="#ff6f00" letter-spacing="1">GROUPS</text>
+<!-- simplified body diagram -->
+<ellipse cx="67" cy="180" rx="14" ry="16" fill="none" stroke="#ff6f00" stroke-width="1.5"/>
+<line x1="67" y1="196" x2="67" y2="235" stroke="#ff6f00" stroke-width="2"/>
+<line x1="50" y1="208" x2="84" y2="208" stroke="#ff6f00" stroke-width="2"/>
+<line x1="50" y1="208" x2="44" y2="228" stroke="#ff6f00" stroke-width="1.5"/>
+<line x1="84" y1="208" x2="90" y2="228" stroke="#ff6f00" stroke-width="1.5"/>
+<line x1="60" y1="235" x2="55" y2="275" stroke="#ff6f00" stroke-width="1.5"/>
+<line x1="74" y1="235" x2="79" y2="275" stroke="#ff6f00" stroke-width="1.5"/>
+
+<!-- RIGHT WALL: AC unit! -->
+<rect x="848" y="118" width="100" height="60" rx="8" fill="#c8e6f7" stroke="#90caf9" stroke-width="3"/>
+<rect x="854" y="124" width="88" height="48" rx="6" fill="#bbdefb"/>
+<!-- AC vents -->
+<line x1="858" y1="138" x2="934" y2="138" stroke="#64b5f6" stroke-width="2.5"/>
+<line x1="858" y1="148" x2="934" y2="148" stroke="#64b5f6" stroke-width="2.5"/>
+<line x1="858" y1="158" x2="934" y2="158" stroke="#64b5f6" stroke-width="2.5"/>
+<!-- AC power light -->
+<circle cx="930" cy="128" r="5" fill="#00e676" id="acLight"/>
+<!-- AC model text -->
+<text x="888" y="170" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="8" fill="#1565c0">❄ COOLMAX 5000</text>
+<!-- AC wind lines -->
+<path d="M848,155 Q820,165 800,158" stroke="#90caf9" stroke-width="2" fill="none" stroke-dasharray="4,3" opacity="0.6" id="wind1">
+  <animate attributeName="d" values="M848,155 Q820,165 800,158;M848,155 Q820,155 800,158;M848,155 Q820,165 800,158" dur="2s" repeatCount="indefinite"/>
+</path>
+<path d="M848,162 Q815,172 792,166" stroke="#90caf9" stroke-width="1.5" fill="none" stroke-dasharray="4,3" opacity="0.5" id="wind2">
+  <animate attributeName="d" values="M848,162 Q815,172 792,166;M848,162 Q815,162 792,166;M848,162 Q815,172 792,166" dur="2.2s" repeatCount="indefinite"/>
+</path>
+<!-- snowflakes near AC -->
+<text x="808" y="148" font-size="14" fill="#90caf9" opacity="0.7">❄</text>
+<text x="822" y="160" font-size="10" fill="#90caf9" opacity="0.5">❄</text>
+<text x="795" y="160" font-size="12" fill="#64b5f6" opacity="0.6">❄</text>
+
+<!-- RIGHT WALL: Motivational sign 2 -->
+<rect x="640" y="32" width="190" height="110" rx="8" fill="#0d0d0d" stroke="#444" stroke-width="2"/>
+<text x="735" y="62"  text-anchor="middle" font-family="'Bebas Neue',cursive" font-size="19" fill="#ffd600" letter-spacing="2">SWEAT IS JUST</text>
+<text x="735" y="86"  text-anchor="middle" font-family="'Bebas Neue',cursive" font-size="19" fill="#ff6f00" letter-spacing="2">FAT CRYING</text>
+<line x1="660" y1="96" x2="810" y2="96" stroke="#444" stroke-width="1"/>
+<text x="735" y="112" text-anchor="middle" font-family="'Nunito',sans-serif" font-size="10" fill="#666" font-weight="700">Member's fat: still laughing 😅</text>
+<text x="735" y="130" text-anchor="middle" font-family="'Nunito',sans-serif" font-size="10" fill="#555" font-weight="700">(hasn't done a single squat)</text>
+
+<!-- FLOOR -->
+<rect x="0" y="420" width="960" height="120" fill="url(#gymFloor)"/>
+<rect x="0" y="418" width="960" height="5" fill="#ff6f00" opacity="0.4"/>
+<!-- rubber floor tiles -->
+<line x1="0" y1="440" x2="960" y2="440" stroke="#1a1000" stroke-width="2" opacity="0.6"/>
+<line x1="0" y1="460" x2="960" y2="460" stroke="#1a1000" stroke-width="2" opacity="0.6"/>
+<line x1="160" y1="420" x2="160" y2="540" stroke="#1a1000" stroke-width="2" opacity="0.4"/>
+<line x1="320" y1="420" x2="320" y2="540" stroke="#1a1000" stroke-width="2" opacity="0.4"/>
+<line x1="480" y1="420" x2="480" y2="540" stroke="#1a1000" stroke-width="2" opacity="0.4"/>
+<line x1="640" y1="420" x2="640" y2="540" stroke="#1a1000" stroke-width="2" opacity="0.4"/>
+<line x1="800" y1="420" x2="800" y2="540" stroke="#1a1000" stroke-width="2" opacity="0.4"/>
+
+<!-- YOGA MAT (member is on it) -->
+<rect x="580" y="395" width="240" height="30" rx="8" fill="#1b5e20" stroke="#4caf50" stroke-width="2" opacity="0.9"/>
+<line x1="590" y1="402" x2="810" y2="402" stroke="#4caf50" stroke-width="1" opacity="0.4"/>
+<line x1="590" y1="412" x2="810" y2="412" stroke="#4caf50" stroke-width="1" opacity="0.4"/>
+<line x1="590" y1="421" x2="810" y2="421" stroke="#4caf50" stroke-width="1" opacity="0.4"/>
+
+<!-- BARBELL on floor left -->
+<rect x="40"  y="398" width="220" height="20" rx="4" fill="#555" stroke="#333" stroke-width="2"/>
+<rect x="30"  y="390" width="30"  height="38" rx="5" fill="#333" stroke="#222" stroke-width="2"/>
+<rect x="240" y="390" width="30"  height="38" rx="5" fill="#333" stroke="#222" stroke-width="2"/>
+<rect x="22"  y="393" width="18"  height="32" rx="4" fill="#e53935" stroke="#b71c1c" stroke-width="1.5"/>
+<rect x="260" y="393" width="18"  height="32" rx="4" fill="#e53935" stroke="#b71c1c" stroke-width="1.5"/>
+<!-- weight numbers -->
+<text x="31"  y="413" text-anchor="middle" font-family="'Bebas Neue',cursive" font-size="10" fill="white">20</text>
+<text x="269" y="413" text-anchor="middle" font-family="'Bebas Neue',cursive" font-size="10" fill="white">20</text>
+
+<!-- DUMBBELLS scattered -->
+<rect x="350" y="408" width="60" height="12" rx="3" fill="#444" stroke="#333" stroke-width="1.5"/>
+<circle cx="348" cy="414" r="10" fill="#333" stroke="#222" stroke-width="1.5"/>
+<circle cx="412" cy="414" r="10" fill="#333" stroke="#222" stroke-width="1.5"/>
+
+<rect x="490" y="408" width="55" height="11" rx="3" fill="#444" stroke="#333" stroke-width="1.5"/>
+<circle cx="488" cy="413" r="9" fill="#e53935" stroke="#b71c1c" stroke-width="1.5"/>
+<circle cx="547" cy="413" r="9" fill="#e53935" stroke="#b71c1c" stroke-width="1.5"/>
+
+<!-- TREADMILL background right -->
+<rect x="820" y="340" width="130" height="80" rx="8" fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+<rect x="826" y="346" width="118" height="50" rx="5" fill="#0d0d0d"/>
+<rect x="832" y="352" width="106" height="38" rx="3" fill="#0a1628"/>
+<text x="885" y="368" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="8" fill="#ff6f00">SPEED: 0.0</text>
+<text x="885" y="380" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="8" fill="#4caf50">CALORIES: 0</text>
+<text x="885" y="392" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="8" fill="#42a5f5">TIME: --:--</text>
+<rect x="826" y="396" width="118" height="24" rx="0" fill="#111"/>
+<rect x="826" y="396" width="118" height="24" rx="0" fill="url(#gymFloor)" opacity="0.5"/>
+
+<!-- MIRROR on left wall -->
+<rect x="0" y="200" width="20" height="220" fill="#a0c8d0" opacity="0.15" stroke="#64b5f6" stroke-width="2"/>
+<!-- mirror reflection hint -->
+<rect x="2" y="202" width="16" height="216" fill="rgba(255,255,255,0.04)"/>
+
+<!-- water bottle -->
+<rect x="568" y="392" width="14" height="30" rx="5" fill="#42a5f5" stroke="#1976d2" stroke-width="1.5"/>
+<rect x="570" y="387" width="10" height="7"  rx="3" fill="#1565c0"/>
+<!-- bottle label -->
+<rect x="569" y="400" width="12" height="12" rx="2" fill="#1565c0" opacity="0.7"/>
+<text x="575" y="409" text-anchor="middle" font-family="monospace" font-size="5" fill="white">H₂O</text>
+
+<!-- towel on bench -->
+<rect x="380" y="375" width="90" height="18" rx="8" fill="#e8eaf6" stroke="#9fa8da" stroke-width="1.5" transform="rotate(-5 425 384)"/>
+<line x1="385" y1="380" x2="463" y2="376" stroke="#9fa8da" stroke-width="1" opacity="0.5" transform="rotate(-5 425 384)"/>
+
+<!-- GYM BENCH -->
+<rect x="300" y="388" width="200" height="18" rx="5" fill="#3e2723" stroke="#4e342e" stroke-width="2"/>
+<rect x="310" y="404" width="12" height="24" rx="3" fill="#2e1a0e"/>
+<rect x="476" y="404" width="12" height="24" rx="3" fill="#2e1a0e"/>
+
+
+<!-- ════════════════════════════
+     TRAINER CHARACTER — Muscular Indian
+════════════════════════════ -->
+<g id="trainer-char" filter="url(#shadow)">
+  <ellipse cx="215" cy="424" rx="58" ry="13" fill="rgba(0,0,0,0.35)"/>
+
+  <!-- LEGS — strong quads -->
+  <rect x="182" y="340" width="36" height="84" rx="12" fill="#d4500a" stroke="#b84000" stroke-width="2"/>
+  <rect x="228" y="340" width="36" height="84" rx="12" fill="#d4500a" stroke="#b84000" stroke-width="2"/>
+  <!-- quad muscle definition -->
+  <path d="M183,360 Q200,355 217,362" stroke="#b84000" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <path d="M229,360 Q246,355 263,362" stroke="#b84000" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <!-- shoes -->
+  <ellipse cx="200" cy="424" rx="26" ry="11" fill="#111" stroke="#222" stroke-width="2"/>
+  <ellipse cx="246" cy="424" rx="26" ry="11" fill="#111" stroke="#222" stroke-width="2"/>
+  <path d="M180,419 Q200,413 216,419" stroke="#ff6f00" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M226,419 Q246,413 262,419" stroke="#ff6f00" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+  <!-- BODY — massive tank top -->
+  <!-- MASSIVE chest / torso -->
+  <rect x="158" y="198" width="128" height="150" rx="18" fill="#c84800" stroke="#a03a00" stroke-width="2"/>
+  <!-- tank top straps -->
+  <rect x="175" y="198" width="34" height="45" rx="6" fill="#e85000"/>
+  <rect x="235" y="198" width="34" height="45" rx="6" fill="#e85000"/>
+  <!-- chest muscles definition -->
+  <path d="M162,230 Q215,218 282,230" stroke="#a03a00" stroke-width="2" fill="none" opacity="0.5"/>
+  <ellipse cx="192" cy="250" rx="28" ry="22" fill="none" stroke="#a03a00" stroke-width="2" opacity="0.4"/>
+  <ellipse cx="252" cy="250" rx="28" ry="22" fill="none" stroke="#a03a00" stroke-width="2" opacity="0.4"/>
+  <!-- ab lines -->
+  <line x1="215" y1="258" x2="215" y2="345" stroke="#a03a00" stroke-width="2" opacity="0.4"/>
+  <path d="M172,278 Q215,272 258,278" stroke="#a03a00" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <path d="M172,298 Q215,292 258,298" stroke="#a03a00" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <path d="M172,318 Q215,312 258,318" stroke="#a03a00" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <!-- vest highlight -->
+  <rect x="160" y="200" width="124" height="35" rx="16" fill="rgba(255,255,255,0.06)"/>
+
+  <!-- LEFT ARM — massive, raised/flexed -->
+  <g id="trainerArmLeft">
+    <path d="M158,210 Q128,220 118,255 Q112,278 122,295" stroke="url(#muscleGrad)" stroke-width="34" fill="none" stroke-linecap="round"/>
+    <!-- bicep peak -->
+    <ellipse cx="125" cy="248" rx="22" ry="16" fill="url(#muscleGrad)" transform="rotate(-20 125 248)"/>
+    <!-- fist -->
+    <ellipse cx="122" cy="295" rx="18" ry="14" fill="#c87848" stroke="#a05828" stroke-width="2"/>
+    <line x1="110" y1="290" x2="134" y2="290" stroke="#a05828" stroke-width="2"/>
+    <line x1="110" y1="298" x2="134" y2="298" stroke="#a05828" stroke-width="2"/>
+  </g>
+
+  <!-- RIGHT ARM — pointing dramatically -->
+  <g id="trainerArmRight">
+    <path d="M286,210 Q316,220 330,252 Q340,275 328,292" stroke="url(#muscleGrad)" stroke-width="32" fill="none" stroke-linecap="round"/>
+    <ellipse cx="322" cy="248" rx="20" ry="15" fill="url(#muscleGrad)" transform="rotate(20 322 248)"/>
+    <!-- pointing hand -->
+    <ellipse cx="328" cy="292" rx="16" ry="12" fill="#c87848" stroke="#a05828" stroke-width="2"/>
+    <!-- pointing finger -->
+    <rect x="325" y="274" width="9" height="22" rx="4" fill="#d4956a" stroke="#b07040" stroke-width="1.5"/>
+  </g>
+
+  <!-- NECK — thick -->
+  <rect x="200" y="186" width="44" height="20" rx="9" fill="url(#skinT)" stroke="#904828" stroke-width="1.5"/>
+
+  <!-- HEAD -->
+  <ellipse cx="225" cy="158" rx="50" ry="54" fill="#904828" opacity="0.4"/>
+  <ellipse cx="223" cy="156" rx="48" ry="52" fill="url(#skinT)"/>
+  <ellipse cx="223" cy="156" rx="48" ry="52" fill="url(#shadeT)"/>
+
+  <!-- HAIR — short buzzcut trainer -->
+  <path d="M175,142 Q173,100 223,96 Q273,100 271,142" fill="#111" stroke="#1a1a1a" stroke-width="1"/>
+  <path d="M180,136 Q178,108 223,104 Q268,108 266,136" fill="#1a1a1a"/>
+  <!-- buzz texture -->
+  <path d="M190,108 Q223,103 256,108" stroke="rgba(255,255,255,0.08)" stroke-width="2" fill="none"/>
+
+  <!-- EARS -->
+  <ellipse cx="175" cy="158" rx="9" ry="12" fill="#b06030" stroke="#904828" stroke-width="1.5"/>
+  <ellipse cx="175" cy="158" rx="5" ry="7"  fill="#a05020"/>
+  <ellipse cx="271" cy="158" rx="9" ry="12" fill="#b06030" stroke="#904828" stroke-width="1.5"/>
+  <ellipse cx="271" cy="158" rx="5" ry="7"  fill="#a05020"/>
+
+  <!-- EYEBROWS — intense trainer -->
+  <path d="M183,138 Q199,130 212,135" stroke="#1a0a00" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+  <path d="M234,135 Q247,130 263,138" stroke="#1a0a00" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+
+  <!-- EYES — intense fire -->
+  <ellipse cx="197" cy="155" rx="14" ry="13" fill="white" stroke="#7a4020" stroke-width="1.5"/>
+  <ellipse cx="249" cy="155" rx="14" ry="13" fill="white" stroke="#7a4020" stroke-width="1.5"/>
+  <circle cx="197" cy="155" r="9"   fill="#8B2000"/>
+  <circle cx="249" cy="155" r="9"   fill="#8B2000"/>
+  <circle cx="197" cy="155" r="6"   fill="#0a0000" id="tPupilL"/>
+  <circle cx="249" cy="155" r="6"   fill="#0a0000" id="tPupilR"/>
+  <!-- fire in eyes -->
+  <circle cx="200" cy="151" r="3"   fill="white" opacity="0.95"/>
+  <circle cx="252" cy="151" r="3"   fill="white" opacity="0.95"/>
+  <!-- eye outline -->
+  <ellipse cx="197" cy="155" rx="14" ry="13" fill="none" stroke="#6a3010" stroke-width="1.5"/>
+  <ellipse cx="249" cy="155" rx="14" ry="13" fill="none" stroke="#6a3010" stroke-width="1.5"/>
+
+  <!-- NOSE -->
+  <path d="M219,165 Q223,176 227,165" stroke="#9a5828" stroke-width="2.2" fill="none"/>
+  <ellipse cx="217" cy="172" rx="6" ry="4" fill="#b06030" stroke="#904828" stroke-width="1"/>
+  <ellipse cx="229" cy="172" rx="6" ry="4" fill="#b06030" stroke="#904828" stroke-width="1"/>
+
+  <!-- MOUTH — trainer -->
+  <g id="trainer-mouth-g">
+    <path id="trainer-mouth" d="M208,190 Q223,200 238,190" stroke="#8B3A10" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- JAW square -->
+  <path d="M178,178 Q176,200 192,216 Q208,228 223,230 Q238,228 254,216 Q270,200 268,178" fill="none" stroke="rgba(80,30,0,0.25)" stroke-width="2"/>
+
+  <!-- VEINS on neck (intensity) -->
+  <path d="M204,186 Q202,200 206,208" stroke="#7a3010" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <path d="M242,186 Q244,200 240,208" stroke="#7a3010" stroke-width="1.5" fill="none" opacity="0.5"/>
+
+  <!-- SWEAT DROPS (trainer sweating from frustration) -->
+  <ellipse cx="272" cy="148" rx="5" ry="8" fill="#90caf9" opacity="0" id="trainerSweat1"/>
+  <ellipse cx="278" cy="162" rx="4" ry="6" fill="#90caf9" opacity="0" id="trainerSweat2"/>
+</g>
+
+
+<!-- ════════════════════════════
+     MEMBER CHARACTER — Chubby lazy dude
+════════════════════════════ -->
+<g id="member-char" filter="url(#shadow)">
+  <ellipse cx="728" cy="424" rx="60" ry="13" fill="rgba(0,0,0,0.35)"/>
+
+  <!-- LEGS — short round -->
+  <rect x="696" y="360" width="32" height="65" rx="12" fill="#1565c0" stroke="#0d47a1" stroke-width="2"/>
+  <rect x="738" y="360" width="32" height="65" rx="12" fill="#1565c0" stroke="#0d47a1" stroke-width="2"/>
+  <!-- jeans crease -->
+  <line x1="708" y1="368" x2="718" y2="424" stroke="#0d47a1" stroke-width="1.5" opacity="0.4"/>
+  <line x1="752" y1="368" x2="742" y2="424" stroke="#0d47a1" stroke-width="1.5" opacity="0.4"/>
+  <!-- sneakers -->
+  <ellipse cx="712" cy="425" rx="25" ry="11" fill="#f5f5f5" stroke="#e0e0e0" stroke-width="2"/>
+  <ellipse cx="754" cy="425" rx="25" ry="11" fill="#f5f5f5" stroke="#e0e0e0" stroke-width="2"/>
+  <rect x="698" y="418" width="28" height="9" rx="2" fill="#42a5f5" opacity="0.8"/>
+  <rect x="740" y="418" width="28" height="9" rx="2" fill="#42a5f5" opacity="0.8"/>
+  <path d="M696,420 Q712,414 724,420" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" fill="none"/>
+  <path d="M738,420 Q754,414 766,420" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" fill="none"/>
+
+  <!-- BODY — rounded/chubby hoodie -->
+  <!-- belly pouch -->
+  <ellipse cx="728" cy="310" rx="62" ry="70" fill="#37474f"/>
+  <!-- main body rect -->
+  <rect x="672" y="225" width="112" height="150" rx="20" fill="#455a64" stroke="#37474f" stroke-width="2"/>
+  <!-- hoodie pocket big -->
+  <rect x="688" y="315" width="82" height="52" rx="10" fill="#37474f" stroke="#546e7a" stroke-width="1.5"/>
+  <!-- hoodie zipper -->
+  <line x1="728" y1="228" x2="728" y2="370" stroke="#546e7a" stroke-width="3.5" opacity="0.5"/>
+  <!-- zipper pull -->
+  <rect x="723" y="318" width="12" height="8" rx="3" fill="#90a4ae"/>
+  <!-- hoodie strings -->
+  <path d="M712,228 Q706,255 710,278" stroke="#546e7a" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <path d="M744,228 Q750,255 746,278" stroke="#546e7a" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <!-- hoodie highlight -->
+  <rect x="674" y="227" width="108" height="36" rx="18" fill="rgba(255,255,255,0.05)"/>
+  <!-- BELLY OUTLINE subtle -->
+  <ellipse cx="728" cy="330" rx="50" ry="38" fill="none" stroke="#546e7a" stroke-width="1.5" opacity="0.3"/>
+
+  <!-- LEFT ARM — limp / holding phone -->
+  <path d="M672,238 Q645,258 638,290 Q632,315 640,330" stroke="#455a64" stroke-width="28" fill="none" stroke-linecap="round"/>
+  <!-- phone in hand -->
+  <rect x="620" y="298" width="32" height="55" rx="6" fill="#1a1a2e" stroke="#333" stroke-width="2"/>
+  <rect x="624" y="302" width="24" height="43" rx="3" fill="#0d1117"/>
+  <!-- phone screen: Netflix -->
+  <rect x="625" y="303" width="22" height="8" rx="2" fill="#e50914"/>
+  <text x="636" y="309" text-anchor="middle" font-family="'Bebas Neue',cursive" font-size="7" fill="white">NETFLIX</text>
+  <text x="636" y="320" text-anchor="middle" font-family="monospace" font-size="5.5" fill="#aaa">Now Playing:</text>
+  <text x="636" y="330" text-anchor="middle" font-family="monospace" font-size="5" fill="#4fc3f7">Couch Potato</text>
+  <text x="636" y="340" text-anchor="middle" font-family="monospace" font-size="5" fill="#4fc3f7">Champion S3</text>
+  <!-- home button -->
+  <circle cx="636" cy="347" r="3" fill="#333" stroke="#555" stroke-width="1"/>
+
+  <!-- RIGHT ARM — waving dismissively -->
+  <path d="M784,238 Q810,255 818,285 Q824,308 816,325" stroke="#455a64" stroke-width="28" fill="none" stroke-linecap="round"/>
+  <!-- hand wave -->
+  <ellipse cx="816" cy="330" rx="18" ry="14" fill="#EFB887" stroke="#d4956a" stroke-width="2"/>
+  <line x1="806" y1="320" x2="802" y2="336" stroke="#d4956a" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="812" y1="317" x2="808" y2="333" stroke="#d4956a" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="818" y1="316" x2="814" y2="332" stroke="#d4956a" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="824" y1="318" x2="820" y2="333" stroke="#d4956a" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- NECK -->
+  <rect x="712" y="213" width="32" height="18" rx="8" fill="url(#skinM)" stroke="#d4956a" stroke-width="1"/>
+  <!-- double chin hint -->
+  <path d="M700,222 Q728,232 756,222" stroke="#d4b887" stroke-width="2" fill="none" opacity="0.4"/>
+
+  <!-- HEAD — round, chubby cheeks -->
+  <ellipse cx="732" cy="176" rx="54" ry="56" fill="#f0a870" opacity="0.4"/>
+  <ellipse cx="730" cy="174" rx="52" ry="54" fill="url(#skinM)"/>
+  <ellipse cx="730" cy="174" rx="52" ry="54" fill="url(#shadeT)" opacity="0.4"/>
+  <!-- chubby cheeks -->
+  <ellipse cx="682" cy="186" rx="20" ry="16" fill="#f5b880" opacity="0.5"/>
+  <ellipse cx="778" cy="186" rx="20" ry="16" fill="#f5b880" opacity="0.5"/>
+
+  <!-- HAIR — messy sleepy hair -->
+  <path d="M678,162 Q676,118 730,114 Q784,118 782,162" fill="#3a2a10" stroke="#2a1a00" stroke-width="1"/>
+  <!-- messy tufts pointing everywhere -->
+  <path d="M688,130 Q695,108 710,118" fill="#3a2a10" stroke="#2a1a00" stroke-width="1"/>
+  <path d="M730,112 Q735,96 750,108" fill="#3a2a10" stroke="#2a1a00" stroke-width="1"/>
+  <path d="M768,128 Q778,112 782,128" fill="#3a2a10" stroke="#2a1a00" stroke-width="1"/>
+  <path d="M678,148 Q666,132 674,120" fill="#3a2a10" stroke="#2a1a00" stroke-width="1"/>
+  <!-- cowlick -->
+  <path d="M726,112 Q720,96 734,98 Q748,100 740,116Z" fill="#4a3a20" stroke="#2a1a00" stroke-width="1"/>
+  <path d="M706,120 Q698,110 706,106 Q716,114 712,122Z" fill="#4a3a20"/>
+
+  <!-- EARS -->
+  <ellipse cx="678" cy="174" rx="9" ry="12" fill="#EFB887" stroke="#d4956a" stroke-width="1.5"/>
+  <ellipse cx="678" cy="174" rx="5" ry="7"  fill="#DFA070"/>
+  <ellipse cx="782" cy="174" rx="9" ry="12" fill="#EFB887" stroke="#d4956a" stroke-width="1.5"/>
+  <ellipse cx="782" cy="174" rx="5" ry="7"  fill="#DFA070"/>
+
+  <!-- EYEBROWS — lazy half-raised -->
+  <path id="mem-brow-l" d="M692,154 Q708,150 720,154" stroke="#2a1a00" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path id="mem-brow-r" d="M740,154 Q752,150 768,154" stroke="#2a1a00" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+  <!-- EYES — half closed sleepy -->
+  <ellipse cx="706" cy="172" rx="15" ry="13" fill="white" stroke="#8B6040" stroke-width="1.5"/>
+  <ellipse cx="754" cy="172" rx="15" ry="13" fill="white" stroke="#8B6040" stroke-width="1.5"/>
+  <!-- sleepy eyelid covers half -->
+  <path d="M691,168 Q706,162 721,168" fill="#EFB887" stroke="#d4956a" stroke-width="1" id="memEyeLidL"/>
+  <path d="M739,168 Q754,162 769,168" fill="#EFB887" stroke="#d4956a" stroke-width="1" id="memEyeLidR"/>
+  <circle cx="706" cy="175" r="8"   fill="#2a1400"/>
+  <circle cx="754" cy="175" r="8"   fill="#2a1400"/>
+  <circle cx="706" cy="175" r="5"   fill="#0a0500" id="mPupilL"/>
+  <circle cx="754" cy="175" r="5"   fill="#0a0500" id="mPupilR"/>
+  <circle cx="709" cy="172" r="2.5" fill="white" opacity="0.85"/>
+  <circle cx="757" cy="172" r="2.5" fill="white" opacity="0.85"/>
+  <!-- eye outline -->
+  <ellipse cx="706" cy="172" rx="15" ry="13" fill="none" stroke="#6a3820" stroke-width="1.5"/>
+  <ellipse cx="754" cy="172" rx="15" ry="13" fill="none" stroke="#6a3820" stroke-width="1.5"/>
+
+  <!-- NOSE — big round -->
+  <path d="M726,184 Q730,196 734,184" stroke="#c4834e" stroke-width="2" fill="none"/>
+  <ellipse cx="724" cy="191" rx="6"  ry="4.5" fill="#EFB887" stroke="#d4956a" stroke-width="1"/>
+  <ellipse cx="736" cy="191" rx="6"  ry="4.5" fill="#EFB887" stroke="#d4956a" stroke-width="1"/>
+
+  <!-- MOUTH — lazy smile / yawn -->
+  <g id="member-mouth-g">
+    <path id="member-mouth" d="M715,210 Q730,218 745,210" stroke="#c0725a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- ZZZ snore bubbles (hidden by default) -->
+  <text id="zzz1" x="790" y="130" font-family="'Bebas Neue',cursive" font-size="18" fill="#42a5f5" opacity="0">Z</text>
+  <text id="zzz2" x="808" y="112" font-family="'Bebas Neue',cursive" font-size="14" fill="#42a5f5" opacity="0">Z</text>
+  <text id="zzz3" x="822" y="98"  font-family="'Bebas Neue',cursive" font-size="11" fill="#42a5f5" opacity="0">Z</text>
+
+  <!-- BLUSH chubby cheeks color -->
+  <ellipse cx="686" cy="190" rx="16" ry="10" fill="#ffb3b3" opacity="0.35"/>
+  <ellipse cx="774" cy="190" rx="16" ry="10" fill="#ffb3b3" opacity="0.35"/>
+</g>
+
+
+<!-- DIVIDER line on floor -->
+<line x1="480" y1="418" x2="480" y2="540" stroke="#ff6f00" stroke-width="3" stroke-dasharray="10,6" opacity="0.4"/>
+<!-- labels on floor -->
+<text x="240" y="460" text-anchor="middle" font-family="'Bebas Neue',cursive" font-size="14" fill="#ff6f00" letter-spacing="2" opacity="0.5">TRAINER ZONE</text>
+<text x="720" y="460" text-anchor="middle" font-family="'Bebas Neue',cursive" font-size="14" fill="#42a5f5" letter-spacing="2" opacity="0.5">MEMBER ZONE (aka AC ZONE)</text>
+
+</svg>
+
+  <div class="speech-bubble" id="bubble-trainer"></div>
+  <div class="speech-bubble" id="bubble-member"></div>
+</div>
+
+<p class="status" id="status">Press ▶ Play to start the workout! 💪</p>
+
+<div class="controls">
+  <button class="btn btn-play" id="playBtn">▶ Play</button>
+  <button class="btn btn-stop" id="stopBtn" disabled>⏹ Stop</button>
+</div>
+
+<script>
+// ── SCRIPT ────────────────────────────────────────────────────────────
+const script = [
+  { speaker:'trainer', text:'GOOD MORNING CHAMPION! Day 1! Let\'s GOOO! 💪🔥', emotion:'💪', state:'jump', boom:'LET\'S GO!' },
+  { speaker:'member',  text:'My knee hurts.', emotion:'😴', state:'snore' },
+  { speaker:'trainer', text:'You just walked IN. You haven\'t done ANYTHING yet!', emotion:'😤', state:'talk', boom:'WHAT?!' },
+  { speaker:'member',  text:'Pre-emptive knee pain. It knows what\'s coming.', emotion:'🦵', state:'snore' },
+  { speaker:'trainer', text:'Okay fine! Let\'s start with 10 pushups! EASY!', emotion:'💪', state:'jump' },
+  { speaker:'member',  text:'My back.', emotion:'😩', state:'snore' },
+  { speaker:'trainer', text:'10 SQUATS THEN!', emotion:'😤', state:'talk', boom:'SQUATS!' },
+  { speaker:'member',  text:'My ankle.', emotion:'😮', state:'snore' },
+  { speaker:'trainer', text:'SIT UPS! JUST SIT UPS!', emotion:'🔥', state:'jump', boom:'SIT UPS!!' },
+  { speaker:'member',  text:'My neck.', emotion:'😑', state:'snore' },
+  { speaker:'trainer', text:'WHAT DOESN\'T HURT?!', emotion:'😭', state:'talk', boom:'WHAT?!' },
+  { speaker:'member',  text:'My fingers. I can do finger exercises. 🤙', emotion:'🤙', state:'talk' },
+  { speaker:'trainer', text:'Fine. Walk on the treadmill. SLOW speed. 3km/h.', emotion:'😤', state:'talk' },
+  { speaker:'member',  text:'Can it go lower?', emotion:'😐', state:'snore' },
+  { speaker:'trainer', text:'That\'s already WALKING speed!! That\'s what humans DO!', emotion:'💢', state:'jump', boom:'WALKING!!' },
+  { speaker:'member',  text:'I\'m more of a... standing person.', emotion:'🧍', state:'snore' },
+  { speaker:'trainer', text:'WHY DID YOU EVEN JOIN THE GYM?!!', emotion:'😱', state:'jump', boom:'WHY!!' },
+  { speaker:'member',  text:'The AC is very good here.\nMy house AC is broken. 🥶', emotion:'❄️', state:'snore' },
+  { speaker:'trainer', text:'...', emotion:'😶', state:'facepalm' },
+  { speaker:'member',  text:'Also the wifi is fast. I\'m on episode 6 of season 3.', emotion:'📱', state:'snore' },
+  { speaker:'trainer', text:'I need a new job.', emotion:'😔', state:'facepalm' },
+  { speaker:'member',  text:'See! Even YOU needed to sit down!\nMaybe rest IS the workout!', emotion:'😂', state:'talk' },
+  { speaker:'trainer', text:'...You know what? You\'re right. Let\'s both just sit here.', emotion:'🪑', state:'facepalm' },
+  { speaker:'member',  text:'NOW you\'re a good trainer! Best session ever! ⭐⭐⭐⭐⭐', emotion:'⭐', state:'talk' },
+];
+
+// ── VOICES ──────────────────────────────────────────────────────────
+const synth = window.speechSynthesis;
+let voices = [];
+function loadVoices(){ voices = synth.getVoices(); }
+loadVoices();
+if(synth.onvoiceschanged!==undefined) synth.onvoiceschanged = loadVoices;
+
+function getVoice(speaker){
+  if(!voices.length) voices = synth.getVoices();
+  const en = voices.filter(v=>v.lang.startsWith('en'));
+  if(speaker==='trainer'){
+    return en.find(v=>/george|daniel|james|david/i.test(v.name))
+        || en.find(v=>v.lang==='en-US') || en[0];
+  }
+  return en.find(v=>/alex|oliver|thomas/i.test(v.name))
+      || en[1] || en[0];
+}
+
+function speak(text, speaker, onEnd){
+  synth.cancel();
+  const clean = text.replace(/[^\w\s,!?.''\-\n.…]/g,'').trim();
+  const utter = new SpeechSynthesisUtterance(clean);
+  if(speaker==='trainer'){ utter.pitch=0.75; utter.rate=1.05; utter.volume=1; }
+  else                   { utter.pitch=1.1;  utter.rate=0.82; utter.volume=0.9; }
+  const v=getVoice(speaker); if(v) utter.voice=v;
+  utter.onend  = ()=>onEnd&&onEnd();
+  utter.onerror = ()=>onEnd&&onEnd();
+  synth.speak(utter);
+}
+
+// ── EXPRESSIONS ─────────────────────────────────────────────────────
+function setTrainerMouth(type){
+  const m=document.getElementById('trainer-mouth');
+  if(type==='shout') m.setAttribute('d','M206,192 Q223,210 240,192');
+  else if(type==='despair') m.setAttribute('d','M210,196 Q223,190 236,196');
+  else m.setAttribute('d','M208,190 Q223,200 238,190');
+}
+function setTrainerBrows(type){
+  // done inline
+}
+function setMemberMouth(type){
+  const g=document.getElementById('member-mouth-g');
+  if(type==='yawn'){
+    g.innerHTML=`<ellipse cx="730" cy="215" rx="15" ry="10" fill="#8B3820" stroke="#6B2810" stroke-width="1.5"/>
+    <ellipse cx="730" cy="212" rx="13" ry="5" fill="#EFB887"/>`;
+  } else if(type==='smirk'){
+    g.innerHTML=`<path id="member-mouth" d="M715,210 Q732,222 745,212" stroke="#c0725a" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
+  } else {
+    g.innerHTML=`<path id="member-mouth" d="M715,210 Q730,218 745,210" stroke="#c0725a" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
+  }
+}
+function setMemberBrows(type){
+  const l=document.getElementById('mem-brow-l');
+  const r=document.getElementById('mem-brow-r');
+  if(type==='sleepy'){
+    l.setAttribute('d','M692,157 Q708,154 720,157');
+    r.setAttribute('d','M740,157 Q752,154 768,157');
+  } else {
+    l.setAttribute('d','M692,154 Q708,150 720,154');
+    r.setAttribute('d','M740,154 Q752,150 768,154');
+  }
+}
+function setZzz(show){
+  ['zzz1','zzz2','zzz3'].forEach((id,i)=>{
+    document.getElementById(id).style.opacity = show ? (0.9-i*0.2).toString() : '0';
+  });
+}
+function setTrainerSweat(show){
+  ['trainerSweat1','trainerSweat2'].forEach(id=>{
+    document.getElementById(id).style.opacity = show ? '0.8' : '0';
+  });
+}
+function lookAt(speaker){
+  const tl=document.getElementById('tPupilL'); const tr=document.getElementById('tPupilR');
+  const ml=document.getElementById('mPupilL'); const mr=document.getElementById('mPupilR');
+  if(speaker==='trainer'){
+    tl.setAttribute('cx','199'); tr.setAttribute('cx','251');
+    ml.setAttribute('cx','702'); mr.setAttribute('cx','750');
+  } else {
+    tl.setAttribute('cx','195'); tr.setAttribute('cx','247');
+    ml.setAttribute('cx','710'); mr.setAttribute('cx','758');
+  }
+}
+
+// ── STATE ────────────────────────────────────────────────────────────
+let currentIdx=0, isPlaying=false, isPaused=false, timeoutId=null;
+const playBtn=document.getElementById('playBtn');
+const stopBtn=document.getElementById('stopBtn');
+
+playBtn.addEventListener('click',()=>{
+  if(!isPlaying && currentIdx===0){
+    isPlaying=true; isPaused=false; stopBtn.disabled=false;
+    playBtn.textContent='⏸ Pause';
+    document.getElementById('status').textContent='🏋️ Day 1 begins...';
+    setTimeout(showNext,500);
+  } else if(!isPlaying && currentIdx>=script.length){
+    resetScene(); isPlaying=true; isPaused=false; stopBtn.disabled=false;
+    playBtn.textContent='⏸ Pause'; setTimeout(showNext,500);
+  } else if(isPlaying && !isPaused){
+    isPaused=true; clearTimeout(timeoutId); synth.pause();
+    playBtn.textContent='▶ Resume';
+    document.getElementById('status').textContent='⏸ Paused — even the trainer needed a break';
+  } else if(isPaused){
+    isPaused=false; synth.resume(); playBtn.textContent='⏸ Pause'; showNext();
+  }
+});
+stopBtn.addEventListener('click',()=>{ resetScene(); stopBtn.disabled=true; });
+
+// ── PLAY LOOP ─────────────────────────────────────────────────────────
+function showNext(){
+  if(!isPlaying||isPaused) return;
+  if(currentIdx>=script.length){
+    isPlaying=false; playBtn.textContent='↺ Replay';
+    document.getElementById('progressFill').style.width='100%';
+    document.getElementById('status').textContent='😂 Best. Workout. Ever. (Calories burned: 0)';
+    hideBubbles(); resetExpressions();
+    return;
+  }
+  const item=script[currentIdx];
+  document.getElementById('progressFill').style.width=(currentIdx/script.length*100)+'%';
+
+  setCharState(item.speaker, item.state);
+  lookAt(item.speaker);
+
+  if(item.speaker==='trainer'){
+    setTrainerMouth(item.state==='facepalm'?'despair':item.state==='jump'?'shout':'talk');
+    setTrainerSweat(item.state==='jump'||item.state==='facepalm');
+    setZzz(false);
+  } else {
+    setMemberBrows(item.state==='snore'?'sleepy':'normal');
+    setMemberMouth(item.state==='snore'?'yawn':item.emotion==='😂'||item.emotion==='⭐'?'smirk':'normal');
+    setZzz(item.state==='snore');
+  }
+
+  const label=item.speaker==='trainer'?'💪 Trainer':'😴 Member';
+  const short=item.text.replace(/\n/g,' ').substring(0,55);
+  document.getElementById('status').textContent=`${label}: "${short}${item.text.length>55?'...':''}"`;
+
+  showBubble(item.speaker, item.text);
+  spawnEmoji(item.speaker, item.emotion);
+  if(item.boom) spawnBoom(item.boom, item.speaker);
+
+  speak(item.text, item.speaker, ()=>{
+    if(isPlaying&&!isPaused){
+      timeoutId=setTimeout(()=>{ currentIdx++; showNext(); }, 700);
+    }
+  });
+}
+
+function setCharState(speaker, state){
+  const svg=document.getElementById('sceneSVG');
+  svg.className='';
+  const cssMap = {talk:'talking', jump:'jump', snore:'snore', facepalm:'facepalm'};
+  const cssState = cssMap[state]||'talking';
+  svg.classList.add(`${speaker}-${cssState}`);
+  const other=speaker==='trainer'?'member':'trainer';
+  svg.classList.add(`${other}-idle`);
+}
+
+function showBubble(speaker, text){
+  hideBubbles();
+  const el=document.getElementById(`bubble-${speaker}`);
+  el.className='speech-bubble'+(speaker==='member'?' lazy-bubble':'');
+  el.style.whiteSpace='pre-line'; el.textContent=text;
+  setTimeout(()=>el.classList.add('show'),30);
+}
+function hideBubbles(){
+  document.getElementById('bubble-trainer').classList.remove('show');
+  document.getElementById('bubble-member').classList.remove('show');
+}
+function spawnEmoji(speaker, emoji){
+  const w=document.querySelector('.scene-wrapper'); if(!w) return;
+  const el=document.createElement('div'); el.className='float-emoji'; el.textContent=emoji;
+  el.style.left=speaker==='trainer'?(50+Math.random()*120)+'px':(660+Math.random()*120)+'px';
+  el.style.top='180px'; w.appendChild(el); setTimeout(()=>el.remove(),2200);
+}
+function spawnBoom(text, speaker){
+  const w=document.querySelector('.scene-wrapper'); if(!w) return;
+  const el=document.createElement('div'); el.className='boom-text'; el.textContent=text;
+  el.style.top=(80+Math.random()*60)+'px';
+  el.style.left=speaker==='trainer'?'5%':'55%';
+  w.appendChild(el); setTimeout(()=>el.remove(),1000);
+}
+function resetExpressions(){
+  setTrainerMouth('normal'); setMemberMouth('normal');
+  setMemberBrows('normal'); setZzz(false); setTrainerSweat(false);
+}
+function resetScene(){
+  clearTimeout(timeoutId); synth.cancel();
+  isPlaying=false; isPaused=false; currentIdx=0;
+  hideBubbles(); resetExpressions();
+  playBtn.textContent='▶ Play';
+  document.getElementById('progressFill').style.width='0%';
+  document.getElementById('status').textContent='Press ▶ Play to start the workout! 💪';
+  document.getElementById('sceneSVG').className='';
+}
+</script>
+</body>
+</html>
