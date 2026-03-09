@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chrome Chrome Yes Papa 😂</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --chrome-blue:#4285f4; --chrome-red:#ea4335;
+  --chrome-yellow:#fbbc05; --chrome-green:#34a853;
+  --dark:#0d1117; --user-color:#a78bfa;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+
+body {
+  background: radial-gradient(ellipse at top, #0d0221 0%, #050010 100%);
+  font-family: 'Nunito', sans-serif;
+  display:flex; flex-direction:column; align-items:center;
+  min-height:100vh; overflow-x:hidden; overflow-y:auto;
+}
+
+h1 {
+  font-family:'Fredoka One', cursive;
+  font-size:clamp(1.8rem,4vw,3rem);
+  letter-spacing:3px; text-align:center;
+  padding:18px 20px 4px;
+  background:linear-gradient(90deg,#4285f4,#ea4335,#fbbc05,#34a853,#4285f4);
+  background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text; animation:shimmer 3s linear infinite;
+}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:300%}}
+.tagline{color:#a78bfa;font-size:0.8rem;margin-bottom:12px;letter-spacing:2px;text-align:center;font-weight:800;text-transform:uppercase;}
+
+/* ── MAIN STAGE ── */
+.stage {
+  width:min(900px,97vw);
+  position:relative;
+}
+
+/* SCENE BOX */
+.scene {
+  background:linear-gradient(160deg,#0d1117 0%,#161b22 60%,#0d1117 100%);
+  border-radius:20px;
+  border:2px solid #30363d;
+  box-shadow:0 0 60px rgba(66,133,244,0.2), 0 0 120px rgba(0,0,0,0.8);
+  padding:20px 20px 0;
+  position:relative;
+  overflow:hidden;
+  min-height:480px;
+  margin-bottom:12px;
+}
+
+/* stars */
+.star{position:absolute;background:white;border-radius:50%;animation:twinkle var(--d,2s) ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:0.15;transform:scale(1)}50%{opacity:0.9;transform:scale(2)}}
+
+/* scene label */
+.scene-label{
+  position:absolute; top:12px; left:50%; transform:translateX(-50%);
+  font-family:'Fredoka One',cursive; font-size:1rem; letter-spacing:2px;
+  background:rgba(255,255,255,0.06); color:#a78bfa;
+  padding:4px 18px; border-radius:20px; border:1px solid rgba(167,139,250,0.3);
+  white-space:nowrap; z-index:10;
+}
+
+/* characters row */
+.characters{
+  display:flex; align-items:flex-end; justify-content:space-around;
+  padding-top:55px; min-height:420px; position:relative; z-index:2;
+}
+.character{
+  display:flex; flex-direction:column; align-items:center; position:relative;
+}
+
+/* speaking animations */
+.character.speaking.user-char {
+  animation:userBounce 0.4s ease infinite alternate;
+  filter:drop-shadow(0 0 18px rgba(167,139,250,0.9));
+}
+.character.speaking.chrome-char {
+  animation:chromeSpin 0.6s ease infinite alternate;
+  filter:drop-shadow(0 0 22px rgba(66,133,244,0.9));
+}
+@keyframes userBounce{from{transform:translateY(0) scale(1)}to{transform:translateY(-12px) scale(1.04)}}
+@keyframes chromeSpin{from{transform:translateY(0) rotate(-1deg) scale(1)}to{transform:translateY(-10px) rotate(1deg) scale(1.04)}}
+
+/* SPEECH BUBBLE */
+.body-speech{
+  width:220px; min-height:55px;
+  border-radius:18px; padding:10px 14px;
+  font-size:0.76rem; font-weight:800; line-height:1.5; text-align:center;
+  opacity:0; transform:scale(0.4) translateY(10px);
+  transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events:none; position:relative; border:3px solid;
+  margin-bottom:6px;
+}
+.body-speech.visible{opacity:1;transform:scale(1) translateY(0);}
+.body-speech::before{
+  content:'';position:absolute;top:-13px;left:50%;transform:translateX(-50%);
+  border:8px solid transparent;
+}
+.body-speech::after{
+  content:'';position:absolute;top:-7px;left:50%;transform:translateX(-50%);
+  border:5px solid transparent;z-index:1;
+}
+.user-bubble{
+  background:linear-gradient(135deg,#1a0a2e,#2d1b4e);
+  border-color:#a78bfa; color:#e9d5ff;
+  box-shadow:0 4px 24px rgba(167,139,250,0.3);
+}
+.user-bubble::before{border-bottom-color:#a78bfa;}
+.user-bubble::after {border-bottom-color:#1a0a2e;}
+.chrome-bubble{
+  background:linear-gradient(135deg,#0d1a2e,#0a1628);
+  border-color:#4285f4; color:#90caf9;
+  box-shadow:0 4px 24px rgba(66,133,244,0.3);
+}
+.chrome-bubble::before{border-bottom-color:#4285f4;}
+.chrome-bubble::after {border-bottom-color:#0d1a2e;}
+.chrome-bubble.lying{border-color:#ea4335!important;color:#ffcdd2!important;background:linear-gradient(135deg,#1a0a0a,#2e1010)!important;}
+.chrome-bubble.lying::before{border-bottom-color:#ea4335!important;}
+
+.bubble-name{
+  display:block;font-family:'Fredoka One',cursive;
+  font-size:0.72rem;letter-spacing:1.5px;margin-bottom:4px;text-transform:uppercase;
+}
+.user-name  {color:#a78bfa;}
+.chrome-name{color:#4285f4;}
+
+/* char labels */
+.char-label{
+  margin-top:8px;font-family:'Fredoka One',cursive;
+  font-size:0.85rem;font-weight:400;padding:4px 16px;
+  border-radius:20px;letter-spacing:1px;color:white;text-transform:uppercase;
+}
+.user-lbl  {background:linear-gradient(135deg,#7c3aed,#4f46e5);box-shadow:0 3px 0 #3730a3,0 0 14px rgba(124,58,237,0.4);}
+.chrome-lbl{
+  background:conic-gradient(#4285f4 0deg 90deg,#ea4335 90deg 180deg,#fbbc05 180deg 270deg,#34a853 270deg 360deg);
+  box-shadow:0 3px 0 #1a1a1a,0 0 14px rgba(66,133,244,0.4);
+}
+
+/* floor */
+.floor{
+  height:55px; margin:0 -20px;
+  background:linear-gradient(180deg,#161b22 0%,#0d1117 100%);
+  border-top:3px solid #30363d;
+  position:relative;
+}
+.floor::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,rgba(66,133,244,0.04) 0,rgba(66,133,244,0.04) 1px,transparent 1px,transparent 80px);
+}
+
+/* BOOM effect */
+.boom-effect{
+  position:absolute;font-family:'Fredoka One',cursive;
+  font-size:2rem;pointer-events:none;z-index:20;opacity:0;
+  animation:boomPop 0.7s ease forwards;
+  text-shadow:0 0 20px currentColor,3px 3px 0 rgba(0,0,0,0.5);
+}
+@keyframes boomPop{
+  0%  {opacity:0;transform:scale(0.2) rotate(-15deg);}
+  45% {opacity:1;transform:scale(1.6) rotate(6deg);}
+  80% {opacity:1;transform:scale(1.1);}
+  100%{opacity:0;transform:scale(0.9) translateY(-30px);}
+}
+
+/* FLOATING EMOJI */
+.float-emoji{
+  position:absolute;font-size:1.5rem;
+  animation:floatUp 1.8s ease-out forwards;pointer-events:none;z-index:30;
+}
+@keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-100px) scale(1.8)}}
+
+/* RAM BAR on Chrome body */
+.ram-bar-wrap{
+  position:absolute;bottom:52px;left:50%;transform:translateX(-50%);
+  width:90px;
+  opacity:0;transition:opacity 0.5s;
+}
+.ram-bar-wrap.show{opacity:1;}
+.ram-label{font-size:9px;color:#fbbc05;font-family:'Share Tech Mono',monospace;text-align:center;margin-bottom:2px;}
+.ram-bar{height:7px;background:#1a1a1a;border-radius:4px;overflow:hidden;border:1px solid #333;}
+.ram-fill{height:100%;background:linear-gradient(90deg,#34a853,#fbbc05,#ea4335);width:0%;border-radius:4px;transition:width 1s ease;}
+
+
+/* ══════════════════════════════════════
+   TASK MANAGER POPUP
+══════════════════════════════════════ */
+#taskManager{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.5);
+  width:min(640px,96vw);
+  background:#1e1e1e;
+  border:2px solid #444;
+  border-radius:8px;
+  box-shadow:0 20px 80px rgba(0,0,0,0.9), 0 0 40px rgba(234,67,53,0.3);
+  z-index:200;
+  opacity:0;pointer-events:none;
+  transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  font-family:'Share Tech Mono',monospace;
+  overflow:hidden;
+}
+#taskManager.open{
+  opacity:1;pointer-events:all;
+  transform:translate(-50%,-50%) scale(1);
+}
+
+/* TM title bar */
+.tm-titlebar{
+  background:linear-gradient(90deg,#2d2d2d,#3a3a3a);
+  padding:8px 14px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid #555;
+  cursor:move;user-select:none;
+}
+.tm-title{color:#e0e0e0;font-size:0.82rem;font-family:'Nunito',sans-serif;font-weight:800;display:flex;align-items:center;gap:8px;}
+.tm-title svg{width:16px;height:16px;}
+.tm-close-btn{
+  background:#ea4335;border:none;color:white;width:18px;height:18px;
+  border-radius:50%;cursor:pointer;font-size:10px;font-weight:bold;
+  display:flex;align-items:center;justify-content:center;
+  transition:background 0.2s;
+}
+.tm-close-btn:hover{background:#c62828;}
+
+/* TM tabs */
+.tm-tabs{
+  display:flex;background:#252526;border-bottom:1px solid #444;
+}
+.tm-tab{
+  padding:8px 16px;font-size:0.72rem;color:#888;cursor:pointer;
+  border-bottom:2px solid transparent;transition:all 0.2s;font-family:'Nunito',sans-serif;font-weight:700;
+}
+.tm-tab.active{color:#4285f4;border-bottom-color:#4285f4;background:#1e1e1e;}
+
+/* TM table */
+.tm-table{width:100%;font-size:0.7rem;border-collapse:collapse;}
+.tm-table th{
+  background:#252526;color:#888;padding:6px 10px;text-align:left;
+  border-bottom:1px solid #333;position:sticky;top:0;font-weight:400;letter-spacing:0.5px;
+}
+.tm-table th.sort-col{color:#4285f4;}
+.tm-table td{padding:5px 10px;border-bottom:1px solid #1a1a1a;color:#ccc;transition:background 0.3s;}
+.tm-table tr:hover td{background:#2a2a2a;}
+.tm-table .process-name{display:flex;align-items:center;gap:8px;color:#e0e0e0;}
+.tm-table .process-icon{width:16px;height:16px;border-radius:50%;display:inline-block;}
+.chrome-row td{color:#fff;}
+.chrome-row.eating td{background:rgba(234,67,53,0.1)!important;animation:rowPulse 0.5s ease infinite alternate;}
+@keyframes rowPulse{from{background:rgba(234,67,53,0.05)}to{background:rgba(234,67,53,0.2)}}
+
+.cpu-bar{height:6px;background:#1a1a1a;border-radius:3px;overflow:hidden;margin-top:2px;}
+.cpu-fill{height:100%;border-radius:3px;transition:width 1.5s ease;}
+.cpu-low  {background:linear-gradient(90deg,#34a853,#66bb6a);}
+.cpu-mid  {background:linear-gradient(90deg,#fbbc05,#ffa726);}
+.cpu-high {background:linear-gradient(90deg,#ff7043,#ea4335);animation:cpuFlash 0.4s ease infinite alternate;}
+@keyframes cpuFlash{from{opacity:0.8}to{opacity:1;box-shadow:0 0 8px #ea4335;}}
+
+/* TM scrollable body */
+.tm-tbody-wrap{max-height:240px;overflow-y:auto;}
+.tm-tbody-wrap::-webkit-scrollbar{width:5px;}
+.tm-tbody-wrap::-webkit-scrollbar-thumb{background:#444;border-radius:3px;}
+
+/* TM bottom bar */
+.tm-statusbar{
+  background:#252526;border-top:1px solid #333;
+  padding:6px 14px;display:flex;gap:24px;align-items:center;
+}
+.tm-stat{font-size:0.65rem;color:#888;}
+.tm-stat span{color:#4285f4;}
+
+/* CPU GRAPH mini */
+.cpu-graph{
+  padding:8px 14px 4px;background:#1e1e1e;
+}
+.cpu-graph-title{font-size:0.65rem;color:#888;margin-bottom:4px;}
+.cpu-canvas-wrap{position:relative;height:60px;background:#111;border:1px solid #333;border-radius:4px;overflow:hidden;}
+.cpu-canvas-wrap canvas{display:block;}
+
+/* ALERT BANNER */
+.tm-alert{
+  background:linear-gradient(90deg,#ea4335,#c62828);
+  color:white;padding:7px 14px;font-size:0.72rem;
+  display:flex;align-items:center;gap:8px;
+  opacity:0;height:0;overflow:hidden;
+  transition:all 0.5s ease;font-family:'Nunito',sans-serif;font-weight:800;
+}
+.tm-alert.show{opacity:1;height:36px;}
+.tm-alert .alert-icon{font-size:1.1rem;animation:alertPulse 0.5s ease infinite alternate;}
+@keyframes alertPulse{from{transform:scale(1)}to{transform:scale(1.3)}}
+
+/* PROGRESS */
+.progress-track{width:min(900px,97vw);height:7px;background:#161b22;border-radius:10px;margin:10px 0 6px;overflow:hidden;border:2px solid #30363d;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#4285f4,#ea4335,#fbbc05,#34a853);background-size:300%;animation:pgFlow 3s linear infinite;border-radius:10px;transition:width 0.4s ease;width:0%;}
+@keyframes pgFlow{0%{background-position:0%}100%{background-position:300%}}
+
+.status{color:#8b949e;font-size:0.82rem;font-weight:700;margin:4px 0 10px;min-height:20px;text-align:center;}
+
+.controls{display:flex;gap:14px;margin-bottom:24px;flex-wrap:wrap;justify-content:center;}
+.btn{
+  font-family:'Fredoka One',cursive;font-size:1.2rem;
+  padding:11px 34px;border:none;border-radius:50px;cursor:pointer;
+  transition:transform 0.15s,box-shadow 0.15s;letter-spacing:1px;min-width:140px;
+}
+.btn:hover {transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.5);}
+.btn:active{transform:translateY(1px);}
+.btn:disabled{opacity:0.4;cursor:default;transform:none;}
+.btn-play{background:linear-gradient(135deg,#4285f4,#1a56db);color:white;box-shadow:0 4px 0 #1244a8;border:2px solid #6ea4f8;}
+.btn-stop{background:linear-gradient(135deg,#37474f,#263238);color:#cfd8dc;box-shadow:0 4px 0 #111;}
+</style>
+</head>
+<body>
+
+<h1>🌐 CHROME CHROME YES PAPA 😂</h1>
+<p class="tagline">Johny Johny Parody — The RAM Eating Confession</p>
+
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="stage">
+<div class="scene" id="scene">
+  <div id="starsBox"></div>
+  <div class="scene-label" id="sceneLabel">🖥️ It's 2AM — 47 Tabs Open</div>
+
+  <div class="characters">
+
+    <!-- USER CHARACTER -->
+    <div class="character user-char" id="userChar">
+      <svg width="155" height="270" viewBox="0 0 155 270" overflow="visible">
+        <defs>
+          <radialGradient id="uSkin" cx="50%" cy="35%" r="55%">
+            <stop offset="0%" stop-color="#fcd5b5"/><stop offset="100%" stop-color="#f0a870"/>
+          </radialGradient>
+          <radialGradient id="uShade" cx="50%" cy="65%" r="50%">
+            <stop offset="0%" stop-color="rgba(0,0,0,0)"/><stop offset="100%" stop-color="rgba(0,0,0,0.18)"/>
+          </radialGradient>
+          <filter id="ushadow"><feDropShadow dx="2" dy="4" stdDeviation="4" flood-color="#00000055"/></filter>
+        </defs>
+        <!-- shadow -->
+        <ellipse cx="77" cy="268" rx="48" ry="10" fill="rgba(0,0,0,0.3)"/>
+        <!-- LEGS -->
+        <rect x="42" y="195" width="25" height="68" rx="9" fill="#1e3a5f" stroke="#152b46" stroke-width="2"/>
+        <rect x="88" y="195" width="25" height="68" rx="9" fill="#1e3a5f" stroke="#152b46" stroke-width="2"/>
+        <ellipse cx="54"  cy="263" rx="20" ry="9" fill="#111" stroke="#333" stroke-width="1.5"/>
+        <ellipse cx="100" cy="263" rx="20" ry="9" fill="#111" stroke="#333" stroke-width="1.5"/>
+        <!-- BODY (hoodie, user) -->
+        <rect x="32" y="120" width="90" height="82" rx="14" fill="#6d28d9" stroke="#5b21b6" stroke-width="2"/>
+        <!-- pocket -->
+        <rect x="46" y="168" width="62" height="28" rx="8" fill="#5b21b6" stroke="#4c1d95" stroke-width="1.5"/>
+        <!-- body shine -->
+        <rect x="34" y="122" width="86" height="22" rx="12" fill="rgba(255,255,255,0.07)"/>
+        <!-- LEFT ARM — holding laptop -->
+        <rect x="6" y="126" width="28" height="60" rx="12" fill="#6d28d9" stroke="#5b21b6" stroke-width="2"/>
+        <!-- LAPTOP -->
+        <rect x="6" y="186" width="68" height="48" rx="5" fill="#1f2937" stroke="#374151" stroke-width="2"/>
+        <rect x="10" y="190" width="60" height="38" rx="3" fill="#0d1117"/>
+        <rect x="12" y="192" width="56" height="34" rx="2" fill="#0a1628"/>
+        <text x="40" y="207" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="7" fill="#a78bfa">USER@pc:~$</text>
+        <text x="40" y="218" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="7" fill="#34a853" id="laptopCmd">▌</text>
+        <rect x="18" y="234" width="48" height="5" rx="3" fill="#374151"/>
+        <!-- RIGHT ARM -->
+        <rect x="116" y="126" width="28" height="60" rx="12" fill="#6d28d9" stroke="#5b21b6" stroke-width="2"/>
+        <ellipse cx="130" cy="192" rx="14" ry="10" fill="url(#uSkin)"/>
+        <!-- pointing finger -->
+        <rect x="124" y="177" width="8" height="20" rx="4" fill="#fcd5b5" stroke="#d4956a" stroke-width="1"/>
+        <!-- NECK -->
+        <rect x="63" y="109" width="28" height="17" rx="7" fill="url(#uSkin)" stroke="#d4956a" stroke-width="1"/>
+        <!-- HEAD -->
+        <ellipse cx="78" cy="78" rx="46" ry="50" fill="#d4956a" opacity="0.3"/>
+        <ellipse cx="77" cy="76" rx="44" ry="48" fill="url(#uSkin)"/>
+        <ellipse cx="77" cy="76" rx="44" ry="48" fill="url(#uShade)"/>
+        <!-- HAIR messy -->
+        <path d="M33,63 Q31,22 77,18 Q123,22 121,63" fill="#2a1800" stroke="#1a1000" stroke-width="1"/>
+        <path d="M39,57 Q44,28 77,24 Q110,28 115,57" fill="#321e00"/>
+        <path d="M40,42 Q48,22 62,28" fill="#2a1800"/>
+        <path d="M77,18 Q84,5 96,14" fill="#2a1800"/>
+        <path d="M112,46 Q122,28 120,40" fill="#2a1800"/>
+        <!-- GLASSES -->
+        <rect x="45" y="64" width="26" height="18" rx="7" fill="none" stroke="#111" stroke-width="2.5"/>
+        <rect x="79" y="64" width="26" height="18" rx="7" fill="none" stroke="#111" stroke-width="2.5"/>
+        <rect x="46" y="65" width="24" height="16" rx="6" fill="rgba(167,139,250,0.12)"/>
+        <rect x="80" y="65" width="24" height="16" rx="6" fill="rgba(167,139,250,0.12)"/>
+        <line x1="71" y1="73" x2="79" y2="73" stroke="#111" stroke-width="2.5"/>
+        <line x1="45" y1="73" x2="36" y2="71" stroke="#111" stroke-width="2" stroke-linecap="round"/>
+        <line x1="105" y1="73" x2="116" y2="71" stroke="#111" stroke-width="2" stroke-linecap="round"/>
+        <!-- EYES -->
+        <ellipse cx="58" cy="73" rx="9" ry="8" fill="white"/>
+        <ellipse cx="92" cy="73" rx="9" ry="8" fill="white"/>
+        <circle cx="58" cy="73" r="5.5" fill="#1a3a70"/>
+        <circle cx="92" cy="73" r="5.5" fill="#1a3a70"/>
+        <circle cx="58" cy="73" r="3.5" fill="#050200" id="uPupilL"/>
+        <circle cx="92" cy="73" r="3.5" fill="#050200" id="uPupilR"/>
+        <circle cx="60" cy="70" r="2"   fill="white" opacity="0.9"/>
+        <circle cx="94" cy="70" r="2"   fill="white" opacity="0.9"/>
+        <!-- EYEBROWS -->
+        <path d="M46,59 Q58,53 68,57" stroke="#2a1800" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <path d="M86,57 Q96,53 108,59" stroke="#2a1800" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <!-- NOSE -->
+        <path d="M73,82 Q77,91 81,82" stroke="#c4834e" stroke-width="1.8" fill="none"/>
+        <!-- MOUTH -->
+        <path id="uMouth" d="M63,97 Q77,106 91,97" stroke="#c0725a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <!-- BLUSH -->
+        <ellipse cx="46" cy="86" rx="11" ry="7" fill="#ffb3b3" opacity="0.3"/>
+        <ellipse cx="108" cy="86" rx="11" ry="7" fill="#ffb3b3" opacity="0.3"/>
+      </svg>
+      <div class="body-speech user-bubble" id="userBubble">
+        <span class="bubble-name user-name">👤 User</span>
+        <span id="userText"></span>
+      </div>
+      <div class="char-label user-lbl">User</div>
+    </div>
+
+    <!-- CHROME CHARACTER (big Chrome logo as body) -->
+    <div class="character chrome-char" id="chromeChar">
+      <svg width="170" height="290" viewBox="0 0 170 290" overflow="visible">
+        <defs>
+          <radialGradient id="chromeGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#4285f4" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="transparent"/>
+          </radialGradient>
+          <filter id="cshadow"><feDropShadow dx="2" dy="4" stdDeviation="5" flood-color="#00000066"/></filter>
+        </defs>
+        <!-- shadow -->
+        <ellipse cx="85" cy="288" rx="52" ry="11" fill="rgba(0,0,0,0.3)"/>
+
+        <!-- LEGS -->
+        <rect x="50" y="210" width="28" height="72" rx="10" fill="#1a237e" stroke="#0d1660" stroke-width="2"/>
+        <rect x="92" y="210" width="28" height="72" rx="10" fill="#1a237e" stroke="#0d1660" stroke-width="2"/>
+        <ellipse cx="64"  cy="282" rx="22" ry="9" fill="#0d0d0d" stroke="#222" stroke-width="1.5"/>
+        <ellipse cx="106" cy="282" rx="22" ry="9" fill="#0d0d0d" stroke="#222" stroke-width="1.5"/>
+
+        <!-- BODY as Chrome logo circle — BIG -->
+        <!-- Outer chrome ring -->
+        <circle cx="85" cy="145" r="72" fill="#0d1117" stroke="#30363d" stroke-width="2" filter="url(#cshadow)"/>
+        <!-- Chrome ring segments -->
+        <!-- Red segment (top right) -->
+        <path d="M85,145 L157,145 A72,72 0 0,0 85,73Z" fill="#ea4335"/>
+        <!-- Green segment (bottom) -->
+        <path d="M85,145 L85,73 A72,72 0 0,0 22,181Z" fill="#34a853"/>
+        <!-- Yellow segment (bottom right and top left) -->
+        <path d="M85,145 L22,181 A72,72 0 0,0 157,145Z" fill="#fbbc05"/>
+        <!-- Blue center circle -->
+        <circle cx="85" cy="145" r="36" fill="#4285f4"/>
+        <circle cx="85" cy="145" r="31" fill="#0d1a3a"/>
+        <!-- Chrome face on blue circle -->
+        <!-- Eyes -->
+        <ellipse cx="73" cy="138" rx="9" ry="10" fill="white" id="cEyeL"/>
+        <ellipse cx="97" cy="138" rx="9" ry="10" fill="white" id="cEyeR"/>
+        <circle cx="73" cy="138" r="6"   fill="#1a56db" id="cIrisL"/>
+        <circle cx="97" cy="138" r="6"   fill="#1a56db" id="cIrisR"/>
+        <circle cx="73" cy="138" r="4"   fill="#050a1a" id="cPupilL"/>
+        <circle cx="97" cy="138" r="4"   fill="#050a1a" id="cPupilR"/>
+        <circle cx="75" cy="135" r="2"   fill="white" opacity="0.9"/>
+        <circle cx="99" cy="135" r="2"   fill="white" opacity="0.9"/>
+        <!-- Eyebrows on circle -->
+        <path id="cBrowL" d="M64,126 Q73,120 82,124" stroke="#0d1a3a" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <path id="cBrowR" d="M88,124 Q97,120 106,126" stroke="#0d1a3a" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <!-- Nose on chrome -->
+        <path d="M82,146 Q85,153 88,146" stroke="#4285f4" stroke-width="1.8" fill="none"/>
+        <!-- Mouth on chrome -->
+        <path id="cMouth" d="M72,162 Q85,170 98,162" stroke="#90caf9" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <!-- Sweat drops (hidden) -->
+        <ellipse id="cSweat1" cx="108" cy="128" rx="5" ry="7" fill="#90caf9" opacity="0"/>
+        <ellipse id="cSweat2" cx="114" cy="140" rx="4" ry="6" fill="#90caf9" opacity="0"/>
+        <!-- ARMS -->
+        <!-- Left arm -->
+        <rect x="10" y="135" width="28" height="58" rx="12" fill="#1a237e" stroke="#0d1660" stroke-width="2"/>
+        <ellipse cx="24" cy="198" rx="14" ry="10" fill="#fcd5b5" stroke="#d4956a" stroke-width="1.5"/>
+        <!-- Right arm - showing RAM meters -->
+        <rect x="132" y="135" width="28" height="58" rx="12" fill="#1a237e" stroke="#0d1660" stroke-width="2"/>
+        <ellipse cx="146" cy="198" rx="14" ry="10" fill="#fcd5b5" stroke="#d4956a" stroke-width="1.5"/>
+        <!-- RAM icon in right hand -->
+        <rect x="138" y="178" width="32" height="20" rx="3" fill="#1f2937" stroke="#374151" stroke-width="1.5" id="ramIcon"/>
+        <text x="154" y="191" text-anchor="middle" font-family="'Share Tech Mono',monospace" font-size="7" fill="#fbbc05" id="ramText">RAM!</text>
+        <!-- Neck connector -->
+        <rect x="72" y="210" width="26" height="12" rx="5" fill="#1a237e"/>
+        <!-- Shine on chrome circle -->
+        <ellipse cx="70" cy="110" rx="28" ry="16" fill="rgba(255,255,255,0.08)" transform="rotate(-20 70 110)"/>
+        <!-- TABS on top (chrome has too many tabs joke) -->
+        <rect x="18"  y="75" width="28" height="10" rx="3" fill="#4285f4" opacity="0.7" id="tab1"/>
+        <rect x="50"  y="75" width="28" height="10" rx="3" fill="#ea4335" opacity="0.7" id="tab2"/>
+        <rect x="82"  y="75" width="28" height="10" rx="3" fill="#34a853" opacity="0.7" id="tab3"/>
+        <rect x="114" y="75" width="28" height="10" rx="3" fill="#fbbc05" opacity="0.7" id="tab4"/>
+        <text x="32"  y="83" text-anchor="middle" font-family="monospace" font-size="6" fill="white">T1</text>
+        <text x="64"  y="83" text-anchor="middle" font-family="monospace" font-size="6" fill="white">T2</text>
+        <text x="96"  y="83" text-anchor="middle" font-family="monospace" font-size="6" fill="white">T3</text>
+        <text x="128" y="83" text-anchor="middle" font-family="monospace" font-size="6" fill="white">+44</text>
+      </svg>
+
+      <!-- RAM bar on body -->
+      <div class="ram-bar-wrap" id="ramBarWrap">
+        <div class="ram-label">🍽️ RAM USAGE</div>
+        <div class="ram-bar"><div class="ram-fill" id="ramFill"></div></div>
+      </div>
+
+      <div class="body-speech chrome-bubble" id="chromeBubble">
+        <span class="bubble-name chrome-name">🌐 Chrome</span>
+        <span id="chromeText"></span>
+      </div>
+      <div class="char-label chrome-lbl">Chrome</div>
+    </div>
+
+  </div><!-- /characters -->
+  <div class="floor"></div>
+</div><!-- /scene -->
+
+<p class="status" id="status">Press ▶ Play to start! 🎭</p>
+<div class="controls">
+  <button class="btn btn-play" id="playBtn">▶ Play</button>
+  <button class="btn btn-stop" id="stopBtn" disabled>⏹ Stop</button>
+</div>
+</div><!-- /stage -->
+
+<!-- ═══════════════════════════════
+     TASK MANAGER POPUP
+═══════════════════════════════ -->
+<div id="taskManager">
+  <div class="tm-titlebar" id="tmTitlebar">
+    <div class="tm-title">
+      <svg viewBox="0 0 16 16" fill="none">
+        <rect x="1" y="1" width="6" height="6" rx="1" fill="#4285f4"/>
+        <rect x="9" y="1" width="6" height="6" rx="1" fill="#ea4335"/>
+        <rect x="1" y="9" width="6" height="6" rx="1" fill="#34a853"/>
+        <rect x="9" y="9" width="6" height="6" rx="1" fill="#fbbc05"/>
+      </svg>
+      Task Manager — Chrome's Confession
+    </div>
+    <button class="tm-close-btn" onclick="closeTaskManager()">✕</button>
+  </div>
+
+  <div class="tm-alert" id="tmAlert">
+    <span class="alert-icon">⚠️</span>
+    <span id="alertMsg">Chrome is eating your RAM. Send help. Or more RAM.</span>
+  </div>
+
+  <div class="tm-tabs">
+    <div class="tm-tab active">Processes</div>
+    <div class="tm-tab">Performance</div>
+    <div class="tm-tab">Memory</div>
+    <div class="tm-tab">🔥 Regrets</div>
+  </div>
+
+  <!-- CPU graph -->
+  <div class="cpu-graph">
+    <div class="cpu-graph-title">CPU Usage — Chrome contribution: <span id="cpuPct" style="color:#ea4335;font-weight:bold">0%</span></div>
+    <div class="cpu-canvas-wrap">
+      <canvas id="cpuCanvas" height="60" style="width:100%;display:block;"></canvas>
+    </div>
+  </div>
+
+  <div class="tm-tbody-wrap">
+    <table class="tm-table">
+      <thead>
+        <tr>
+          <th>Process Name</th>
+          <th class="sort-col">CPU ▼</th>
+          <th>Memory</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="tmTbody">
+        <tr class="chrome-row" id="chromeMainRow">
+          <td><span class="process-name">
+            <span class="process-icon" style="background:conic-gradient(#4285f4 0deg 90deg,#ea4335 90deg 180deg,#fbbc05 180deg 270deg,#34a853 270deg 360deg)"></span>
+            Google Chrome (Main)
+          </span>
+            <div class="cpu-bar"><div class="cpu-fill cpu-low" id="chromeCpuBar" style="width:4%"></div></div>
+          </td>
+          <td id="chromeCpuVal">4%</td>
+          <td id="chromeMemVal">1.2 GB</td>
+          <td id="chromeStatus" style="color:#34a853">Running</td>
+        </tr>
+        <tr class="chrome-row" id="chromeTab1">
+          <td><span class="process-name"><span class="process-icon" style="background:#4285f4"></span>Chrome Tab: YouTube</span>
+            <div class="cpu-bar"><div class="cpu-fill cpu-low" style="width:3%"></div></div>
+          </td>
+          <td>3%</td><td id="yt-mem">512 MB</td><td style="color:#34a853">Playing</td>
+        </tr>
+        <tr class="chrome-row" id="chromeTab2">
+          <td><span class="process-name"><span class="process-icon" style="background:#ea4335"></span>Chrome Tab: Stack Overflow (×12)</span>
+            <div class="cpu-bar"><div class="cpu-fill cpu-low" style="width:2%"></div></div>
+          </td>
+          <td>2%</td><td>840 MB</td><td style="color:#fbbc05">Judging You</td>
+        </tr>
+        <tr>
+          <td><span class="process-name"><span class="process-icon" style="background:#34a853"></span>VSCode</span>
+            <div class="cpu-bar"><div class="cpu-fill cpu-low" style="width:1%"></div></div>
+          </td>
+          <td>1%</td><td>380 MB</td><td style="color:#34a853">Running</td>
+        </tr>
+        <tr>
+          <td><span class="process-name"><span class="process-icon" style="background:#fbbc05"></span>Slack</span></td>
+          <td>0%</td><td>600 MB</td><td style="color:#888">Idle (still using RAM)</td>
+        </tr>
+        <tr>
+          <td><span class="process-name"><span class="process-icon" style="background:#7c3aed"></span>Spotify</span></td>
+          <td>0%</td><td>450 MB</td><td style="color:#888">Paused (still using RAM)</td>
+        </tr>
+        <tr class="chrome-row" id="chromeEatingRow">
+          <td><span class="process-name"><span class="process-icon" style="background:linear-gradient(135deg,#ea4335,#c62828)" id="eatingIcon"></span><span id="eatingProcName">Chrome Extension: ??? </span></span>
+            <div class="cpu-bar"><div class="cpu-fill cpu-high" id="eatingCpuBar" style="width:0%"></div></div>
+          </td>
+          <td id="eatingCpuVal" style="color:#ea4335">0%</td>
+          <td id="eatingMemVal" style="color:#ea4335">0 MB</td>
+          <td id="eatingStatus" style="color:#ea4335">Hungry</td>
+        </tr>
+        <tr>
+          <td><span class="process-name"><span class="process-icon" style="background:#555"></span>Your Hope</span></td>
+          <td>0%</td><td>0 MB</td><td style="color:#ef4444">Not Found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tm-statusbar">
+    <div class="tm-stat">CPU: <span id="totalCpu">6%</span></div>
+    <div class="tm-stat">RAM: <span id="totalRam">4.0 / 8.0 GB</span></div>
+    <div class="tm-stat">Processes: <span>47</span></div>
+    <div class="tm-stat">Chrome Tabs: <span id="tabCount" style="color:#ea4335">47</span></div>
+    <div class="tm-stat">Fan Speed: <span id="fanSpeed" style="color:#fbbc05">Normal</span></div>
+  </div>
+</div>
+
+<script>
+// ── STARS ─────────────────────────────────────────────────────────────
+const sb=document.getElementById('starsBox');
+for(let i=0;i<55;i++){
+  const s=document.createElement('div'); s.className='star';
+  const sz=1+Math.random()*2;
+  s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*75}%;--d:${1.5+Math.random()*3}s;animation-delay:${Math.random()*3}s;position:absolute;`;
+  sb.appendChild(s);
+}
+
+// ── SCRIPT ────────────────────────────────────────────────────────────
+const script = [
+  { who:'user',   text:'Google Chrome,\nGoogle Chrome!', tts:'Google Chrome, Google Chrome!', mood:'curious' },
+  { who:'chrome', text:'Yes Papa? 😇', tts:'Yes Papa?', mood:'sweet' },
+  { who:'user',   text:'Eating RAM?', tts:'Eating RAM?', mood:'suspicious' },
+  { who:'chrome', text:'No Papa! 😇\n(has 47 tabs open)', tts:'No Papa!', mood:'lying', boom:'😂 LIAR!' },
+  { who:'user',   text:'Telling lies?', tts:'Telling lies?', mood:'angry' },
+  { who:'chrome', text:'No Papa! 🙈\n(secretly downloading Chrome update)', tts:'No Papa!', mood:'lying', boom:'🤥 CAUGHT!' },
+  { who:'user',   text:'Open Task Manager!', tts:'Open Task Manager!', mood:'gotcha', boom:'💥 BUSTED!!', taskManager:true },
+  { who:'chrome', text:'Ha Ha Ha... 😅\n*sweating intensely*', tts:'Ha Ha Ha', mood:'caught', boom:'😱 OH NO!' },
+];
+
+// ── VOICES ─────────────────────────────────────────────────────────────
+const synth = window.speechSynthesis;
+let voices=[];
+function loadVoices(){ voices=synth.getVoices(); }
+loadVoices();
+if(synth.onvoiceschanged!==undefined) synth.onvoiceschanged=loadVoices;
+
+function getVoice(who){
+  if(!voices.length) voices=synth.getVoices();
+  const en=voices.filter(v=>v.lang.startsWith('en'));
+  if(who==='user') return en.find(v=>/alex|ryan|daniel|david/i.test(v.name))||en[0];
+  return en.find(v=>/samantha|victoria|karen|zira|female/i.test(v.name))||en[1]||en[0];
+}
+function speak(who, text, onDone){
+  synth.cancel();
+  const clean=text.replace(/[^\w\s,!?.''\-\n😇😅😱]/gu,'').trim();
+  const utter=new SpeechSynthesisUtterance(clean);
+  if(who==='user'){utter.pitch=1.0;utter.rate=0.95;}
+  else            {utter.pitch=1.3;utter.rate=1.0;}
+  utter.volume=1;
+  const v=getVoice(who); if(v) utter.voice=v;
+  utter.onend=()=>setTimeout(onDone,400);
+  utter.onerror=()=>setTimeout(onDone,400);
+  synth.speak(utter);
+}
+
+// ── EXPRESSIONS ──────────────────────────────────────────────────────
+function setUserMouth(type){
+  const m=document.getElementById('uMouth');
+  if(type==='open')   m.setAttribute('d','M63,97 Q77,112 91,97');
+  else if(type==='angry') m.setAttribute('d','M66,101 Q77,96 88,101');
+  else                m.setAttribute('d','M63,97 Q77,106 91,97');
+}
+function setChromeMouth(type){
+  const m=document.getElementById('cMouth');
+  if(type==='sweet')  m.setAttribute('d','M70,162 Q85,174 100,162');
+  else if(type==='caught') m.setAttribute('d','M72,168 Q85,158 98,168');
+  else if(type==='open')   m.setAttribute('d','M68,162 Q85,178 102,162');
+  else                m.setAttribute('d','M72,162 Q85,170 98,162');
+}
+function setChromeBrows(type){
+  const l=document.getElementById('cBrowL');
+  const r=document.getElementById('cBrowR');
+  if(type==='worried'){
+    l.setAttribute('d','M64,128 Q73,122 82,126');
+    r.setAttribute('d','M88,126 Q97,122 106,128');
+  } else if(type==='innocent'){
+    l.setAttribute('d','M64,124 Q73,118 82,122');
+    r.setAttribute('d','M88,122 Q97,118 106,124');
+  } else {
+    l.setAttribute('d','M64,126 Q73,120 82,124');
+    r.setAttribute('d','M88,124 Q97,120 106,126');
+  }
+}
+function setChromeSweat(show){
+  document.getElementById('cSweat1').style.opacity=show?'0.9':'0';
+  document.getElementById('cSweat2').style.opacity=show?'0.8':'0';
+}
+function lookAt(who){
+  const uL=document.getElementById('uPupilL'); const uR=document.getElementById('uPupilR');
+  const cL=document.getElementById('cPupilL'); const cR=document.getElementById('cPupilR');
+  if(who==='user'){
+    uL.setAttribute('cx','60'); uR.setAttribute('cx','94');
+    cL.setAttribute('cx','71'); cR.setAttribute('cx','95');
+  } else {
+    uL.setAttribute('cx','56'); uR.setAttribute('cx','90');
+    cL.setAttribute('cx','75'); cR.setAttribute('cx','99');
+  }
+}
+function updateLaptopCmd(txt){
+  const el=document.getElementById('laptopCmd');
+  if(el) el.textContent=txt;
+}
+
+// ── RAM BAR ANIMATION ────────────────────────────────────────────────
+let ramLevel=0;
+function animateRamBar(targetPct){
+  document.getElementById('ramBarWrap').classList.add('show');
+  let current=ramLevel;
+  const step=()=>{
+    current=Math.min(current+2,targetPct);
+    document.getElementById('ramFill').style.width=current+'%';
+    ramLevel=current;
+    if(current<targetPct) setTimeout(step,20);
+  };
+  step();
+}
+
+// ── TASK MANAGER ────────────────────────────────────────────────────
+let tmOpen=false;
+let cpuHistory=Array(60).fill(5);
+let currentCpu=5;
+let animFrame=null;
+let cpuTarget=5;
+let ramAnimInterval=null;
+
+function openTaskManager(){
+  tmOpen=true;
+  document.getElementById('taskManager').classList.add('open');
+  startCpuGraph();
+  setTimeout(()=>rampUpChrome(),800);
+}
+function closeTaskManager(){
+  tmOpen=false;
+  document.getElementById('taskManager').classList.remove('open');
+  if(animFrame) cancelAnimationFrame(animFrame);
+  if(ramAnimInterval) clearInterval(ramAnimInterval);
+}
+
+function startCpuGraph(){
+  const canvas=document.getElementById('cpuCanvas');
+  canvas.width=canvas.parentElement.offsetWidth||580;
+  const ctx=canvas.getContext('2d');
+  let t=0;
+  function draw(){
+    if(!tmOpen) return;
+    t++;
+    // add jitter + trend
+    const noise=(Math.random()-0.5)*8;
+    const target=cpuTarget;
+    currentCpu=Math.max(2,Math.min(99, currentCpu+(target-currentCpu)*0.08+noise));
+    cpuHistory.push(Math.round(currentCpu));
+    if(cpuHistory.length>60) cpuHistory.shift();
+
+    ctx.fillStyle='#111';
+    ctx.fillRect(0,0,canvas.width,60);
+    // grid lines
+    ctx.strokeStyle='rgba(255,255,255,0.05)';
+    ctx.lineWidth=1;
+    [25,50,75].forEach(y=>{
+      const py=60-(y/100*60);
+      ctx.beginPath(); ctx.moveTo(0,py); ctx.lineTo(canvas.width,py); ctx.stroke();
+    });
+    // draw graph
+    ctx.beginPath();
+    ctx.strokeStyle=currentCpu>80?'#ea4335':currentCpu>50?'#fbbc05':'#34a853';
+    ctx.lineWidth=2;
+    ctx.shadowColor=ctx.strokeStyle; ctx.shadowBlur=4;
+    cpuHistory.forEach((v,i)=>{
+      const x=(i/59)*canvas.width;
+      const y=60-(v/100*60);
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+    ctx.shadowBlur=0;
+    // fill under
+    ctx.lineTo(canvas.width,60); ctx.lineTo(0,60); ctx.closePath();
+    ctx.fillStyle=currentCpu>80?'rgba(234,67,53,0.15)':currentCpu>50?'rgba(251,188,5,0.1)':'rgba(52,168,83,0.1)';
+    ctx.fill();
+
+    document.getElementById('cpuPct').textContent=Math.round(currentCpu)+'%';
+    animFrame=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+function rampUpChrome(){
+  let step=0;
+  const steps=[
+    {delay:0,    cpu:'18%', mem:'2.1 GB', status:'Suspicious', cpuW:'18%',  memVal:'2.1 GB', eating:'512 MB',  eatCpu:'18%', eatW:'18%',  tabCount:'47', totalCpu:'22%', fan:'Normal',    cpuTarget:20,  alert:false},
+    {delay:800,  cpu:'35%', mem:'3.4 GB', status:'Hungry',     cpuW:'35%',  memVal:'3.4 GB', eating:'1.2 GB',  eatCpu:'35%', eatW:'35%',  tabCount:'53', totalCpu:'41%', fan:'Spinning',  cpuTarget:40,  alert:false},
+    {delay:1600, cpu:'62%', mem:'5.1 GB', status:'EATING',     cpuW:'62%',  memVal:'5.1 GB', eating:'2.8 GB',  eatCpu:'62%', eatW:'62%',  tabCount:'61', totalCpu:'68%', fan:'🔥 LOUD',    cpuTarget:65,  alert:true,  alertMsg:'⚠️ Chrome is consuming 62% CPU. Your laptop has become a space heater. 🔥'},
+    {delay:2600, cpu:'88%', mem:'7.2 GB', status:'FEASTING 🍽️',cpuW:'88%',  memVal:'7.2 GB', eating:'5.1 GB',  eatCpu:'88%', eatW:'88%',  tabCount:'74', totalCpu:'91%', fan:'🚀 TAKEOFF', cpuTarget:90,  alert:true,  alertMsg:'🚨 CRITICAL: Chrome using 88% CPU. Please close Chrome. Chrome refuses. 😈'},
+  ];
+
+  function runStep(){
+    if(step>=steps.length) return;
+    const s=steps[step];
+    setTimeout(()=>{
+      cpuTarget=s.cpuTarget;
+      document.getElementById('chromeCpuVal').textContent=s.cpu;
+      document.getElementById('chromeMemVal').textContent=s.mem;
+      document.getElementById('chromeStatus').textContent=s.status;
+      document.getElementById('chromeStatus').style.color=step>1?'#ea4335':'#fbbc05';
+      // cpu bar class
+      const bar=document.getElementById('chromeCpuBar');
+      bar.style.width=s.cpuW;
+      bar.className='cpu-fill '+(step>2?'cpu-high':step>1?'cpu-mid':'cpu-low');
+      document.getElementById('totalCpu').textContent=s.totalCpu;
+      document.getElementById('totalRam').textContent=s.mem.replace(' GB','')+' / 8.0 GB';
+      document.getElementById('tabCount').textContent=s.tabCount;
+      document.getElementById('fanSpeed').textContent=s.fan;
+      document.getElementById('fanSpeed').style.color=step>2?'#ea4335':step>1?'#fbbc05':'#34a853';
+      // eating row
+      const eBar=document.getElementById('eatingCpuBar');
+      eBar.style.width=s.eatW;
+      document.getElementById('eatingCpuVal').textContent=s.eatCpu;
+      document.getElementById('eatingMemVal').textContent=s.eating;
+      document.getElementById('eatingProcName').textContent=
+        step===0?'Chrome Extension: ??? ':
+        step===1?'Chrome: RAM Buffet Mode':
+        step===2?'Chrome: All You Can Eat 🍽️':
+                 'Chrome: FINAL FORM 💀';
+      document.getElementById('chromeEatingRow').classList.toggle('eating',step>0);
+      if(s.alert){
+        document.getElementById('alertMsg').textContent=s.alertMsg;
+        document.getElementById('tmAlert').classList.add('show');
+      }
+      // animate RAM bar on chrome char
+      animateRamBar(parseInt(s.eatW));
+      step++;
+      runStep();
+    }, step===0?100:steps[step-1].delay);
+  }
+  runStep();
+}
+
+// ── DRAG TASK MANAGER ────────────────────────────────────────────────
+(()=>{
+  const el=document.getElementById('taskManager');
+  const hd=document.getElementById('tmTitlebar');
+  let dragging=false, ox=0, oy=0;
+  hd.addEventListener('mousedown',e=>{
+    dragging=true;
+    const r=el.getBoundingClientRect();
+    ox=e.clientX-r.left; oy=e.clientY-r.top;
+    el.style.transition='none';
+  });
+  document.addEventListener('mousemove',e=>{
+    if(!dragging) return;
+    el.style.left=(e.clientX-ox)+'px';
+    el.style.top= (e.clientY-oy)+'px';
+    el.style.transform='none';
+  });
+  document.addEventListener('mouseup',()=>dragging=false);
+})();
+
+// ── STATE ─────────────────────────────────────────────────────────────
+let currentLine=0, paused=false, running=false, pending=null;
+const playBtn=document.getElementById('playBtn');
+const stopBtn=document.getElementById('stopBtn');
+
+playBtn.addEventListener('click',()=>{
+  if(!running && currentLine===0){
+    running=true; stopBtn.disabled=false; playBtn.textContent='⏸ Pause'; playLine();
+  } else if(!running && currentLine>=script.length){
+    fullReset(); running=true; stopBtn.disabled=false; playBtn.textContent='⏸ Pause'; playLine();
+  } else if(running && !paused){
+    paused=true; synth.pause(); if(pending){clearTimeout(pending);pending=null;}
+    playBtn.textContent='▶ Resume';
+  } else if(paused){
+    paused=false; synth.resume(); playBtn.textContent='⏸ Pause';
+    if(!synth.speaking) scheduleNext(300);
+  }
+});
+stopBtn.addEventListener('click',()=>{
+  synth.cancel(); fullReset();
+  running=false; paused=false; stopBtn.disabled=true; playBtn.textContent='▶ Play';
+});
+function scheduleNext(d){
+  pending=setTimeout(()=>{pending=null;if(!paused&&running)playLine();},d);
+}
+
+// ── PLAY LOOP ─────────────────────────────────────────────────────────
+function playLine(){
+  if(currentLine>=script.length){
+    running=false; playBtn.textContent='↺ Replay'; spawnParticles(); return;
+  }
+  const e=script[currentLine];
+  clearAllSpeech();
+  lookAt(e.who);
+
+  // Set label
+  document.getElementById('sceneLabel').textContent =
+    currentLine<2 ? '🖥️ It\'s 2AM — 47 Tabs Open' :
+    currentLine<4 ? '🍽️ Eating RAM Intensifies...' :
+    currentLine<6 ? '🤥 Chrome is LYING' :
+                    '💥 TASK MANAGER TIME';
+
+  if(e.who==='user'){
+    document.getElementById('userChar').classList.add('speaking');
+    document.getElementById('userText').textContent=e.text;
+    setTimeout(()=>document.getElementById('userBubble').classList.add('visible'),40);
+    setUserMouth(e.mood==='angry'?'angry':e.mood==='gotcha'?'open':'normal');
+    updateLaptopCmd(e.mood==='gotcha'?'taskmgr':'google.com');
+  } else {
+    document.getElementById('chromeChar').classList.add('speaking');
+    const cb=document.getElementById('chromeBubble');
+    cb.className='body-speech chrome-bubble'+(e.mood==='lying'?' lying':'');
+    document.getElementById('chromeText').textContent=e.text;
+    setTimeout(()=>cb.classList.add('visible'),40);
+    setChromeMouth(e.mood==='sweet'?'sweet':e.mood==='caught'?'caught':'open');
+    setChromeBrows(e.mood==='lying'?'innocent':e.mood==='caught'?'worried':'normal');
+    setChromeSweat(e.mood==='caught'||e.mood==='lying');
+    if(e.mood==='lying') animateRamBar(Math.min(ramLevel+25,95));
+  }
+
+  if(e.boom) spawnBoom(e.boom, e.who);
+  if(e.taskManager) {
+    setTimeout(()=>openTaskManager(), 800);
+  }
+
+  currentLine++;
+  document.getElementById('progressFill').style.width=(currentLine/script.length*100)+'%';
+  const label=e.who==='user'?'👤 User':'🌐 Chrome';
+  document.getElementById('status').textContent=`${label}: "${e.text.replace(/\n/g,' ').substring(0,50)}"`;
+
+  speak(e.who, e.tts, ()=>{
+    if(!paused&&running){ clearAllSpeech(); scheduleNext(600); }
+  });
+}
+
+function clearAllSpeech(){
+  ['userChar','chromeChar'].forEach(id=>document.getElementById(id).classList.remove('speaking'));
+  ['userBubble','chromeBubble'].forEach(id=>document.getElementById(id).classList.remove('visible'));
+  setUserMouth('normal'); setChromeMouth('normal');
+}
+function fullReset(){
+  synth.cancel(); closeTaskManager();
+  if(pending){clearTimeout(pending);pending=null;}
+  currentLine=0; ramLevel=0; clearAllSpeech();
+  document.getElementById('progressFill').style.width='0%';
+  document.getElementById('sceneLabel').textContent='🖥️ It\'s 2AM — 47 Tabs Open';
+  document.getElementById('status').textContent='Press ▶ Play to start! 🎭';
+  document.getElementById('ramBarWrap').classList.remove('show');
+  document.getElementById('ramFill').style.width='0%';
+  setChromeSweat(false); setChromeBrows('normal');
+  updateLaptopCmd('▌');
+  cpuTarget=5; currentCpu=5; cpuHistory=Array(60).fill(5);
+}
+
+function spawnBoom(text, who){
+  const scene=document.getElementById('scene');
+  const el=document.createElement('div'); el.className='boom-effect'; el.textContent=text;
+  el.style.top=(60+Math.random()*60)+'px';
+  el.style.left=who==='user'?'4%':'52%';
+  el.style.color=who==='user'?'#a78bfa':'#ea4335';
+  scene.appendChild(el); setTimeout(()=>el.remove(),900);
+}
+function spawnParticles(){
+  const items=['🌐','💻','😂','💾','🔥','⚡','😱','🤣','📊','💀'];
+  for(let i=0;i<18;i++){
+    setTimeout(()=>{
+      const p=document.createElement('div'); p.className='float-emoji'; p.textContent=items[Math.floor(Math.random()*items.length)];
+      p.style.cssText=`position:fixed;left:${Math.random()*window.innerWidth}px;top:${100+Math.random()*window.innerHeight*0.6}px;z-index:300;font-size:2rem;pointer-events:none;animation:floatUp 1.5s ease-out forwards;`;
+      document.body.appendChild(p); setTimeout(()=>p.remove(),1600);
+    },i*70);
+  }
+}
+</script>
+</body>
+</html>
