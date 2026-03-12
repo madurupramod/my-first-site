@@ -164,6 +164,7 @@ body{
   <button class="btn bp" onclick="startShow()">▶ Begin</button>
   <button class="btn bs" onclick="skipToEnd()">⏭ Skip</button>
   <button class="btn br" onclick="resetShow()">↺ Reset</button>
+  <button class="btn br" id="muteBtn" onclick="toggleMute()" title="Toggle voice">🔊</button>
 </div>
 
 <script>
@@ -171,8 +172,8 @@ body{
 // DATA
 // ═══════════════════════════════
 const rawEdges=[
-  ["Kondaiya","Narayya"],
-  ["Narayya","Pedda Bodiya"],
+  ["Kondaiya","Narayana"],
+  ["Narayana","Pedda Bodiya"],
   ["Pedda Bodiya","Venkataiah"],
   ["Pedda Bodiya","Rangayya"],
   ["Pedda Bodiya","Ramayya"],
@@ -197,7 +198,7 @@ const rawEdges=[
   ["Balram","Yashika_Female"],
   ["Narayana_R","BalaKrishna"],
   ["Narayana_R","Narayana_R_Daughter_Female"],
-  ["BalaKrishna","Yogansh"],
+  ["BalaKrishna","Balu_Son"],
   ["BalaKrishna","Jasritha_Female"],
   ["Harinarayana","Pramod"],
   ["Harinarayana","Manasa_Female"],
@@ -489,6 +490,52 @@ function createNodeBox(node){
 }
 
 // ═══════════════════════════════
+// SPEECH ENGINE (Web Speech API)
+// ═══════════════════════════════
+let speechEnabled = false;
+let speechQueue = [];
+let isSpeaking = false;
+let muted = false;
+
+// Must be called from a user gesture (Begin button) to unlock audio
+function unlockSpeech(){
+  speechEnabled = true;
+  // warm up the engine with a silent utterance
+  const u = new SpeechSynthesisUtterance('');
+  u.volume = 0;
+  window.speechSynthesis.speak(u);
+}
+
+function speakText(text, rate=1.0, pitch=1.0){
+  if(!speechEnabled || !window.speechSynthesis || muted) return;
+  speechQueue.push({text, rate, pitch});
+  if(!isSpeaking) drainSpeechQueue();
+}
+
+function drainSpeechQueue(){
+  if(!speechQueue.length){ isSpeaking=false; return; }
+  isSpeaking = true;
+  const {text, rate, pitch} = speechQueue.shift();
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate  = rate;
+  u.pitch = pitch;
+  u.volume = 1;
+  // prefer a natural English voice if available
+  const voices = window.speechSynthesis.getVoices();
+  const preferred = voices.find(v=>v.lang.startsWith('en')&&v.localService) || voices.find(v=>v.lang.startsWith('en')) || null;
+  if(preferred) u.voice = preferred;
+  u.onend = ()=> setTimeout(drainSpeechQueue, 80);
+  u.onerror = ()=> setTimeout(drainSpeechQueue, 80);
+  window.speechSynthesis.speak(u);
+}
+
+function stopSpeech(){
+  speechQueue = [];
+  isSpeaking  = false;
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+}
+
+// ═══════════════════════════════
 // ANIMATION
 // ═══════════════════════════════
 const WALK_DUR=2000;   // ms
@@ -504,10 +551,12 @@ function walkCharTo(id,targetX,onDone){
   el.offsetLeft;
   el.style.transition=`left ${WALK_DUR}ms linear`;
   el.style.left=targetX+'px';
-  // show bubble at 50% through walk
+  // show bubble + SPEAK NAME at 50% through walk
   setTimeout(()=>{
     const b=document.getElementById(`bub-${sid}`);
     if(b) b.style.opacity='1';
+    // speak: "I am [Name]"
+    speakText(`I am ${dName(id)}`, 0.95, 1.05);
   }, WALK_DUR*0.5);
   setTimeout(()=>{
     if(!fromLeft) el.style.transform='scaleX(1)';
@@ -589,9 +638,11 @@ function runNextGen(){
 // ═══════════════════════════════
 function startShow(){
   if(running||ended)return;
+  unlockSpeech(); // user gesture unlocks audio
   running=true;runNextGen();
 }
 function resetShow(){
+  stopSpeech();
   running=false;ended=false;genIndex=0;
   visibleNodes.clear();
   Object.values(charEls).forEach(c=>c.el&&c.el.remove&&c.el.remove());
@@ -604,6 +655,7 @@ function resetShow(){
   drawConnections();
 }
 function skipToEnd(){
+  stopSpeech();
   running=false;ended=true;
   Object.values(charEls).forEach(c=>c.el&&c.el.remove&&c.el.remove());
   charEls={};
@@ -614,6 +666,12 @@ function skipToEnd(){
   });
   drawConnections();
   progEl.textContent='All '+allNodesList.length+' members shown';
+}
+
+function toggleMute(){
+  muted = !muted;
+  document.getElementById('muteBtn').textContent = muted ? '🔇' : '🔊';
+  if(muted && window.speechSynthesis) window.speechSynthesis.cancel();
 }
 
 // ═══════════════════════════════
