@@ -238,6 +238,7 @@ body{
   <button class="btn bp" onclick="startShow()">▶ Begin</button>
   <button class="btn bs" onclick="skipToEnd()">⏭ Skip</button>
   <button class="btn br" onclick="resetShow()">↺ Reset</button>
+  <button class="btn br" id="muteBtn" onclick="toggleMute()" title="Toggle voice">🔊</button>
 </div>
 
 <script>
@@ -492,6 +493,48 @@ function createNodeBox(node){
 }
 
 // ════════════════════════════
+// SPEECH ENGINE
+// ════════════════════════════
+let speechEnabled=false, speechQueue=[], isSpeaking=false, muted=false;
+
+function unlockSpeech(){
+  speechEnabled=true;
+  const u=new SpeechSynthesisUtterance('');u.volume=0;
+  window.speechSynthesis.speak(u);
+}
+
+function speakText(text, rate=1.0, pitch=1.0){
+  if(!speechEnabled||!window.speechSynthesis||muted) return;
+  speechQueue.push({text,rate,pitch});
+  if(!isSpeaking) drainSpeechQueue();
+}
+
+function drainSpeechQueue(){
+  if(!speechQueue.length){isSpeaking=false;return;}
+  isSpeaking=true;
+  const {text,rate,pitch}=speechQueue.shift();
+  const u=new SpeechSynthesisUtterance(text);
+  u.rate=rate; u.pitch=pitch; u.volume=1;
+  const voices=window.speechSynthesis.getVoices();
+  const v=voices.find(v=>v.lang.startsWith('en')&&v.localService)||voices.find(v=>v.lang.startsWith('en'))||null;
+  if(v) u.voice=v;
+  u.onend=()=>setTimeout(drainSpeechQueue,80);
+  u.onerror=()=>setTimeout(drainSpeechQueue,80);
+  window.speechSynthesis.speak(u);
+}
+
+function stopSpeech(){
+  speechQueue=[];isSpeaking=false;
+  if(window.speechSynthesis) window.speechSynthesis.cancel();
+}
+
+function toggleMute(){
+  muted=!muted;
+  document.getElementById('muteBtn').textContent=muted?'🔇':'🔊';
+  if(muted) stopSpeech();
+}
+
+// ════════════════════════════
 // ANIMATION
 // ════════════════════════════
 const WALK_DUR=2000,PAUSE=1400,FLOAT_DUR=1600,GEN_WAIT=800,STAGGER_PER=320;
@@ -502,7 +545,12 @@ function walkCharTo(id,targetX,onDone){
   el.offsetLeft;
   el.style.transition=`left ${WALK_DUR}ms linear`;
   el.style.left=targetX+'px';
-  setTimeout(()=>{const b=document.getElementById(`bub-${sid}`);if(b)b.style.opacity='1';},WALK_DUR*.5);
+  // show bubble + SPEAK NAME at midpoint of walk
+  setTimeout(()=>{
+    const b=document.getElementById(`bub-${sid}`);
+    if(b) b.style.opacity='1';
+    speakText(`I am ${dName(id)}`, 0.95, 1.05);
+  }, WALK_DUR*0.5);
   setTimeout(()=>{if(!fromLeft)el.style.transform='scaleX(1)';onDone();},WALK_DUR);
 }
 
@@ -651,6 +699,25 @@ function openPopup(id,el){
   popup.classList.add('show');
   popupOpen=true;
 
+  // ── SPEAK the intro ──
+  stopSpeech(); // cancel any in-progress speech
+  const pronoun2 = female ? 'Her' : 'His';
+  let speech = `I am ${name}. `;
+  if(parentName) speech += `${pronoun2} father is ${parentName}. `;
+  else speech += `I am the root ancestor of this family. `;
+  if(childCount>0){
+    const sons=children.filter(c=>!isFem(c)).length;
+    const daughters=children.filter(c=>isFem(c)).length;
+    speech += `I have ${childCount} ${childCount===1?'child':'children'}`;
+    if(sons>0&&daughters>0) speech += `, ${sons} ${sons===1?'son':'sons'} and ${daughters} ${daughters===1?'daughter':'daughters'}`;
+    else if(sons>0) speech += `, ${sons} ${sons===1?'son':'sons'}`;
+    else speech += `, ${daughters} ${daughters===1?'daughter':'daughters'}`;
+    speech += '.';
+  } else {
+    speech += `I am a leaf of this family tree.`;
+  }
+  speakText(speech, 0.88, female ? 1.2 : 0.95);
+
   // Animate character bounce then idle
   setTimeout(()=>{charDiv.classList.add('idle');},500);
 
@@ -695,6 +762,7 @@ function typeLines(lines,container){
 
 function closePopup(){
   clearTypingTimers();
+  stopSpeech();
   const popup=document.getElementById('info-popup');
   popup.classList.remove('show');
   popupOpen=false;
@@ -718,10 +786,12 @@ stage.addEventListener('click',e=>{
 // ════════════════════════════
 function startShow(){
   if(running||ended)return;
+  unlockSpeech();
   running=true;runNextGen();
 }
 function resetShow(){
   closePopup();
+  stopSpeech();
   running=false;ended=false;genIndex=0;
   visibleNodes.clear();
   hintEl.classList.remove('show');
@@ -732,6 +802,7 @@ function resetShow(){
 }
 function skipToEnd(){
   closePopup();
+  stopSpeech();
   running=false;ended=true;
   Object.values(charEls).forEach(c=>c.el&&c.el.remove&&c.el.remove());
   charEls={};
