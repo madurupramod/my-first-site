@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Family Tree – Living Characters</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:#0d1b2a;
+  font-family:'Nunito',sans-serif;
+  overflow:hidden;
+  width:100vw;height:100vh;
+}
+#stage{
+  position:fixed;inset:0;
+  overflow:hidden;
+}
+#sky{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,#0a1520 0%,#152a45 55%,#1e4060 100%);
+}
+.star{
+  position:absolute;background:#fff;border-radius:50%;
+  animation:twinkle 3s infinite alternate;
+}
+@keyframes twinkle{from{opacity:.15}to{opacity:.85}}
+
+#ground{
+  position:absolute;bottom:0;left:0;right:0;
+  height:100px;
+  background:linear-gradient(0deg,#122012 0%,#254525 55%,#336633 100%);
+  border-top:2px solid #4a8a4a;
+  z-index:3;
+}
+.tuft{
+  position:absolute;bottom:98px;
+  width:10px;height:10px;
+  background:#3a7a3a;
+  clip-path:polygon(50% 0%,100% 100%,0% 100%);
+  opacity:.6;
+}
+
+#treeCanvas{
+  position:absolute;top:0;left:0;
+  pointer-events:none;z-index:4;
+}
+
+/* ── CHARACTERS (walk-in stage) ── */
+.character{
+  position:absolute;
+  z-index:20;
+  display:flex;flex-direction:column;align-items:center;
+  pointer-events:none;
+  bottom:68px;
+}
+.char-svg{width:36px;height:56px;}
+.speech-bubble{
+  position:absolute;bottom:62px;
+  background:rgba(255,255,255,.96);
+  color:#1a1a2e;
+  font-size:10px;font-weight:700;
+  border-radius:10px;padding:4px 8px;
+  white-space:nowrap;opacity:0;
+  pointer-events:none;
+  box-shadow:0 2px 10px rgba(0,0,0,.4);
+  transform:translateX(-50%);left:50%;
+  transition:opacity .4s;z-index:30;
+}
+.speech-bubble::after{
+  content:'';position:absolute;top:100%;left:50%;
+  transform:translateX(-50%);
+  border:5px solid transparent;
+  border-top-color:rgba(255,255,255,.96);
+}
+
+/* ── NODE BOXES ── */
+.tree-node{
+  position:absolute;z-index:10;
+  opacity:0;pointer-events:none;
+  /* left = cx (centered via transform) */
+  transform:translateX(-50%);
+}
+.node-box{
+  display:flex;align-items:center;gap:4px;
+  background:rgba(12,25,45,.92);
+  border:1.5px solid rgba(90,170,255,.5);
+  border-radius:6px;
+  padding:3px 8px 3px 5px;
+  white-space:nowrap;
+  box-shadow:0 1px 8px rgba(0,0,0,.5);
+}
+.node-box.f{
+  border-color:rgba(255,140,190,.55);
+  background:rgba(35,12,30,.92);
+}
+.node-icon{flex-shrink:0;}
+.node-label{
+  font-weight:700;color:#d8eeff;
+  white-space:nowrap;
+}
+.node-label.fl{color:#ffd8ee;}
+
+/* glow on arrival */
+.node-box{transition:box-shadow .3s;}
+@keyframes glowM{0%{box-shadow:0 0 14px 4px rgba(90,170,255,.7)}100%{box-shadow:0 1px 8px rgba(0,0,0,.5)}}
+@keyframes glowF{0%{box-shadow:0 0 14px 4px rgba(255,140,190,.7)}100%{box-shadow:0 1px 8px rgba(0,0,0,.5)}}
+.glow-m{animation:glowM 1.4s ease-out forwards;}
+.glow-f{animation:glowF 1.4s ease-out forwards;}
+
+/* ── CONTROLS ── */
+#controls{
+  position:fixed;bottom:12px;left:50%;transform:translateX(-50%);
+  z-index:200;display:flex;gap:8px;
+  background:rgba(0,0,0,.55);
+  padding:8px 14px;border-radius:40px;
+  border:1px solid rgba(255,255,255,.1);
+  backdrop-filter:blur(6px);
+}
+.btn{
+  font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;
+  padding:6px 16px;border:none;border-radius:20px;
+  cursor:pointer;transition:all .25s;letter-spacing:.03em;
+}
+.bp{background:linear-gradient(135deg,#3aaa8a,#2070a0);color:#fff;}
+.bp:hover{transform:scale(1.05);}
+.br{background:rgba(255,255,255,.14);color:#fff;}
+.br:hover{background:rgba(255,255,255,.24);}
+.bs{background:rgba(255,200,70,.16);color:#ffcc50;}
+.bs:hover{background:rgba(255,200,70,.3);}
+
+#title{
+  position:fixed;top:10px;left:50%;transform:translateX(-50%);
+  z-index:200;text-align:center;pointer-events:none;white-space:nowrap;
+}
+#title h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(.8rem,2vw,1.3rem);color:#ddeeff;
+  text-shadow:0 0 24px rgba(80,180,255,.4);letter-spacing:.06em;
+}
+#title p{font-size:.65rem;color:rgba(255,255,255,.38);margin-top:2px;letter-spacing:.12em;}
+
+#progress{
+  position:fixed;top:58px;left:50%;transform:translateX(-50%);
+  z-index:200;font-size:10px;color:rgba(255,255,255,.45);
+  letter-spacing:.06em;white-space:nowrap;max-width:90vw;
+  overflow:hidden;text-overflow:ellipsis;
+}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="sky"></div>
+  <canvas id="treeCanvas"></canvas>
+  <div id="ground"></div>
+</div>
+<div id="title">
+  <h1>✦ The Family of Kondaiya ✦</h1>
+  <p>An Animated Lineage</p>
+</div>
+<div id="progress"></div>
+<div id="controls">
+  <button class="btn bp" onclick="startShow()">▶ Begin</button>
+  <button class="btn bs" onclick="skipToEnd()">⏭ Skip</button>
+  <button class="btn br" onclick="resetShow()">↺ Reset</button>
+</div>
+
+<script>
+// ═══════════════════════════════
+// DATA
+// ═══════════════════════════════
+const rawEdges=[
+  ["Kondaiya","Narayya"],
+  ["Narayya","Pedda Bodiya"],
+  ["Pedda Bodiya","Venkataiah"],
+  ["Pedda Bodiya","Rangayya"],
+  ["Pedda Bodiya","Ramayya"],
+  ["Venkataiah","Aswathnarayana"],
+  ["Venkataiah","Amanemma_Female"],
+  ["Venkataiah","Achamma_Female"],
+  ["Venkataiah","Venkataiah_L3_Female"],
+  ["Aswathnarayana","Girish"],
+  ["Aswathnarayana","Karthik"],
+  ["Aswathnarayana","Aswathnarayana_Daughter_Female"],
+  ["Rangayya","Pedda_Venkataiah"],
+  ["Rangayya","Narayana_R"],
+  ["Rangayya","Harinarayana"],
+  ["Rangayya","Prahlada"],
+  ["Rangayya","Rangayya_Daughter_Female"],
+  ["Pedda_Venkataiah","Venkataiah_PV"],
+  ["Pedda_Venkataiah","Venkatayya_Daghter_Female"],
+  ["Pedda_Venkataiah","Balram"],
+  ["Venkataiah_PV","Neelima_Female"],
+  ["Venkataiah_PV","Nikhil"],
+  ["Balram","SreethanRam"],
+  ["Balram","Yashika_Female"],
+  ["Narayana_R","BalaKrishna"],
+  ["Narayana_R","Narayana_R_Daughter_Female"],
+  ["BalaKrishna","Yogansh"],
+  ["BalaKrishna","Jasritha_Female"],
+  ["Harinarayana","Pramod"],
+  ["Harinarayana","Manasa_Female"],
+  ["Prahlada","Durga"],
+  ["Prahlada","Swapna_Female"],
+  ["Durga","Mahika_Female"],
+  ["Ramayya","Timmayya"],
+  ["Ramayya","Seshayya"],
+  ["Ramayya","Chinna_Venkataiah"],
+  ["Ramayya","Ramayya_Daughter_Female"],
+  ["Timmayya","Narayana_T"],
+  ["Timmayya","Anjaneya_T"],
+  ["Timmayya","Timmayya_Daughter_Female"],
+  ["Anjaneya_T","Son_A"],
+  ["Seshayya","NagaLakshmi_Female"],
+  ["Seshayya","Usha_Female"],
+  ["Seshayya","Gayatri_Female"],
+  ["Chinna_Venkataiah","Narendra"],
+  ["Chinna_Venkataiah","Keshava"],
+  ["Keshava","Son"],
+];
+const isFem=id=>id.endsWith('_Female');
+const dName=id=>id.replace(/_Female$/,'').replace(/_/g,' ');
+
+// ═══════════════════════════════
+// BUILD TREE
+// ═══════════════════════════════
+const cOf={},pOf={},allIds=new Set();
+rawEdges.forEach(([p,c])=>{
+  allIds.add(p);allIds.add(c);
+  (cOf[p]=cOf[p]||[]).push(c);
+  pOf[c]=p;
+});
+const rootId=[...allIds].find(n=>!pOf[n]);
+function bh(id){return{id,children:(cOf[id]||[]).map(bh)};}
+const tree=bh(rootId);
+
+function flatten(n,a=[]){a.push(n);n.children.forEach(c=>flatten(c,a));return a;}
+function maxDepth(n,d=0){return n.children.length?Math.max(...n.children.map(c=>maxDepth(c,d+1))):d;}
+
+// ═══════════════════════════════
+// LAYOUT — fit entirely on screen
+// ═══════════════════════════════
+// Group nodes by depth-generation
+function getGenerations(){
+  const gens=[];
+  function tr(n,d){(gens[d]=gens[d]||[]).push(n);n.children.forEach(c=>tr(c,d+1));}
+  tr(tree,0);
+  return gens;
+}
+
+// Measure text (approximate — 6.5px per char at font-size 10)
+const CHAR_PX=6.5;
+const NODE_PAD=22; // icon+gaps+padding
+const MIN_H_GAP=6; // min gap between nodes horizontally
+
+function nodeW(id){return Math.max(60, dName(id).length*CHAR_PX + NODE_PAD + 18);}
+const NODE_H=26;
+const STAGGER_OFFSET=18; // px up/down for staggered rows
+
+let scale=1; // global scale applied to layout
+
+function layoutTree(){
+  const VW=window.innerWidth;
+  const VH=window.innerHeight;
+  const TITLE_H=75;
+  const GROUND_H=100;
+  const CONTROLS_H=50;
+  const availH=VH-TITLE_H-GROUND_H-CONTROLS_H;
+  const availW=VW-20;
+
+  const gens=getGenerations();
+  const md=gens.length-1;
+
+  // First pass: compute ideal X positions using subtree-width method
+  // subtreeWidth in "natural" units (no scaling yet)
+  function subW(n){
+    if(!n.children.length) return nodeW(n.id);
+    const childSum=n.children.reduce((s,c)=>s+subW(c),0)+MIN_H_GAP*(n.children.length-1);
+    n._sw=Math.max(nodeW(n.id),childSum);
+    return n._sw;
+  }
+  function assignCX(n,left){
+    const sw=n._sw||nodeW(n.id);
+    n.cx=left+sw/2;
+    if(!n.children.length)return;
+    let cur=left;
+    n.children.forEach(c=>{
+      const csw=c._sw||nodeW(c.id);
+      assignCX(c,cur);
+      cur+=csw+MIN_H_GAP;
+    });
+  }
+  subW(tree);
+  const naturalW=tree._sw;
+
+  // Scale so natural width fits available width
+  scale=Math.min(1, availW/naturalW);
+
+  assignCX(tree,0);
+
+  // Apply scale and center
+  const scaledW=naturalW*scale;
+  const offsetX=(availW-scaledW)/2+10;
+
+  const allNodes=flatten(tree);
+  allNodes.forEach(n=>{n.cx=n.cx*scale+offsetX;});
+
+  // Assign Y by generation — evenly spaced
+  const vStep=md>0?availH/md:availH;
+
+  // For dense generations: detect overlaps and stagger vertically
+  gens.forEach((gen,gi)=>{
+    const baseY=TITLE_H+gi*vStep;
+    gen.forEach((n,idx)=>{
+      // Default Y
+      n.cy=baseY;
+    });
+
+    // Check for overlaps — if any two nodes cx within nodeW of each other, stagger
+    let needsStagger=false;
+    for(let i=1;i<gen.length;i++){
+      const gap=gen[i].cx-gen[i-1].cx;
+      const minGap=(nodeW(gen[i].id)+nodeW(gen[i-1].id))*scale/2+MIN_H_GAP;
+      if(gap<minGap){needsStagger=true;break;}
+    }
+    if(needsStagger){
+      gen.forEach((n,idx)=>{
+        n.cy=baseY+(idx%2===0?-STAGGER_OFFSET:STAGGER_OFFSET);
+      });
+    }
+  });
+}
+
+// ═══════════════════════════════
+// SVG CHARACTERS
+// ═══════════════════════════════
+function maleSVG(c='#4fc3f7'){
+  return `<svg viewBox="0 0 36 56" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="18" cy="8" r="6.5" fill="${c}"/>
+  <rect x="12" y="16" width="12" height="15" rx="3" fill="${c}"/>
+  <line x1="12" y1="19" x2="4"  y2="29" stroke="${c}" stroke-width="3.2" stroke-linecap="round" class="arm-l"/>
+  <line x1="24" y1="19" x2="32" y2="29" stroke="${c}" stroke-width="3.2" stroke-linecap="round" class="arm-r"/>
+  <line x1="16" y1="31" x2="12" y2="50" stroke="${c}" stroke-width="3.5" stroke-linecap="round" class="leg-l"/>
+  <line x1="20" y1="31" x2="24" y2="50" stroke="${c}" stroke-width="3.5" stroke-linecap="round" class="leg-r"/>
+</svg>`;}
+
+function femaleSVG(c='#f48fb1'){
+  return `<svg viewBox="0 0 36 56" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="18" cy="8" r="6.5" fill="${c}"/>
+  <circle cx="18" cy="3"  r="3.8" fill="${c}" opacity=".8"/>
+  <polygon points="12,17 24,17 28,42 8,42" fill="${c}" opacity=".88"/>
+  <rect x="12" y="17" width="12" height="9" rx="2.5" fill="${c}"/>
+  <line x1="12" y1="20" x2="4"  y2="30" stroke="${c}" stroke-width="2.8" stroke-linecap="round" class="arm-l"/>
+  <line x1="24" y1="20" x2="32" y2="30" stroke="${c}" stroke-width="2.8" stroke-linecap="round" class="arm-r"/>
+  <line x1="14" y1="42" x2="12" y2="54" stroke="${c}" stroke-width="3"   stroke-linecap="round" class="leg-l"/>
+  <line x1="22" y1="42" x2="24" y2="54" stroke="${c}" stroke-width="3"   stroke-linecap="round" class="leg-r"/>
+</svg>`;}
+
+function maleIcon(){return `<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="8" cy="4.5" r="3" fill="#4fc3f7"/>
+  <rect x="5" y="8" width="6" height="6" rx="1.5" fill="#4fc3f7"/>
+  <line x1="5" y1="9.5" x2="2" y2="13" stroke="#4fc3f7" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="11" y1="9.5" x2="14" y2="13" stroke="#4fc3f7" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="6.5" y1="14" x2="6"  y2="16" stroke="#4fc3f7" stroke-width="1.8" stroke-linecap="round"/>
+  <line x1="9.5" y1="14" x2="10" y2="16" stroke="#4fc3f7" stroke-width="1.8" stroke-linecap="round"/>
+</svg>`;}
+
+function femaleIcon(){return `<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="8" cy="4.5" r="3" fill="#f48fb1"/>
+  <circle cx="8" cy="2"   r="2" fill="#f48fb1" opacity=".8"/>
+  <polygon points="5,8 11,8 13,16 3,16" fill="#f48fb1" opacity=".88"/>
+  <line x1="5" y1="9.5" x2="2" y2="13" stroke="#f48fb1" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="11" y1="9.5" x2="14" y2="13" stroke="#f48fb1" stroke-width="1.5" stroke-linecap="round"/>
+</svg>`;}
+
+// ═══════════════════════════════
+// WALK CSS
+// ═══════════════════════════════
+const dynStyle=document.createElement('style');
+document.head.appendChild(dynStyle);
+function addWalkCSS(sid,female){
+  dynStyle.textContent+=female?`
+    @keyframes fleg-${sid}{0%,100%{transform:rotate(-16deg)}50%{transform:rotate(16deg)}}
+    #ch-${sid} .leg-l{animation:fleg-${sid} .55s infinite;transform-origin:14px 42px;}
+    #ch-${sid} .leg-r{animation:fleg-${sid} .55s infinite reverse;transform-origin:22px 42px;}
+  `:`
+    @keyframes mleg-${sid}{0%,100%{transform:rotate(-22deg)}50%{transform:rotate(22deg)}}
+    @keyframes marm-${sid}{0%,100%{transform:rotate(-26deg)}50%{transform:rotate(26deg)}}
+    #ch-${sid} .leg-l{animation:mleg-${sid} .5s infinite;transform-origin:16px 31px;}
+    #ch-${sid} .leg-r{animation:mleg-${sid} .5s infinite reverse;transform-origin:20px 31px;}
+    #ch-${sid} .arm-l{animation:marm-${sid} .5s infinite;transform-origin:12px 19px;}
+    #ch-${sid} .arm-r{animation:marm-${sid} .5s infinite reverse;transform-origin:24px 19px;}
+  `;
+}
+
+// ═══════════════════════════════
+// STAGE REFS
+// ═══════════════════════════════
+const stage=document.getElementById('stage');
+const canvas=document.getElementById('treeCanvas');
+const ctx=canvas.getContext('2d');
+const progEl=document.getElementById('progress');
+
+let charEls={},nodeEls={},allNodesList=[];
+let animQueue=[],genIndex=0;
+let running=false,ended=false;
+let visibleNodes=new Set();
+
+// ── stars ──
+function addStars(){
+  const sky=document.getElementById('sky');
+  for(let i=0;i<140;i++){
+    const s=document.createElement('div');s.className='star';
+    const sz=Math.random()*2.2+.4;
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*75}%;animation-delay:${Math.random()*4}s;animation-duration:${2+Math.random()*3}s;`;
+    sky.appendChild(s);
+  }
+}
+function addTufts(){
+  const g=document.getElementById('ground');
+  for(let i=0;i<Math.floor(window.innerWidth/16);i++){
+    const t=document.createElement('div');t.className='tuft';
+    t.style.left=(i*16+Math.random()*6)+'px';g.appendChild(t);
+  }
+}
+
+// ── dynamic node font size based on scale ──
+function nodeFontSize(){return Math.max(7, Math.min(11, Math.round(10*scale)));}
+function nodeIconSize(){return Math.max(10, Math.min(16, Math.round(14*scale)));}
+
+// ── draw connections ──
+function drawConnections(){
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  allNodesList.forEach(node=>{
+    if(!visibleNodes.has(node.id))return;
+    node.children.forEach(child=>{
+      if(!visibleNodes.has(child.id))return;
+      const sx=node.cx, sy=node.cy+NODE_H/2+2;
+      const tx=child.cx, ty=child.cy-NODE_H/2-2;
+      // bezier mid points
+      const midy=(sy+ty)/2;
+      ctx.beginPath();
+      ctx.moveTo(sx,sy);
+      ctx.bezierCurveTo(sx,midy,tx,midy,tx,ty);
+      ctx.strokeStyle=isFem(child.id)?'rgba(255,140,190,.55)':'rgba(80,180,255,.55)';
+      ctx.lineWidth=1.4;
+      ctx.setLineDash([5,4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    });
+  });
+}
+
+// ═══════════════════════════════
+// CREATE ELEMENTS
+// ═══════════════════════════════
+function createChar(id){
+  const female=isFem(id);
+  const sid=id.replace(/[^a-zA-Z0-9]/g,'_');
+  const fromLeft=Math.random()>.5;
+  const el=document.createElement('div');
+  el.className='character';el.id=`ch-${sid}`;
+  el.innerHTML=`
+    <div class="speech-bubble" id="bub-${sid}">${dName(id)}</div>
+    <div class="char-svg">${female?femaleSVG():maleSVG()}</div>
+  `;
+  el.style.cssText=`left:${fromLeft?-70:window.innerWidth+70}px;bottom:68px;transition:none;`;
+  stage.appendChild(el);
+  addWalkCSS(sid,female);
+  charEls[id]={el,female,sid,fromLeft};
+}
+
+function createNodeBox(node){
+  const female=isFem(node.id);
+  const fs=nodeFontSize();
+  const is=nodeIconSize();
+  const el=document.createElement('div');
+  el.className='tree-node';
+  el.style.cssText=`left:${node.cx}px;top:${node.cy-NODE_H/2}px;opacity:0;`;
+  el.innerHTML=`<div class="node-box${female?' f':''}">
+    <div class="node-icon" style="width:${is}px;height:${is}px">${female?femaleIcon():maleIcon()}</div>
+    <span class="node-label${female?' fl':''}" style="font-size:${fs}px">${dName(node.id)}</span>
+  </div>`;
+  stage.appendChild(el);
+  nodeEls[node.id]=el;
+}
+
+// ═══════════════════════════════
+// ANIMATION
+// ═══════════════════════════════
+const WALK_DUR=2000;   // ms
+const PAUSE=1400;      // ms pause after arriving before floating
+const FLOAT_DUR=1600;  // ms
+const GEN_WAIT=800;    // ms between gens
+const STAGGER_PER=320; // ms between each char in same gen starting walk
+
+function walkCharTo(id,targetX,onDone){
+  const {el,fromLeft,sid}=charEls[id];
+  if(!fromLeft) el.style.transform='scaleX(-1)';
+  // force reflow so transition kicks in
+  el.offsetLeft;
+  el.style.transition=`left ${WALK_DUR}ms linear`;
+  el.style.left=targetX+'px';
+  // show bubble at 50% through walk
+  setTimeout(()=>{
+    const b=document.getElementById(`bub-${sid}`);
+    if(b) b.style.opacity='1';
+  }, WALK_DUR*0.5);
+  setTimeout(()=>{
+    if(!fromLeft) el.style.transform='scaleX(1)';
+    onDone();
+  }, WALK_DUR);
+}
+
+function floatUp(id,node,onDone){
+  const {el,sid}=charEls[id];
+  // hide bubble
+  const b=document.getElementById(`bub-${sid}`);
+  if(b) b.style.opacity='0';
+  // target position
+  const targetLeft=node.cx-18;
+  const targetBottom=window.innerHeight-node.cy-56;
+  el.style.transition=`left ${FLOAT_DUR}ms ease-in-out, bottom ${FLOAT_DUR}ms ease-in-out, transform ${FLOAT_DUR}ms ease-in-out, opacity 400ms ${FLOAT_DUR-350}ms`;
+  el.style.left=targetLeft+'px';
+  el.style.bottom=targetBottom+'px';
+  el.style.transform='scale(0.45)';
+  el.style.opacity='0';
+  setTimeout(()=>{
+    // show node box
+    const ne=nodeEls[id];
+    if(ne){
+      ne.style.transition='opacity .35s';
+      ne.style.opacity='1';
+      const box=ne.querySelector('.node-box');
+      if(box) box.classList.add(isFem(id)?'glow-f':'glow-m');
+    }
+    visibleNodes.add(id);
+    drawConnections();
+    setTimeout(()=>{el.remove();onDone();},350);
+  }, FLOAT_DUR);
+}
+
+// ═══════════════════════════════
+// GENERATION RUNNER
+// ═══════════════════════════════
+function buildQueue(){
+  const gens=getGenerations();
+  animQueue=gens.map((nodes,gi)=>({nodes,gi}));
+}
+
+function runNextGen(){
+  if(genIndex>=animQueue.length){
+    progEl.textContent='Complete ✦ '+allNodesList.length+' members';
+    ended=true;running=false;return;
+  }
+  const {nodes,gi}=animQueue[genIndex++];
+  const names=nodes.map(n=>dName(n.id)).join(' · ');
+  progEl.textContent=`Gen ${gi+1}/${animQueue.length}  ·  ${names}`;
+
+  nodes.forEach(node=>{createChar(node.id);createNodeBox(node);});
+
+  // Walk-in positions: evenly spread across middle of screen
+  const vw=window.innerWidth;
+  const count=nodes.length;
+  const spreadW=Math.min(vw-100, count*72);
+  const startX=vw/2-spreadW/2;
+
+  let done=0;
+  nodes.forEach((node,idx)=>{
+    const walkX=count===1 ? vw/2-18 : startX+idx*(spreadW/(count-1)||0)-18;
+    setTimeout(()=>{
+      walkCharTo(node.id, walkX, ()=>{
+        setTimeout(()=>{
+          floatUp(node.id, node, ()=>{
+            done++;
+            if(done===count) setTimeout(runNextGen, GEN_WAIT);
+          });
+        }, PAUSE);
+      });
+    }, idx*STAGGER_PER);
+  });
+}
+
+// ═══════════════════════════════
+// CONTROLS
+// ═══════════════════════════════
+function startShow(){
+  if(running||ended)return;
+  running=true;runNextGen();
+}
+function resetShow(){
+  running=false;ended=false;genIndex=0;
+  visibleNodes.clear();
+  Object.values(charEls).forEach(c=>c.el&&c.el.remove&&c.el.remove());
+  Object.values(nodeEls).forEach(e=>e.remove());
+  charEls={};nodeEls={};
+  progEl.textContent='';
+  layoutTree();
+  allNodesList=flatten(tree);
+  buildQueue();
+  drawConnections();
+}
+function skipToEnd(){
+  running=false;ended=true;
+  Object.values(charEls).forEach(c=>c.el&&c.el.remove&&c.el.remove());
+  charEls={};
+  allNodesList.forEach(node=>{
+    if(!nodeEls[node.id]) createNodeBox(node);
+    nodeEls[node.id].style.opacity='1';
+    visibleNodes.add(node.id);
+  });
+  drawConnections();
+  progEl.textContent='All '+allNodesList.length+' members shown';
+}
+
+// ═══════════════════════════════
+// INIT
+// ═══════════════════════════════
+window.addEventListener('load',()=>{
+  layoutTree();
+  allNodesList=flatten(tree);
+  addStars();addTufts();
+  buildQueue();
+  drawConnections();
+  progEl.textContent='Press ▶ Begin to start';
+});
+
+window.addEventListener('resize',()=>{
+  layoutTree();
+  allNodesList=flatten(tree);
+  allNodesList.forEach(node=>{
+    const el=nodeEls[node.id];
+    if(el){el.style.left=node.cx+'px';el.style.top=(node.cy-NODE_H/2)+'px';}
+  });
+  drawConnections();
+});
+</script>
+</body>
+</html>
