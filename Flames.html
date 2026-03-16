@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMES Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f2f2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 50px;
+        }
+        h1 {
+            color: #ff4d4d;
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #333;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>FLAMES Game</h1>
+    <input type="text" id="boyName" placeholder="Enter boy's name">
+    <input type="text" id="girlName" placeholder="Enter girl's name">
+    <button onclick="playFlames()">Check Relationship</button>
+
+    <div id="result"></div>
+
+    <script>
+        function playFlames() {
+            let boy = document.getElementById('boyName').value.toLowerCase().replace(/\s/g, '');
+            let girl = document.getElementById('girlName').value.toLowerCase().replace(/\s/g, '');
+            
+            if (!boy || !girl) {
+                alert("Please enter both names!");
+                return;
+            }
+
+            // Count remaining letters after removing common letters
+            let boyArr = boy.split('');
+            let girlArr = girl.split('');
+
+            for (let i = 0; i < boyArr.length; i++) {
+                let index = girlArr.indexOf(boyArr[i]);
+                if (index !== -1) {
+                    boyArr[i] = '';
+                    girlArr[index] = '';
+                }
+            }
+
+            let count = boyArr.join('').length + girlArr.join('').length;
+
+            let flames = ['F', 'L', 'A', 'M', 'E', 'S'];
+
+            let relationships = {
+                'F': 'Friends',
+                'L': 'Love',
+                'A': 'Affection',
+                'M': 'Marriage',
+                'E': 'Enemies',
+                'S': 'Siblings'
+            };
+
+            let index = 0;
+            while (flames.length > 1) {
+                index = (count % flames.length) - 1;
+                if (index >= 0) {
+                    flames = flames.slice(index + 1).concat(flames.slice(0, index));
+                } else {
+                    flames.pop();
+                }
+            }
+
+            document.getElementById('result').innerText = 
+                `The relationship between ${boy} and ${girl} is: ${relationships[flames[0]]}`;
+        }
+    </script>
+</body>
+</html>
