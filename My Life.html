@@ -1,0 +1,252 @@
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+#wrap{width:100%;border-radius:12px;overflow:hidden;position:relative;background:#87CEEB}
+canvas{display:block;width:100%;height:500px}
+#play-btn{
+  position:absolute;top:10px;right:12px;
+  background:#fff;border:1.5px solid #4A90D9;
+  color:#4A90D9;font-size:13px;font-weight:500;
+  padding:5px 16px;border-radius:20px;cursor:pointer;
+  font-family:sans-serif;z-index:10;
+}
+#time-tag{
+  position:absolute;top:10px;left:12px;
+  background:#1a2233cc;color:#fff;font-size:12px;
+  padding:4px 12px;border-radius:20px;
+  font-family:sans-serif;font-weight:500;z-index:10;
+}
+</style>
+<div id="wrap">
+  <canvas id="c"></canvas>
+  <div id="time-tag">—</div>
+  <button id="play-btn" onclick="startStory()">▶ Play</button>
+</div>
+<script>
+const canvas=document.getElementById('c');
+const ctx=canvas.getContext('2d');
+const W=680,H=420;
+canvas.width=W;canvas.height=H;
+const timeTag=document.getElementById('time-tag');
+const playBtn=document.getElementById('play-btn');
+
+let tick=0,sceneIdx=0,started=false,done=false;
+let typedText='',fullText='',charIdx=0,typingDone=false;
+let typeTimer=null,autoTimer=null,raf=null;
+let manX=-70,targetX=300,pose='walk',messy=false;
+
+const GROUND=H-70;
+
+const scenes=[
+  {time:'Hello!',sky:'day',text:"Hi! I am M. Pramod, studying 7th class. Let me show you my boring daily life!",pose:'wave',walkTo:320},
+  {time:'6:00 AM',sky:'morning',text:"I wake up at 6 AM and rush to tuition — no brushing, no combing! Very messy!",pose:'walk',walkTo:130,messy:true},
+  {time:'Tuition',sky:'morning',text:"Sir comes late. Sleep hits me. I put my head on the bag and doze off... zzz",pose:'sleep',walkTo:130,messy:true},
+  {time:'Tuition',sky:'morning',text:"Can't sleep? I walk around, talk, enjoy! Sometimes sir doesn't come at all!",pose:'walk',walkTo:430,messy:true},
+  {time:'8:00 AM',sky:'morning',text:"Back home at 8. Brush, bath, eat tiffin — then off to school!",pose:'walk',walkTo:200,messy:false},
+  {time:'School',sky:'day',text:"Every day we hope for a holiday! Interval at 11:15. Meals at 12:50.",pose:'stand',walkTo:320},
+  {time:'1:50 PM',sky:'noon',text:"1:50 PM — back to class. It is very painful! Interval again at 3:00.",pose:'sad',walkTo:220},
+  {time:'4:40 PM',sky:'noon',text:"4:40 PM leave for home! 5:00 PM tuition again. So boring.",pose:'walk',walkTo:480},
+  {time:'7:00 PM',sky:'evening',text:"7:00 PM — we are HAPPY! School and tuition finally over! Play computer!",pose:'happy',walkTo:310},
+  {time:'10:30 PM',sky:'night',text:"10:30 PM — time to sleep. My life is very boring. Don't waste yours like this!",pose:'sleep2',walkTo:310},
+  {time:'Moral',sky:'day',text:"But remember: when exams are tomorrow — study like a mad person! Never neglect exams!",pose:'wave',walkTo:340},
+];
+
+const SKY={
+  morning:{top:'#F7A860',mid:'#FDDDA0',gnd:'#A0C86A'},
+  day:    {top:'#87CEEB',mid:'#B8E4FF',gnd:'#7EC850'},
+  noon:   {top:'#5BA8D4',mid:'#87CEEB',gnd:'#5D9E40'},
+  evening:{top:'#C0472A',mid:'#F4844A',gnd:'#4A7A2A'},
+  night:  {top:'#101828',mid:'#1E2E50',gnd:'#1a3020'},
+};
+
+function drawSky(key){
+  const s=SKY[key]||SKY.day;
+  ctx.fillStyle=s.top;ctx.fillRect(0,0,W,GROUND*0.6);
+  ctx.fillStyle=s.mid;ctx.fillRect(0,GROUND*0.4,W,GROUND*0.4);
+  ctx.fillStyle=s.gnd;ctx.fillRect(0,GROUND,W,H-GROUND);
+  ctx.fillStyle='#555';ctx.fillRect(0,H-70,W,70);
+  ctx.fillStyle='#fff';
+  for(let i=0;i<W;i+=80)ctx.fillRect(i+((tick*2)%80)-80,H-43,40,5);
+  if(key==='night'){
+    ctx.fillStyle='#fff';
+    for(let i=0;i<28;i++)ctx.fillRect(30+i*24,(i*41)%70+10,2,2);
+    ctx.fillStyle='#FFE97A';ctx.beginPath();ctx.arc(W-90,55,18,0,Math.PI*2);ctx.fill();
+  } else if(key==='morning'){
+    ctx.fillStyle='#FFE030';ctx.beginPath();ctx.arc(70,65,25,0,Math.PI*2);ctx.fill();
+  } else if(key==='evening'){
+    ctx.fillStyle='#FF8040';ctx.beginPath();ctx.arc(W-80,80,28,0,Math.PI*2);ctx.fill();
+  } else {
+    ctx.fillStyle='#FFE030';ctx.beginPath();ctx.arc(W-90,55,24,0,Math.PI*2);ctx.fill();
+  }
+  ctx.fillStyle='#ffffffaa';
+  ctx.beginPath();ctx.ellipse(150+(tick*0.25)%620,80,55,18,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(380+(tick*0.18)%700,55,40,14,0,0,Math.PI*2);ctx.fill();
+  drawTree(55,GROUND);drawTree(190,GROUND);drawTree(540,GROUND);drawTree(620,GROUND);
+  drawBuilding(455,GROUND);
+}
+
+function drawTree(x,y){
+  ctx.fillStyle='#7B4E2A';ctx.fillRect(x-5,y-34,10,34);
+  ctx.fillStyle='#2D8A3E';ctx.beginPath();ctx.arc(x,y-50,22,0,Math.PI*2);ctx.fill();
+}
+
+function drawBuilding(x,y){
+  ctx.fillStyle='#C9A87A';ctx.fillRect(x-45,y-95,90,95);
+  ctx.fillStyle='#6B3A1A';ctx.font='bold 9px sans-serif';ctx.textAlign='center';
+  ctx.fillText('SCHOOL',x,y-80);
+  ctx.fillStyle='#87CEEB';
+  [[x-22,y-65],[x+8,y-65],[x-22,y-44],[x+8,y-44]].forEach(([wx,wy])=>{
+    ctx.fillRect(wx,wy,16,13);ctx.strokeStyle='#5A3A1A';ctx.lineWidth=0.5;ctx.strokeRect(wx,wy,16,13);
+  });
+  ctx.fillStyle='#5A3A1A';ctx.fillRect(x-11,y-22,22,22);
+}
+
+function drawMan(x,y,pose,messy){
+  ctx.save();ctx.translate(x,y);
+  const t=tick;
+  const sw=pose==='walk'?Math.sin(t*0.18)*14:0;
+
+  if(pose==='sleep'||pose==='sleep2'){
+    ctx.fillStyle='#4A90D9';
+    ctx.beginPath();ctx.ellipse(2,-38,26,13,Math.PI*0.12,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#FDBCB4';ctx.strokeStyle='#C08870';ctx.lineWidth=1;
+    ctx.beginPath();ctx.arc(24,-34,12,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#2C1800';ctx.beginPath();ctx.arc(24,-44,8,Math.PI,0);ctx.fill();
+    ctx.strokeStyle='#aaa';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(36,-30);ctx.quadraticCurveTo(52,-18,55,-10);ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='#555';ctx.font='bold 13px sans-serif';ctx.textAlign='left';
+    ctx.fillText('zzz',54,-8);
+    ctx.fillStyle='#2C3E6B';ctx.fillRect(-18,-26,14,28);ctx.fillRect(-2,-26,14,28);
+    ctx.fillStyle='#222';ctx.fillRect(-20,0,16,10);ctx.fillRect(-4,0,16,10);
+  } else {
+    ctx.fillStyle='#FDBCB4';ctx.strokeStyle='#C08870';ctx.lineWidth=1;
+    ctx.beginPath();ctx.arc(0,-80,15,0,Math.PI*2);ctx.fill();ctx.stroke();
+    if(messy){
+      ctx.strokeStyle='#3A2800';ctx.lineWidth=2;
+      for(let i=-3;i<=3;i++){ctx.beginPath();ctx.moveTo(i*4,-94);ctx.lineTo(i*4+Math.sin(i+t*0.05)*4,-103+Math.abs(i));ctx.stroke();}
+    } else {
+      ctx.fillStyle='#2C1800';ctx.beginPath();ctx.arc(0,-93,11,Math.PI,0);ctx.fill();
+    }
+    ctx.fillStyle='#4A90D9';ctx.fillRect(-16,-66,32,36);
+    const la=pose==='wave'?(-0.9+Math.sin(t*0.12)*0.3):sw*0.04+0.28;
+    const ra=pose==='wave'?(0.25):-(sw*0.04+0.28);
+    ctx.save();ctx.translate(-16,-68);ctx.rotate(la);
+    ctx.fillStyle='#4A90D9';ctx.fillRect(-12,0,12,9);
+    ctx.fillStyle='#FDBCB4';ctx.fillRect(-13,7,11,10);ctx.restore();
+    ctx.save();ctx.translate(16,-68);ctx.rotate(ra);
+    ctx.fillStyle='#4A90D9';ctx.fillRect(0,0,12,9);
+    ctx.fillStyle='#FDBCB4';ctx.fillRect(2,7,11,10);ctx.restore();
+    const lk=pose==='stand'||pose==='happy'?0:sw*0.045;
+    ctx.fillStyle='#2C3E6B';
+    ctx.save();ctx.translate(-8,-30);ctx.rotate(lk);
+    ctx.fillRect(-7,0,14,32);ctx.fillStyle='#222';ctx.fillRect(-8,29,15,10);ctx.restore();
+    ctx.save();ctx.translate(8,-30);ctx.rotate(-lk);
+    ctx.fillStyle='#2C3E6B';ctx.fillRect(-7,0,14,32);ctx.fillStyle='#222';ctx.fillRect(-7,29,15,10);ctx.restore();
+    if(pose==='sad'){
+      ctx.fillStyle='#4490CC';ctx.font='16px sans-serif';ctx.textAlign='center';
+      ctx.fillText('😢',22,-70);
+    }
+    if(pose==='happy'){
+      ctx.fillStyle='#FFD700';ctx.font='16px sans-serif';ctx.textAlign='center';
+      ctx.fillText('★',20,-84);
+    }
+  }
+  ctx.restore();
+}
+
+function drawCloudBubble(mx,my,text){
+  if(!text) return;
+  const isPose=pose==='sleep'||pose==='sleep2';
+  const headY = my - (isPose?50:97);
+  const cx=Math.min(Math.max(mx, 120), W-120);
+  const cy=headY-30;
+  const bw=300, bh=90;
+  const bx=cx-bw/2, by=cy-bh;
+
+  ctx.fillStyle='#fff';ctx.strokeStyle='#4A90D9';ctx.lineWidth=1.5;
+
+  ctx.beginPath();
+  ctx.moveTo(bx+20,by+bh);
+  ctx.lineTo(bx+20,by+20);ctx.quadraticCurveTo(bx,by+20,bx,by+bh/2);
+  ctx.quadraticCurveTo(bx,by,bx+bw/2,by);
+  ctx.quadraticCurveTo(bx+bw,by,bx+bw,by+bh/2);
+  ctx.quadraticCurveTo(bx+bw,by+bh,bx+bw-20,by+bh);
+  ctx.closePath();
+  ctx.fill();ctx.stroke();
+
+  ctx.fillStyle='#fff';ctx.strokeStyle='#4A90D9';ctx.lineWidth=1.2;
+  const dots=[{x:cx-5,y:cy+6,r:7},{x:cx+5,y:cy+14,r:5},{x:cx+14,y:cy+22,r:3}];
+  dots.forEach(d=>{ctx.beginPath();ctx.arc(d.x,d.y,d.r,0,Math.PI*2);ctx.fill();ctx.stroke();});
+
+  ctx.fillStyle='#1a2233';ctx.font='500 12.5px sans-serif';ctx.textAlign='center';
+  const words=text.split(' ');
+  let line='',lines=[],lw=bw-30;
+  words.forEach(w=>{
+    const test=line+w+' ';
+    if(ctx.measureText(test).width>lw&&line){lines.push(line.trim());line=w+' ';}
+    else line=test;
+  });
+  lines.push(line.trim());
+  const lh=17,startY=by+28+(bh-lines.length*lh)/2;
+  lines.forEach((l,i)=>ctx.fillText(l,cx,startY+i*lh));
+}
+
+function startTyping(text){
+  fullText=text;typedText='';charIdx=0;typingDone=false;
+  clearInterval(typeTimer);
+  typeTimer=setInterval(()=>{
+    if(charIdx<fullText.length){
+      typedText+=fullText[charIdx++];
+      if(window.speechSynthesis&&charIdx===1){
+        window.speechSynthesis.cancel();
+        const u=new SpeechSynthesisUtterance(fullText);
+        u.rate=0.92;u.pitch=1.08;
+        window.speechSynthesis.speak(u);
+      }
+    } else {typingDone=true;clearInterval(typeTimer);}
+  },32);
+}
+
+let sceneProgress=0;
+function loadScene(idx){
+  if(idx>=scenes.length){done=true;playBtn.textContent='↺ Replay';return;}
+  const s=scenes[idx];
+  targetX=s.walkTo;pose=s.pose;messy=!!s.messy;
+  timeTag.textContent=s.time;
+  sceneProgress=0;
+  startTyping(s.text);
+}
+
+function loop(){
+  tick++;
+  ctx.clearRect(0,0,W,H);
+  const s=scenes[Math.min(sceneIdx,scenes.length-1)];
+  drawSky(s.sky||'day');
+  if(Math.abs(manX-targetX)>2) manX+=(targetX-manX)*0.055;
+  drawMan(manX,GROUND,pose,messy);
+  drawCloudBubble(manX,GROUND,typedText);
+  sceneProgress++;
+  if(sceneProgress>220&&typingDone&&!autoTimer){
+    autoTimer=setTimeout(()=>{autoTimer=null;sceneIdx++;loadScene(sceneIdx);},1000);
+  }
+  raf=requestAnimationFrame(loop);
+}
+
+function startStory(){
+  if(done){
+    done=false;sceneIdx=0;manX=-70;
+    playBtn.textContent='⏭ Next';
+    loadScene(0);return;
+  }
+  if(started){
+    clearTimeout(autoTimer);autoTimer=null;
+    clearInterval(typeTimer);
+    sceneIdx++;loadScene(sceneIdx);return;
+  }
+  started=true;playBtn.textContent='⏭ Next';
+  manX=-70;loadScene(0);
+  if(!raf)loop();
+}
+loop();
+</script>
