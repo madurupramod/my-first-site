@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Guess the Word Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: #f0f8ff;
+    }
+
+    #emojiBox {
+      font-size: 80px;
+      margin: 20px;
+    }
+
+    #gameArea {
+      position: relative;
+      height: 300px;
+      width: 90%;
+      max-width: 400px;
+      margin: 20px auto;
+      border: 2px dashed #aaa;
+      background: #fff;
+    }
+
+    .letter {
+      position: absolute;
+      font-size: 30px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 200px;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin: 10px 5px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .submit-btn { background: green; color: white; }
+    .next-btn { background: blue; color: white; }
+
+    #result {
+      font-size: 20px;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>🎯 Guess the Word</h1>
+
+<div id="emojiBox"></div>
+
+<div id="gameArea"></div>
+
+<input type="text" id="answer" placeholder="Enter name">
+
+<br>
+
+<button class="submit-btn" onclick="checkAnswer()">Submit</button>
+<button class="next-btn" onclick="loadGame()">Next</button>
+
+<div id="result"></div>
+
+<script>
+const items = [
+
+  // Animals 🐾
+  {name:"lion", emoji:"🦁"},
+  {name:"tiger", emoji:"🐯"},
+  {name:"elephant", emoji:"🐘"},
+  {name:"zebra", emoji:"🦓"},
+  {name:"giraffe", emoji:"🦒"},
+  {name:"monkey", emoji:"🐒"},
+  {name:"panda", emoji:"🐼"},
+  {name:"dog", emoji:"🐶"},
+  {name:"cat", emoji:"🐱"},
+  {name:"horse", emoji:"🐴"},
+  {name:"camel", emoji:"🐪"},
+  {name:"deer", emoji:"🦌"},
+  {name:"wolf", emoji:"🐺"},
+  {name:"fox", emoji:"🦊"},
+  {name:"bear", emoji:"🐻"},
+  {name:"kangaroo", emoji:"🦘"},
+  {name:"rabbit", emoji:"🐰"},
+  {name:"leopard", emoji:"🐆"},
+  {name:"cow", emoji:"🐄"},
+  {name:"goat", emoji:"🐐"},
+
+  // Birds 🐦
+  {name:"parrot", emoji:"🦜"},
+  {name:"eagle", emoji:"🦅"},
+  {name:"peacock", emoji:"🦚"},
+  {name:"crow", emoji:"🐦"},
+  {name:"owl", emoji:"🦉"},
+  {name:"pigeon", emoji:"🕊️"},
+  {name:"duck", emoji:"🦆"},
+  {name:"hen", emoji:"🐔"},
+  {name:"penguin", emoji:"🐧"},
+  {name:"flamingo", emoji:"🦩"},
+
+  // Vehicles 🚗
+  {name:"car", emoji:"🚗"},
+  {name:"bus", emoji:"🚌"},
+  {name:"train", emoji:"🚆"},
+  {name:"bike", emoji:"🏍️"},
+  {name:"bicycle", emoji:"🚲"},
+  {name:"truck", emoji:"🚚"},
+  {name:"tractor", emoji:"🚜"},
+  {name:"aeroplane", emoji:"✈️"},
+  {name:"helicopter", emoji:"🚁"},
+  {name:"ship", emoji:"🚢"}
+];
+
+let currentWord = "";
+
+function loadGame() {
+  const random = items[Math.floor(Math.random() * items.length)];
+  currentWord = random.name;
+
+  document.getElementById("emojiBox").innerText = random.emoji;
+
+  document.getElementById("answer").value = "";
+  document.getElementById("result").innerText = "";
+
+  displayLetters(random.name);
+}
+
+function shuffle(word) {
+  return word.split('').sort(() => Math.random() - 0.5);
+}
+
+function displayLetters(word) {
+  const gameArea = document.getElementById("gameArea");
+  gameArea.innerHTML = "";
+
+  const letters = shuffle(word);
+
+  letters.forEach((char, i) => {
+    const el = document.createElement("div");
+    el.className = "letter";
+    el.innerText = char.toUpperCase();
+
+    let x = Math.random() * (gameArea.clientWidth - 30);
+    let y = (i % 2 === 0 ? 50 : 180) + Math.random() * 50;
+
+    el.style.left = x + "px";
+    el.style.top = y + "px";
+
+    gameArea.appendChild(el);
+  });
+}
+
+function checkAnswer() {
+  const userAnswer = document.getElementById("answer").value.trim().toLowerCase();
+
+  if (userAnswer === currentWord) {
+    document.getElementById("result").innerText = "✅ Correct!";
+    document.getElementById("result").style.color = "green";
+  } else {
+    document.getElementById("result").innerText = "❌ Wrong! Try again";
+    document.getElementById("result").style.color = "red";
+  }
+}
+
+loadGame();
+</script>
+
+</body>
+</html>
