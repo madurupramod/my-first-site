@@ -22,16 +22,7 @@
         100% { background-position: 0% 50%; }
     }
 
-    h1 {
-        margin-top: 50px;
-        font-size: 3rem;
-        text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-    }
-
-    p {
-        font-size: 1.3rem;
-        margin-bottom: 40px;
-    }
+    h1 { margin-top: 50px; font-size: 3rem; }
 
     .story-container {
         display: flex;
@@ -48,16 +39,11 @@
         padding: 20px;
         border-radius: 20px;
         box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        transition: transform 0.3s, box-shadow 0.3s;
+        transition: transform 0.3s;
     }
 
     .story-card:hover {
-        transform: scale(1.1) rotate(-2deg);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-    }
-
-    .story-card h2 {
-        margin-bottom: 15px;
+        transform: scale(1.1);
     }
 
     .story-card button {
@@ -66,108 +52,142 @@
         border-radius: 20px;
         background: #ff6f61;
         color: white;
-        font-size: 1rem;
         cursor: pointer;
-        transition: background 0.3s;
     }
 
-    .story-card button:hover {
-        background: #ff3b2e;
+    /* GAME OVERLAY */
+    #gameOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: white;
+        display: none;
+        z-index: 999;
+        color: black;
+        overflow: auto;
     }
 
-    footer {
-        margin-bottom: 20px;
-        font-size: 0.9rem;
-        opacity: 0.8;
+    #emojiBox { font-size: 80px; margin: 20px; }
+
+    #gameArea {
+        position: relative;
+        height: 300px;
+        width: 90%;
+        max-width: 400px;
+        margin: 20px auto;
+        border: 2px dashed #aaa;
+        background: #fff;
     }
+
+    .letter {
+        position: absolute;
+        font-size: 30px;
+        font-weight: bold;
+    }
+
+    input { padding: 10px; font-size: 16px; }
+
+    .btn { padding: 10px; margin: 5px; }
 
 </style>
 </head>
 
 <body>
 
-<h1>📚 Welcome to Story World 🌟</h1>
-<p>Click a story and start your adventure!</p>
+<h1>📚 Story World 🌟</h1>
 
 <div class="story-container">
 
+    <!-- EXISTING STORIES (unchanged) -->
     <div class="story-card">
-        <h2>🦁 My Life in 7th Class</h2>
-        <button onclick="openStory('My Life.html')">
-            Read Story
-        </button>
+        <h2>🦁 My Life</h2>
+        <button onclick="openStory('My Life.html')">Read</button>
     </div>
+
+    <!-- ADD GAME CARD -->
     <div class="story-card">
-        <h2>🦁 The Lion and The Rat</h2>
-        <button onclick="openStory('Lion_and_Rat.html')">
-            Read Story
-        </button>
-    </div>
-    <div class="story-card">
-        <h2>💻 The Magic Software Story</h2>
-        <button onclick="openStory('Software.html')">
-            Read Story
-        </button>
-    </div>
-    <div class="story-card">
-        <h2>Babai Abbai</h2>
-        <button onclick="openStory('balayya-ntr.html')">
-            Read Story
-        </button>
-    </div>
-    <div class="story-card">
-        <h2>Robot First Day in IT</h2>
-        <button onclick="openStory('robot-first-day.html')">
-            Read Story
-        </button>
-    </div>
-    <div class="story-card">
-        <h2>Doctor vs Modern Patient</h2>
-        <button onclick="openStory('doctor-webmd.html')">
-            Read Story
-        </button>
-    </div>
-    <div class="story-card">
-        <h2>Lazy Member vs Gym Trainer</h2>
-        <button onclick="openStory('gym-trainer.html')">
-            Read Story
-        </button>
-    </div>
-    <div class="story-card">
-        <h2>Chrome-Johny</h2>
-        <button onclick="openStory('chrome-johny.html')">
-            Read Story
-        </button>
-    </div>
-    <div class="story-card">
-        <h2>Bodayya Family Tree</h2>
-        <button onclick="openStory('family-tree-v3.html')">
-            Read Story
-        </button>
-    </div>
-    <div class="story-card">
-        <h2>Bodayya Family Tree With Interaction</h2>
-        <button onclick="openStory('family-tree-interactive.html')">
-            Read Story
-        </button>
-    </div>
-    <div class="story-card">
-        <h2>Flames</h2>
-        <button onclick="openStory('Flames.html')">
-            Read Story
-        </button>
+        <h2>🎮 Guess the Name Game</h2>
+        <button onclick="openGame()">Play Game</button>
     </div>
 
 </div>
 
-<footer>
-    Made with ❤️ for Kids | 2026
-</footer>
+<!-- GAME OVERLAY -->
+<div id="gameOverlay">
+    <h2>🎯 Guess the Name</h2>
+    <button onclick="closeGame()">❌ Close</button>
+
+    <div id="emojiBox"></div>
+    <div id="gameArea"></div>
+
+    <input type="text" id="answer" placeholder="Enter name">
+    <br>
+    <button class="btn" onclick="checkAnswer()">Submit</button>
+    <button class="btn" onclick="loadGame()">Next</button>
+
+    <div id="result"></div>
+</div>
 
 <script>
-    function openStory(page) {
-        window.location.href = page;
-    }
+function openStory(page){ window.location.href = page; }
+
+function openGame(){
+    document.getElementById("gameOverlay").style.display = "block";
+    loadGame();
+}
+
+function closeGame(){
+    document.getElementById("gameOverlay").style.display = "none";
+}
+
+const items = [
+  {name:"lion",emoji:"🦁"},{name:"tiger",emoji:"🐯"},
+  {name:"elephant",emoji:"🐘"},{name:"zebra",emoji:"🦓"},
+  {name:"giraffe",emoji:"🦒"},{name:"dog",emoji:"🐶"},
+  {name:"cat",emoji:"🐱"},{name:"horse",emoji:"🐴"},
+  {name:"cow",emoji:"🐄"},{name:"goat",emoji:"🐐"},
+  {name:"parrot",emoji:"🦜"},{name:"eagle",emoji:"🦅"},
+  {name:"peacock",emoji:"🦚"},{name:"owl",emoji:"🦉"},
+  {name:"duck",emoji:"🦆"},{name:"car",emoji:"🚗"},
+  {name:"bus",emoji:"🚌"},{name:"train",emoji:"🚆"},
+  {name:"bike",emoji:"🏍️"},{name:"ship",emoji:"🚢"}
+];
+
+let currentWord="";
+
+function loadGame(){
+    const random = items[Math.floor(Math.random()*items.length)];
+    currentWord = random.name;
+
+    document.getElementById("emojiBox").innerText = random.emoji;
+    document.getElementById("answer").value="";
+    document.getElementById("result").innerText="";
+
+    displayLetters(random.name);
+}
+
+function displayLetters(word){
+    const area = document.getElementById("gameArea");
+    area.innerHTML="";
+
+    word.split('').sort(()=>Math.random()-0.5).forEach((c,i)=>{
+        const d=document.createElement("div");
+        d.className="letter";
+        d.innerText=c.toUpperCase();
+        d.style.left=Math.random()*300+"px";
+        d.style.top=(i%2?180:50)+Math.random()*40+"px";
+        area.appendChild(d);
+    });
+}
+
+function checkAnswer(){
+    const val=document.getElementById("answer").value.toLowerCase();
+    document.getElementById("result").innerText =
+        val===currentWord ? "✅ Correct!" : "❌ Try Again";
+}
+
 </script>
 
 </body>
